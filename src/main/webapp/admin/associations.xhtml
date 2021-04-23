@@ -1,0 +1,880 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.accociationAccounts}"/>
+
+    <ui:define name="content">
+        <h:form id="spreadsheet_form">
+            <h:panelGroup id="newUserDialogPanel">
+                <p:dialog id="newUserDialog" widgetVar="main_dialog" positionType="fixed"
+                          header="#{messages.newAssociation}" modal="false" width="350">
+
+                    <h:panelGroup id="dialogContent" styleClass="ui-g ui-fluid" layout="block">
+                        <p:focus context="dialogContent"/>
+                        <!-- username -->
+                        <div class="ui-g-12 compact">
+                            <p:outputLabel for="dialog_username" value="#{messages.username}"/>
+                            <p:messages for="dialog_username" showIcon="false" closable="true"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-user"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="dialog_username" value="#{newAccDialog.newUsername}" required="true"/>
+                            </span>
+                            </div>
+                        </div>
+
+                        <!-- password -->
+                        <div class="ui-g-12 compact">
+                            <p:outputLabel for="dialog_password"
+                                           value="#{messages.password}" title="#{messages.passwordHelp}"/>
+                            <p:messages for="dialog_password" showIcon="false" closable="true"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-lock"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:password id="dialog_password" redisplay="false"
+                                        value="#{newAccDialog.newPassword}" required="true"
+                                        title="#{messages.passwordHelp}" feedback="false" inline="false"
+                                        promptLabel="#{messages.enterPassword}"
+                                        weakLabel="#{messages.weak}" goodLabel="#{messages.good}"
+                                        strongLabel="#{messages.strong}"/>
+                            </span>
+                            </div>
+                        </div>
+
+                        <!-- description -->
+                        <div class="ui-g-12 compact">
+                            <p:outputLabel for="dialog_description" value="#{messages.description}"/>
+                            <p:messages for="dialog_description" showIcon="false" closable="true"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-edit"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="dialog_description" value="#{newAccDialog.newDescription}"/>
+                            </span>
+                            </div>
+                        </div>
+
+                        <!-- categorie -->
+                        <div class="ui-g-12">
+                            <p:outputLabel for="dialog_categorie"
+                                           value="#{messages.categorie}"/>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-legal"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                                    <p:selectOneMenu id="dialog_categorie" value="#{newAccDialog.accountType}"
+                                                     required="true">
+                                        <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                        <!--suppress ELValidationInJSP -->
+                                        <f:selectItems value="#{newAccDialog.availableAccountTypes}"
+                                                       var="type"
+                                                       itemLabel="#{messages[type]}"
+                                                       itemValue="#{type}"
+                                        />
+                                    </p:selectOneMenu>
+                            </span>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="saveAccountButton" widgetVar="widget_new_user_button"
+                                         value="#{messages.singUp}"
+                                         icon="fa fa-user-plus"
+                                         process="newUserDialogPanel accountsPanel"
+                                         update="dialogContent accountsPanel"
+                                         onstart="PF('widget_new_user_button').disable()"
+                                         onerror="jsoftware95.updateFailed()"
+                                         oncomplete="PF('widget_new_user_button').enable()"
+                                         actionListener="#{newAccDialog.newUser}"/>
+                        <p:commandButton value="#{messages.cancel}" type="button"
+                                         onclick="PF('main_dialog').hide()" icon="fa fa-remove"/>
+                    </f:facet>
+                </p:dialog>
+            </h:panelGroup>
+
+            <h:panelGroup id="newContractDialogPanel">
+                <p:dialog id="newContractDialog" widgetVar="new_contract_dialog" positionType="fixed"
+                          header="#{messages.newContract}" modal="false" width="350">
+
+                    <h:panelGroup id="newContractDialogContent" styleClass="ui-g ui-fluid" layout="block">
+                        <p:focus context="newContractDialogContent"/>
+                        <!-- type -->
+                        <div class="ui-g-12 compact">
+                            <p:outputLabel for="content-name" value="Modèle de contrat"/>
+                            <p:messages for="content-name" showIcon="false" closable="true">
+                                <p:effect event="load" type="bounce"/>
+                            </p:messages>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span
+                                        class="material-icons ui-icon-mode-edit"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:selectOneMenu id="content-name" required="true"
+                                             value="#{sectionsView.newContractTemplateID}"
+                                             style="min-width: 250px">
+                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                <f:selectItems value="#{sectionsView.availableContracts}" var="item"
+                                               itemValue="#{item.templateID}" itemLabel="#{item.templateName}"/>
+                            </p:selectOneMenu>
+                            </span>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="addContractButton" widgetVar="widget_addContractButton"
+                                         value="#{messages.add}"
+                                         process="newContractDialogPanel accountsPanel"
+                                         update="newContractDialogContent accountsPanel"
+                                         icon="fa fa-user-plus"
+                                         onstart="PF('widget_addContractButton').disable()"
+                                         onerror="jsoftware95.updateFailed()"
+                                         oncomplete="PF('widget_addContractButton').enable()"
+                                         disabled="#{empty sectionsView.currentAssociation}"
+                                         actionListener="#{sectionsView.addContractInstance}"/>
+                        <p:commandButton value="#{messages.cancel}" type="button"
+                                         onclick="PF('new_contract_dialog').hide()" icon="fa fa-remove"/>
+                    </f:facet>
+                </p:dialog>
+            </h:panelGroup>
+
+            <h:panelGroup id="newSectionDialogPanel">
+                <p:dialog id="newSectionDialog" widgetVar="new_section_dialog" positionType="fixed"
+                          header="#{messages.newSection}" modal="false" width="350">
+
+                    <h:panelGroup id="newSectionDialogContent" styleClass="ui-g ui-fluid" layout="block">
+                        <p:focus context="newSectionDialogContent"/>
+                        <!-- type -->
+                        <div class="ui-g-12 compact">
+                            <p:outputLabel for="section-name" value="Nom de section"/>
+                            <p:messages for="section-name" showIcon="false" closable="true">
+                                <p:effect event="load" type="bounce"/>
+                            </p:messages>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span
+                                        class="material-icons ui-icon-mode-edit"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:selectOneMenu id="section-name" required="true" filter="true" filterMatchMode="contains"
+                                             filterPlaceholder="#{messages.filter}"
+                                             value="#{sectionsView.newSectionName}"
+                                             style="min-width: 250px">
+                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                <f:selectItems value="#{sectionsView.availableSectionNames}"
+                                               var="reference" itemLabel="#{reference.name}"
+                                               itemValue="#{reference.name}"/>
+                            </p:selectOneMenu>
+                            </span>
+                            </div>
+                        </div>
+
+                    </h:panelGroup>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="addSectionButton" widgetVar="widget_addSectionButton"
+                                         value="#{messages.add}"
+                                         process="newSectionDialogPanel accountsPanel"
+                                         update="newSectionDialogContent accountsPanel"
+                                         icon="fa fa-user-plus"
+                                         onstart="PF('widget_addSectionButton').disable()"
+                                         onerror="jsoftware95.updateFailed()"
+                                         oncomplete="PF('widget_addSectionButton').enable()"
+                                         disabled="#{empty sectionsView.currentAssociation}"
+                                         actionListener="#{sectionsView.addNewSection}"/>
+                        <p:commandButton value="#{messages.cancel}" type="button"
+                                         onclick="PF('new_section_dialog').hide()" icon="fa fa-remove"/>
+                    </f:facet>
+                </p:dialog>
+            </h:panelGroup>
+
+            <h:panelGroup id="accountsPanel" layout="block" styleClass="card">
+                <p:toolbar>
+                    <f:facet name="left">
+                        <p:commandButton id="newUserButton" type="button" accesskey="n"
+                                         value="#{messages.newAssociation}" icon="fa fa-plus"
+                                         onclick="PF('main_dialog').show()"/>
+                    </f:facet>
+                </p:toolbar>
+                <h1>#{messages.clientsAccounts} (#{messages.season}: #{sectionsView.currentSeasonName})</h1>
+                <!--suppress ELValidationInJSP -->
+                <p:dataTable id="acc_container" widgetVar="main_sheet_widget" var="account"
+                             value="#{usersView.accounts}" filteredValue="#{usersView.filteredAccounts}"
+                             paginator="true" rows="70"
+                             draggableColumns="true" resizableColumns="true" emptyMessage="#{messages.noData}"
+                             selectionMode="single" selection="#{usersView.currentAccount}"
+                             rowKey="#{account.id}" styleClass="compact-data"
+                             scrollable="true" scrollHeight="400">
+
+                    <p:ajax update="spreadsheet_form:excludes spreadsheet_form:accounts_dashboard spreadsheet_form:inputs spreadsheet_form:newSectionDialogPanel spreadsheet_form:newContractDialogPanel"
+                            event="rowSelect"/>
+
+                    <p:column headerText="#{messages.username}" sortBy="#{account.name}"
+                              toggleable="false"
+                              filterBy="#{account.name}" filterMatchMode="contains">
+                        <h:panelGroup id="downloaded">
+                            <h:panelGroup
+                                    rendered="#{account.contractDownloadState == 'ASSIGNED_CONTRACTS_PARTIALLY_DOWNLOADED'}"
+                                    styleClass="middled material-icons ui-icon-file-download not-yet"/>
+                            <h:panelGroup
+                                    rendered="#{account.contractDownloadState == 'ALL_ASSIGNED_CONTRACTS_DOWNLOADED'}"
+                                    styleClass="middled material-icons ui-icon-file-download done"/>
+
+                            <h:panelGroup
+                                    rendered="#{account.contractDownloadState == 'NO_ASSIGNED_CONTRACT_DOWNLOADED'}"
+                                    styleClass="middled material-icons ui-icon-hourglass-full not-yet"/>
+                            <h:panelGroup rendered="#{account.contractDownloadState == 'NO_CONTRACT_ASSIGNED_YET'}"
+                                          styleClass="middled material-icons ui-icon-hourglass-empty not-yet"/>
+                        </h:panelGroup>
+                        <p:tooltip for="downloaded"
+                                   value="#{messages[account.contractDownloadState]} #{messages.forTheCurrentSeason}"/>
+
+                        <h:outputText styleClass="spaced" value="#{account.name}"/>
+
+                        <h:panelGroup id="hasDossier" rendered="#{account.hasDossier}"
+                                      styleClass="middled material-icons ui-icon-folder archive"/>
+                        <p:tooltip for="hasDossier" value="#{messages.dossierUploaded}"/>
+
+                        <h:panelGroup id="newMessage" rendered="#{account.hasMessage}"
+                                      styleClass="middled material-icons ui-icon-mail new"/>
+                        <p:tooltip for="newMessage" value="#{messages.newMessageIsAvailable}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.description}"
+                              filterBy="#{account.description}" filterMatchMode="contains">
+                        <h:outputText value="#{account.description}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.agrement}" width="50px"
+                              sortBy="#{account.canonicAgrement}"
+                              styleClass="#{account.validRegistrationNumber? '' : 'warning'}"
+                              filterBy="#{account.agrement}" filterMatchMode="contains">
+                        <h:outputText value="#{account.agrement}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.phoneNumber}"
+                              filterBy="#{account.phone}" filterMatchMode="contains">
+                        <h:outputText value="#{account.phone}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <!--                <p:contextMenu id="account_context_menu" for="acc_container">-->
+                <!--                    <p:menuitem id="chat_menu_item" action="#{usersView.chatWithCurrentAssociation}"-->
+                <!--                                onerror="jsoftware95.updateFailed()"-->
+                <!--                                process="@this" update="@none"-->
+                <!--                                value="#{messages.chat}" icon="ui-icon-forum"/>-->
+
+                <!--                    <p:menuitem id="save_menu_item" accesskey="s"-->
+                <!--                                value="#{messages.save}"-->
+                <!--                                onerror="jsoftware95.updateFailed()"-->
+                <!--                                icon="ui-icon-save" process="spreadsheet_form:accountsPanel" update="@form"-->
+                <!--                                actionListener="#{usersView.saveChanges}"/>-->
+
+                <!--                    <p:menuitem id="newUser_menu_item" type="button"-->
+                <!--                                value="#{messages.newAcc}" icon="fa fa-plus"-->
+                <!--                                onclick="PF('main_dialog').show()"/>-->
+
+                <!--                    <p:menuitem id="delete_menu_item" value="#{messages.delete}" icon="ui-icon-delete"-->
+                <!--                                onerror="jsoftware95.updateFailed()"-->
+                <!--                                process="@this" update="@form"-->
+                <!--                                action="#{usersView.deleteCurrentAccount}">-->
+                <!--                        <p:confirm message="#{messages.confirmeUserDelete}"/>-->
+                <!--                    </p:menuitem>-->
+                <!--                </p:contextMenu>-->
+
+                <p:toolbar id="accounts_dashboard" styleClass="scrollable-toolbar">
+                    <f:facet name="left">
+                        <h:panelGroup>
+                            <p:commandButton id="saveButton" widgetVar="saveButtonWidget" accesskey="s"
+                                             value="#{messages.save}"
+                                             disabled="#{empty profile.currentAssociation}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             icon="ui-icon-save" process="spreadsheet_form:accountsPanel" update="@form"
+                                             actionListener="#{usersView.saveChanges}"/>
+
+                            <p:commandButton id="delete_button" value="#{messages.delete}" icon="ui-icon-delete"
+                                             onerror="jsoftware95.updateFailed()"
+                                             disabled="#{empty profile.currentAssociation}"
+                                             process="@this" update="@form" action="#{usersView.deleteCurrentAccount}">
+                                <p:confirm message="#{messages.confirmeUserDelete}"/>
+                            </p:commandButton>
+
+                            <p:button id="chat_button" disabled="#{empty profile.currentAssociation}"
+                                      outcome="chatAdmin"
+                                      value="#{messages.chat}" icon="ui-icon-forum" accesskey="c">
+                                <f:param name="sender" value="#{profile.currentAssociation.name}"/>
+                            </p:button>
+
+                            <p:button id="preview_button"
+                                      value="#{messages.preview} #{sectionsView.currentContract.contractTemplate.name}"
+                                      data-title="#{messages.preview}"
+                                      target="_blank" accesskey="p"
+                                      icon="fa fa-file-pdf-o" outcome="downloadContract"
+                                      disabled="#{empty sectionsView.currentContract}">
+                                <f:param name="preview" value="true"/>
+                                <f:param name="account" value="#{sectionsView.currentAssociation.id}"/>
+                                <f:param name="contract" value="#{sectionsView.currentContract.id}"/>
+                            </p:button>
+                        </h:panelGroup>
+                    </f:facet>
+                    <f:facet name="right">
+                        <p:commandButton id="accountsColumnsToggler" type="button" value="#{messages.tableColumns}"
+                                         icon="ui-icon-view-column"/>
+                        <p:columnToggler datasource="acc_container" trigger="accountsColumnsToggler"/>
+                    </f:facet>
+                </p:toolbar>
+
+                <h:panelGroup id="excludes" layout="block">
+                    <!--                    <h:outputText styleClass="middled" value="#{messages.excludeAccountsThatHave}:"/>-->
+                    <!--                    <p:selectCheckboxMenu value="#{usersView.excludedTemplates}" multiple="true"-->
+                    <!--                                          updateLabel="true" showHeader="false" emptyLabel="#{messages.none}">-->
+                    <!--                        <f:selectItems value="#{sectionsView.allContracts}"/>-->
+                    <!--                        <p:ajax event="change" listener="#{usersView.refreshAll}"-->
+                    <!--                                process="spreadsheet_form:accountsPanel" update="@form"/>-->
+                    <!--                    </p:selectCheckboxMenu>-->
+                </h:panelGroup>
+
+                <h:panelGroup id="inputs" layout="block">
+                    <p:fieldset id="contract_input"
+                                legend="#{messages.assignedContracts} - #{sectionsView.currentAssociation.name}">
+                        <!--suppress ELValidationInJSP -->
+                        <p:dataTable id="contracts_table" value="#{sectionsView.assignedContracts}"
+                                     var="contract" emptyMessage="#{messages.noAssignedContract}"
+                                     rowKey="#{contract.id}"
+                                     selectionMode="single" selection="#{usersView.currentContract}">
+                            <p:column headerText="#{messages.contractName}">
+                                <p:commandButton id="deleteContractButton" process="@this" update="@form"
+                                                 actionListener="#{sectionsView.deleteContractInstance(contract.id)}"
+                                                 onerror="jsoftware95.updateFailed()"
+                                                 icon="ui-icon-delete">
+                                    <p:confirm/>
+                                </p:commandButton>
+                                <p:tooltip for="deleteContractButton" value="#{messages.deleteThisContract}"/>
+<!--                                <p:commandButton id="archiveContractButton" process="@this" update="@form"-->
+<!--                                                 actionListener="#{usersView.archiveContractInstance(contract.id)}"-->
+<!--                                                 onerror="jsoftware95.updateFailed()"-->
+<!--                                                 icon="ui-icon-archive">-->
+<!--                                    <p:confirm message="#{messages.confirmArchiving}"/>-->
+<!--                                </p:commandButton>-->
+<!--                                <p:tooltip for="archiveContractButton" value="#{messages.moveThisContractToArchive}"/>-->
+                                #{contract.contractTemplate.name}
+                            </p:column>
+                            <p:column headerText="#{messages.globalMontant}">
+                                <h:outputFormat value="#{messages.currencyInDA}">
+                                    <f:param value="#{contract.globalMontant}"/>
+                                </h:outputFormat>
+                            </p:column>
+                            <p:column headerText="#{messages.Downloads}">
+                                <h:outputFormat value="#{messages.times}">
+                                    <f:param value="#{contract.retrait}"/>
+                                </h:outputFormat>
+                                <ui:fragment rendered="#{not contract.contractTemplate.canBeDownloadedAt(localeManager.currentEpoch)}">
+                                    <h:panelGroup id="downloadAlert" styleClass="topbar-icon material-icons ui-icon-alert"
+                                                  style="vertical-align: middle;padding-left: 0.2em;"/>
+                                    <p:tooltip for="downloadAlert" position="bottom"
+                                            value="#{messages.cannotBeDownloadedUntil} #{localeManager.formatAsLocalDateTime(usersView.currentContract.contractTemplate.downloadDate)}"/>
+                                </ui:fragment>
+                            </p:column>
+                            <p:ajax event="rowSelect"
+                                    update="spreadsheet_form:accounts_dashboard spreadsheet_form:sub_inputs spreadsheet_form:newContractDialogPanel"/>
+                        </p:dataTable>
+                        <h:panelGroup id="contracts_toolbar" layout="block" styleClass="ui-g-12 text-Center">
+                            <p:commandButton id="newContractButton" type="button"
+                                             value="#{messages.newContract}" icon="ui-icon-add"
+                                             disabled="#{empty profile.currentAssociation}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             onclick="PF('new_contract_dialog').show()"/>
+                            <p:button id="contractsArchive" value="#{messages.viewAll}"
+                                      disabled="#{empty profile.currentAssociation}"
+                                      outcome="contractsArchive" icon="ui-icon-search">
+                                <f:param name="account" value="#{sectionsView.currentAssociation.id}"/>
+                            </p:button>
+                        </h:panelGroup>
+                    </p:fieldset>
+                    <h:panelGroup id="sub_inputs" layout="block">
+                        <p:fieldset
+                                rendered="#{sectionsView.currentAssociationIsSport}"
+                                id="budget_input" legend="Les Informations des sections">
+                            <div class="ui-g compact-data">
+                                <h:panelGroup id="sections_panel" styleClass="ui-g-12" layout="block">
+                                    <!--suppress ELValidationInJSP -->
+                                    <p:dataTable id="sections_table" value="#{sectionsView.sections}" var="section"
+                                                 emptyMessage="pas de sections" rowKey="#{section.id}"
+                                                 sortBy="#{section.index}"
+                                                 selectionMode="single" selection="#{usersView.currentSection}">
+
+                                        <p:ajax event="rowSelect"
+                                                update="spreadsheet_form:sections_toolbar spreadsheet_form:section_input"/>
+
+                                        <p:column headerText="#{messages.sectionName}">
+                                            <p:commandButton actionListener="#{sectionsView.deleteSection(section.id)}"
+                                                             onerror="jsoftware95.updateFailed()"
+                                                             process="spreadsheet_form:accountsPanel"
+                                                             update="@form" icon="ui-icon-delete"/>
+                                            <h:outputText styleClass="spaced" value="#{section.name}"/>
+                                        </p:column>
+
+                                        <p:column headerText="#{messages.montantSection}">
+                                            <h:outputFormat value="#{messages.currencyInDA}">
+                                                <f:param value="#{sectionsView.calcSectionTotalBudget(section.id)}"/>
+                                            </h:outputFormat>
+                                        </p:column>
+
+                                        <p:column headerText="#{messages.progressState}">
+                                            #{messages[section.processingState]}
+                                        </p:column>
+                                    </p:dataTable>
+                                    <h:panelGroup id="sections_toolbar" layout="block" styleClass="ui-g-12">
+                                        <p:commandButton id="newSectionButton" type="button" accesskey="n"
+                                                         value="#{messages.newSection}" icon="ui-icon-add"
+                                                         disabled="#{empty profile.currentAssociation}"
+                                                         onerror="jsoftware95.updateFailed()"
+                                                         onclick="PF('new_section_dialog').show()"/>
+
+                                        <p:commandButton id="section_up_button"
+                                                         disabled="#{sectionsView.currentSectionIsFirst}"
+                                                         onerror="jsoftware95.updateFailed()"
+                                                         process="@this" update="@form"
+                                                         actionListener="#{sectionsView.moveCurrentSectionUp}"
+                                                         icon="ui-icon-arrow-upward" value="#{messages.moveUp}"/>
+
+
+                                        <p:commandButton id="section_down_button"
+                                                         disabled="#{sectionsView.currentSectionIsLast}"
+                                                         onerror="jsoftware95.updateFailed()"
+                                                         process="@this" update="@form"
+                                                         actionListener="#{sectionsView.moveCurrentSectionDown}"
+                                                         icon="ui-icon-arrow-downward" value="#{messages.moveDown}"/>
+                                    </h:panelGroup>
+                                </h:panelGroup>
+
+                                <h:panelGroup id="section_input" layout="block" styleClass="ui-g ui-fluid full-width">
+                                    <div class="ui-g-12">
+                                        <p:messages for="sectionName" showIcon="false" closable="true"/>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6">
+                                        <div>
+                                            <p:outputLabel for="sectionName" value="#{messages.sectionName}"/>
+                                            <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon">
+                                                <span class="material-icons ui-icon-mode-edit"/>
+                                            </span>
+                                                <span class="md-inputfield md-inputfield-fill">
+                                                <p:inputText id="sectionName" readonly="true"
+                                                             value="#{sectionsView.currentSection.name}"
+                                                             disabled="#{empty sectionsView.currentSection}"/>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui-g-12 ui-md-6">
+                                        <div>
+                                            <p:outputLabel for="processingState" value="#{messages.state}"/>
+                                            <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon">
+                                                <span class="material-icons ui-icon-visibility"/>
+                                            </span>
+                                                <span class="md-inputfield md-inputfield-fill">
+
+                                                <p:selectOneMenu id="processingState"
+                                                                 value="#{empty sectionsView.currentSection? messages.NOT_STARTED : sectionsView.currentSection.processingState}"
+                                                                 disabled="#{empty sectionsView.currentSection}">
+                                                    <f:selectItem itemLabel="#{messages.NOT_STARTED}" itemValue=""/>
+                                                    <f:selectItems value="#{sectionsView.selectableProcessingStates}"
+                                                                   var="state" itemValue="#{state}"
+                                                                   itemLabel="#{messages[state]}"/>
+                                                </p:selectOneMenu>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <ui:repeat value="#{sectionsView.potentialBudgetsOfCurrentSection}"
+                                               var="activityBudget">
+                                        <div class="ui-g-12 ui-md-6">
+                                            <div>
+                                                <p:outputLabel for="sectionActivityBudget"
+                                                               value="#{activityBudget.activity.label}"
+                                                               indicateRequired="false"/>
+                                                <p:messages for="sectionActivityBudget" showIcon="false"
+                                                            closable="true"/>
+                                                <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon">
+                                                <span class="ui-icon fa fa-money"/>
+                                            </span>
+                                                    <span class="md-inputfield md-inputfield-fill">
+                                                <p:inputNumber id="sectionActivityBudget"
+                                                               value="#{activityBudget.budget}" styleClass="full-width"
+                                                               onfocus="this.setSelectionRange(0, this.value.length)"
+                                                               symbol=" DA" symbolPosition="suffix"
+                                                               decimalPlaces="2" decimalSeparator=","
+                                                               thousandSeparator="&#160;"
+                                                               disabled="#{empty sectionsView.currentSection or empty sectionsView.currentContract}"/>
+                                            </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ui:repeat>
+
+                                </h:panelGroup>
+                            </div>
+                        </p:fieldset>
+                        <p:fieldset id="info_input" rendered="#{not empty sectionsView.currentAssociation}"
+                                    legend="Informations d'association: #{sectionsView.currentAssociation.name}">
+                            <p:messages for="password" showIcon="false" closable="true"/>
+                            <p:messages for="agrement" showIcon="false" closable="true"/>
+                            <p:messages for="description" showIcon="false" closable="true"/>
+                            <p:messages for="president" showIcon="false" closable="true"/>
+                            <p:messages for="phone" showIcon="false" closable="true"/>
+                            <p:messages for="compte" showIcon="false" closable="true"/>
+                            <p:messages for="banque" showIcon="false" closable="true"/>
+                            <p:messages for="agence" showIcon="false" closable="true"/>
+                            <p:messages for="adresse" showIcon="false" closable="true"/>
+
+                            <div class="ui-g ui-fluid compact-data">
+                                <div class="ui-g-12 ui-md-4">
+                                    <!-- password -->
+                                    <div>
+                                        <p:outputLabel id="passwordLabel" for="password" value="#{messages.password}"
+                                                       indicateRequired="false"/>
+                                        <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-lock"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="password" value="#{profile.currentAssociation.password}"
+                                                 disabled="#{empty profile.currentAssociation}"
+                                                 required="true">
+                                    </p:inputText>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-8">
+                                    <!-- description -->
+                                    <div>
+                                        <p:outputLabel id="descriptionLabel" for="description"
+                                                       value="#{messages.description}"/>
+                                        <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon"><span
+                                                class="ui-icon fa fa-file-text-o"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="description" value="#{profile.currentAssociation.description}"
+                                                 disabled="#{empty profile.currentAssociation}"/>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-4">
+                                    <!-- agrement -->
+                                    <div>
+                                        <p:outputLabel id="agrementLabel" for="agrement"
+                                                       value="#{messages.agrement}"/>
+                                        <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon"><span
+                                                class="ui-icon fa fa-certificate"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="agrement" value="#{profile.currentAssociation.agrement}"
+                                                 disabled="#{empty profile.currentAssociation}">
+                                    </p:inputText>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-8">
+                                    <!-- adresse -->
+                                    <div>
+                                        <p:outputLabel id="adresseLabel" for="adresse" value="#{messages.adresse}"/>
+                                        <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon"><span
+                                                class="ui-icon fa fa-map-marker"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="adresse" value="#{profile.currentAssociation.adresse}"
+                                                 disabled="#{empty profile.currentAssociation}"/>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-4">
+                                    <!-- president -->
+                                    <div>
+                                        <p:outputLabel id="presidentLabel" for="president"
+                                                       value="#{messages.president}"/>
+                                        <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-group"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="president" value="#{profile.currentAssociation.president}"
+                                                 disabled="#{empty profile.currentAssociation}">
+                                    </p:inputText>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-4">
+                                    <!-- phone -->
+                                    <div>
+                                        <p:outputLabel for="phone" value="#{messages.phoneNumber}"/>
+                                        <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-phone"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                                <p:inputMask id="phone" value="#{profile.currentAssociation.phone}"
+                                                             mask="09 99 99 99 99"
+                                                             disabled="#{empty profile.currentAssociation}">
+                                                </p:inputMask>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-4">
+                                    <!-- compte -->
+                                    <div>
+                                        <p:outputLabel id="compteLabel" for="compte" value="#{messages.compte}"/>
+                                        <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon"><span
+                                                class="ui-icon fa fa-credit-card"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="compte" value="#{profile.currentAssociation.compte}"
+                                                 disabled="#{empty profile.currentAssociation}"
+                                                 validatorMessage="#{messages.invalidAccNum}"/>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-4">
+                                    <!-- agence -->
+                                    <div>
+                                        <p:outputLabel for="agence" value="#{messages.agence}"/>
+                                        <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon"><span
+                                                class="ui-icon fa fa-bank"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="agence" value="#{profile.currentAssociation.agence}"
+                                                 disabled="#{empty profile.currentAssociation}"/>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-8">
+                                    <!-- banque -->
+                                    <div>
+                                        <p:outputLabel id="banqueLabel" for="banque" value="#{messages.banque}"/>
+                                        <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon"><span
+                                                    class="ui-icon fa fa-map-marker"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="banque" value="#{profile.currentAssociation.banque}"
+                                                 disabled="#{empty profile.currentAssociation}"/>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h:panelGroup rendered="#{not empty profile.dossierFiles}" layout="block"
+                                          styleClass="ui-g-12 text-Center">
+                                <p:button id="downloadDossierButton" value="#{messages.downloadDossier}"
+                                          icon="ui-icon-file-download" href="#{profile.currentDossierUrl}"/>
+
+                                <p:commandButton id="dossierPreviewButton" type="button" icon="ui-icon-search"
+                                                 value="#{messages.preview}"/>
+
+                                <p:overlayPanel id="thumbnailsOverlay" for="dossierPreviewButton"
+                                                styleClass="compact-data align-center" showEffect="fade"
+                                                widgetVar="dossierPreviewWidget" my="false" blockScroll="true"
+                                                dismissable="true" showCloseIcon="true" hideEffect="fade">
+                                    <p:dataList value="#{profile.dossierFiles}" var="file" itemType="none"
+                                                paginator="true" rows="1" lazy="true" varStatus="status"
+                                                emptyMessage="#{messages.noData}">
+                                        <!--suppress ELValidationInJSP -->
+                                        <div class="spaced">
+                                            <p:link href="#{file.fullUrl}" target="_blank"
+                                                    title="#{messages.viewInSeparateWindow}">
+                                                <img src="#{file.url}" alt="#{file.name}"
+                                                     onerror="jsoftware95.altImage(this,#{'\''}#{resource['djs:images/doc_preview.png']}#{'\''})"
+                                                     width="auto" height="250px"/>
+                                            </p:link>
+                                            <div class="title">#{file.name}
+                                                <p:button id="downloadDossierFileButton" icon="ui-icon-file-download"
+                                                          href="#{profile.getDossierFileUrl(file.name)}"/>
+                                            </div>
+                                        </div>
+                                    </p:dataList>
+                                </p:overlayPanel>
+                            </h:panelGroup>
+                        </p:fieldset>
+                        <p:fieldset id="propeties_input" rendered="#{not empty propertiesView.potentialValues}"
+                                    legend="#{messages.contractProperties}">
+                            <h:panelGroup id="dynamicProperties" styleClass="ui-g">
+                                <ui:fragment rendered="#{not empty propertiesView.potentialBudgets}">
+                                    <div class="ui-g-12">
+                                        <h3 class="bold v-spaced">#{messages.budgetsSharedByAllSections}</h3>
+                                    </div>
+                                </ui:fragment>
+                                <ui:repeat value="#{propertiesView.potentialBudgets}"
+                                           var="globalBudget">
+                                    <div class="ui-g-12 ui-md-6">
+                                        <div>
+                                            <p:inplace>
+                                                <f:facet name="output">
+                                                    <p:outputLabel for="globalActivityBudget"
+                                                                   value="#{empty globalBudget.header? globalBudget.activity.label : globalBudget.header}"
+                                                                   indicateRequired="false"/>
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:messages for="activity_header" showIcon="false" closable="true"/>
+                                                    <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                                        <p:inputText id="activity_header"
+                                                                     style="width: calc(100% - 1em)"
+                                                                     value="#{globalBudget.header}"
+                                                                     placeholder="#{globalBudget.activity.label}"/>
+                                                    </h:panelGroup>
+                                                </f:facet>
+                                            </p:inplace>
+                                            <p:messages for="globalActivityBudget" showIcon="false"
+                                                        closable="true"/>
+                                            <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon">
+                                                <span class="ui-icon fa fa-money"/>
+                                            </span>
+                                                <span class="md-inputfield md-inputfield-fill">
+                                                <p:inputNumber id="globalActivityBudget"
+                                                               value="#{globalBudget.budget}" styleClass="full-width"
+                                                               onfocus="this.setSelectionRange(0, this.value.length)"
+                                                               symbol=" DA" symbolPosition="suffix"
+                                                               decimalPlaces="2" decimalSeparator=","
+                                                               thousandSeparator="&#160;"
+                                                               disabled="#{empty sectionsView.currentContract}"/>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ui:repeat>
+
+                                <ui:fragment rendered="#{not empty propertiesView.potentialBudgets}">
+                                    <div class="ui-g-12">
+                                        <h3 class="bold v-spaced">#{messages.additionalProperties}</h3>
+                                    </div>
+                                </ui:fragment>
+                                <ui:repeat value="#{propertiesView.potentialValues}"
+                                           var="propertyValue">
+                                    <h:panelGroup styleClass="ui-g-12 ui-fluid">
+                                        <p:inplace>
+                                            <f:facet name="output">
+                                                <h:outputText
+                                                        value="#{empty propertyValue.property.label? propertyValue.actualHeader : propertyValue.property.label}"
+                                                        styleClass="ui-outputlabel"/>
+                                            </f:facet>
+                                            <f:facet name="input">
+                                                <p:messages for="property_header" showIcon="false" closable="true"/>
+                                                <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                                    <p:inputText id="property_header" styleClass="full-width"
+                                                                 placeholder="#{propertyValue.property.defaultHeader}"
+                                                                 value="#{propertyValue.header}"/>
+                                                </h:panelGroup>
+                                            </f:facet>
+                                        </p:inplace>
+                                    </h:panelGroup>
+                                    <h:panelGroup styleClass="ui-g-12">
+                                        <ui:fragment rendered="#{propertyValue.property.type eq 'NOTE'}">
+                                            <div class="ui-messages ui-messages-noicon ui-widget">
+                                                <div class="ui-messages-info ui-corner-all">
+                                                    <div class="ui-messages-info-summary">#{propertyValue.property.label}</div>
+                                                </div>
+                                            </div>
+                                        </ui:fragment>
+                                        <ui:fragment
+                                                rendered="#{propertyValue.property.type eq 'TEXT' or propertyValue.property.type eq 'GOAL'}">
+                                            <p:messages for="TEXT_input" showIcon="false" closable="true"/>
+                                            <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                                <p:inputTextarea id="TEXT_input"
+                                                                 required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ADMIN'}"
+                                                                 placeholder="#{propertyValue.property.defaultValue}"
+                                                                 value="#{propertyValue.value}"
+                                                                 style="width: calc(100% - 16px)"/>
+                                            </h:panelGroup>
+                                        </ui:fragment>
+                                        <ui:fragment
+                                                rendered="#{propertyValue.property.type eq 'MONETARY_AMOUNT' or propertyValue.property.type eq 'BUDGET'}">
+                                            <p:messages for="MONETARY_AMOUNT_input" showIcon="false" closable="true"/>
+                                            <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                                <p:inputNumber id="MONETARY_AMOUNT_input"
+                                                               required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ADMIN'}"
+                                                               value="#{propertyValue.valueAsDecimal}"
+                                                               minValue="0" styleClass="need-validation"
+                                                               onfocus="this.setSelectionRange(0, this.value.length)"
+                                                               symbol=" DA" symbolPosition="suffix"
+                                                               decimalPlaces="2" decimalSeparator=","
+                                                               thousandSeparator="&#160;"/>
+                                            </h:panelGroup>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{propertyValue.property.type eq 'INTEGER'}">
+                                            <p:messages for="INTEGER_input" showIcon="false" closable="true"/>
+                                            <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                                <p:inputNumber id="INTEGER_input"
+                                                               required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ADMIN'}"
+                                                               value="#{propertyValue.value}"
+                                                               styleClass="need-validation"
+                                                               onfocus="this.setSelectionRange(0, this.value.length)"
+                                                               decimalPlaces="0"
+                                                               thousandSeparator="&#160;"
+                                                />
+                                            </h:panelGroup>
+                                        </ui:fragment>
+                                        <ui:fragment rendered="#{propertyValue.property.type eq 'DATE'}">
+                                            <p:messages for="DATE_input" showIcon="false" closable="true"/>
+                                            <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                                <p:calendar id="DATE_input"
+                                                            required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ADMIN'}"
+                                                            value="#{propertyValue.valueAsDate}"
+                                                            styleClass="need-validation"/>
+                                            </h:panelGroup>
+                                        </ui:fragment>
+                                    </h:panelGroup>
+                                </ui:repeat>
+                            </h:panelGroup>
+                        </p:fieldset>
+                        <p:fieldset id="additional_info" legend="Statistiques d'association">
+                            <div class="ui-g ui-fluid">
+                                <h:panelGroup layout="block" styleClass="ui-g-12"
+                                              rendered="#{not empty profile.currentAssociation.lastLogin}">
+                                    #{messages.lastLogin} #{localeManager.formatAsLocalDateTime(profile.currentAssociation.lastLogin)}
+                                    (<pe:timeAgo value="#{profile.currentAssociation.lastLoginDate}"/>)
+                                </h:panelGroup>
+
+                                <h:panelGroup layout="block" styleClass="ui-g-12"
+                                              rendered="#{not empty profile.currentAssociation.lastUpdate}">
+                                    #{messages.lastUpdate}: #{localeManager.formatAsLocalDateTime(profile.currentAssociation.lastUpdate)} (<pe:timeAgo
+                                        value="#{profile.currentAssociation.lastUpdateDate}"/>)
+                                    <h:outputText rendered="#{not empty profile.currentAssociation.lastUpdater}"
+                                                  value=" - #{messages.by} #{profile.currentAssociation.lastUpdater}"/>
+                                </h:panelGroup>
+                            </div>
+                        </p:fieldset>
+                    </h:panelGroup>
+                </h:panelGroup>
+
+            </h:panelGroup>
+        </h:form>
+
+        <h:outputScript>
+            // <![CDATA[
+            $("#spreadsheet_form").keypress(function (event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                }
+            })
+            // ]]>
+        </h:outputScript>
+    </ui:define>
+</ui:composition>

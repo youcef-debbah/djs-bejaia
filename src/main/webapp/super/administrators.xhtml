@@ -1,0 +1,231 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.adminsAccounts}"/>
+
+    <ui:define name="overlay">
+        <h:form id="newAccForm">
+            <p:dialog id="dialog" widgetVar="main_dialog"
+                      positionType="fixed" modal="false" width="350"
+                      header="#{messages.newAdminAcc}">
+
+                <h:panelGroup id="dialogContent" styleClass="ui-g ui-fluid" layout="block">
+                    <p:focus context="dialogContent"/>
+                    <!-- username -->
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="dialog_username" value="#{messages.username}"/>
+                        <p:messages for="dialog_username" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-user"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="dialog_username" value="#{newAccDialog.newUsername}"
+                                         required="true" styleClass="full-width-with-padding"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- password -->
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="dialog_password"
+                                       value="#{messages.password}" title="#{messages.passwordHelp}"/>
+                        <p:messages for="dialog_password" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-lock"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                            <p:password id="dialog_password" redisplay="false"
+                                        value="#{newAccDialog.newPassword}" required="true"
+                                        title="#{messages.passwordHelp}" styleClass="full-width-with-padding"
+                                        feedback="false" inline="false" promptLabel="#{messages.enterPassword}"
+                                        weakLabel="#{messages.weak}" goodLabel="#{messages.good}"
+                                        strongLabel="#{messages.strong}"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- type -->
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="acc-type" value="#{messages.accountType}"/>
+                        <p:messages for="acc-type" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-group"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                            <p:selectOneMenu id="acc-type" required="true" value="#{newAccDialog.accountType}">
+                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                <!--suppress ELValidationInJSP -->
+                                <f:selectItems value="#{adminProfile.allAdminRoles}"
+                                               var="type"
+                                               itemLabel="#{messages[type]}"
+                                               itemValue="#{type}"/>
+                            </p:selectOneMenu>
+                        </span>
+                        </div>
+                    </div>
+                </h:panelGroup>
+                <f:facet name="footer">
+                    <p:commandButton id="saveAccountButton" widgetVar="widget_newAccButton"
+                                     value="#{messages.singUp}"
+                                     icon="fa fa-user-plus" process="dialog"
+                                     update="dialogContent spreadsheet_form:accountsPanel"
+                                     onstart="PF('widget_newAccButton').disable()"
+                                     onerror="jsoftware95.updateFailed()"
+                                     oncomplete="PF('widget_newAccButton').enable()"
+                                     actionListener="#{newAccDialog.newUser}"/>
+                    <p:commandButton value="#{messages.cancel}" type="button"
+                                     onerror="jsoftware95.updateFailed()"
+                                     onclick="PF('main_dialog').hide()" icon="fa fa-remove"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="spreadsheet_form">
+
+            <h:panelGroup id="accountsPanel" styleClass="card big" layout="block">
+                <h1>#{messages.adminsAccounts}</h1>
+
+
+                <!--suppress ELValidationInJSP -->
+                <p:dataTable id="acc_container" widgetVar="main_sheet_widget" var="account"
+                             value="#{adminsView.admins}"
+                             draggableColumns="true" resizableColumns="true" emptyMessage="#{messages.noData}"
+                             selectionMode="single" selection="#{adminProfile.currentAdmin}"
+                             rowKey="#{account.id}" styleClass="compact-data"
+                             scrollable="true" scrollHeight="400">
+
+                    <p:ajax update="spreadsheet_form:sheet_input spreadsheet_form:accounts_dashboard"
+                            event="rowSelect"/>
+
+                    <p:column headerText="#{messages.username}">
+                        <h:outputText value="#{account.name}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.accountType}">
+                        <h:outputText value="#{messages[account.role]}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.creationDate}">
+                        <h:outputText value="#{account.creationDate}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <p:toolbar styleClass="scrollable-toolbar">
+                    <f:facet name="left">
+                        <h:panelGroup id="accounts_dashboard">
+                            <p:commandButton id="saveButton"
+                                             value="#{messages.save}"
+                                             disabled="#{empty adminProfile.currentAdmin}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             icon="ui-icon-save" process="accountsPanel" update="accountsPanel"
+                                             actionListener="#{adminProfile.saveChanges}"/>
+
+                            <p:commandButton id="newUserButton" type="button"
+                                             value="#{messages.newAdminAcc}" icon="fa fa-plus"
+                                             onclick="PF('main_dialog').show()"/>
+
+                            <p:commandButton id="delete_button" value="#{messages.delete}" icon="ui-icon-delete"
+                                             onerror="jsoftware95.updateFailed()"
+                                             disabled="#{empty adminProfile.currentAdmin}"
+                                             process="@this" update="accountsPanel"
+                                             action="#{adminsView.deleteCurrentAccount}">
+                                <p:confirm message="#{messages.confirmeUserDelete}"/>
+                            </p:commandButton>
+                        </h:panelGroup>
+                    </f:facet>
+                    <f:facet name="right">
+                        <div class="dark-input">
+                            <div class="spaced ui-inputgroup">
+                                <div class="ui-inputgroup-addon">
+                                    <i class="topbar-icon ui-icon fa fa-filter"/>
+                                </div>
+                                <p:inputText pt:form="search_form"
+                                             onkeyup="jsoftware95.filterTableRowsBy(this.value,PF('main_sheet_widget').tbody)"
+                                             placeholder="#{messages.filter}"/>
+                            </div>
+
+                        </div>
+                    </f:facet>
+                </p:toolbar>
+
+                <h:panelGroup id="sheet_input" layout="block">
+                    <p:messages for="password" showIcon="false" closable="true"/>
+                    <p:messages for="username" showIcon="false" closable="true"/>
+
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-4">
+                            <!-- username -->
+                            <div>
+                                <p:outputLabel id="usernameLabel" for="username" value="#{messages.username}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-user"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="username" value="#{adminProfile.username}"
+                                                 disabled="#{empty adminProfile.currentAdmin}"
+                                                 styleClass="full-Width-cell" readonly="true">
+                                    </p:inputText>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4">
+                            <!-- password -->
+                            <div>
+                                <p:outputLabel id="passwordLabel" for="password"
+                                               value="#{messages.password}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-lock"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="password" value="#{adminProfile.password}"
+                                                 disabled="#{empty adminProfile.currentAdmin}"
+                                                 styleClass="full-Width-cell">
+                                    </p:inputText>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-4">
+                            <!-- role -->
+                            <div>
+                                <p:outputLabel id="roleLabel" for="role"
+                                               value="#{messages.accountType}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-group"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:selectOneMenu id="role" value="#{adminProfile.type}"
+                                                     styleClass="full-Width-cell"
+                                                     disabled="#{empty adminProfile.currentAdmin}">
+                                        <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+
+                                        <!--suppress ELValidationInJSP -->
+                                        <f:selectItems value="#{adminProfile.allAdminRoles}"
+                                                       var="type"
+                                                       itemValue="#{type}"
+                                                       itemLabel="#{messages[type]}"/>
+                                    </p:selectOneMenu>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

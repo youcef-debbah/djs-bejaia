@@ -1,0 +1,19 @@
+{
+    "name": "DJS - Bejaia",
+    "short_name": "DJS - Bejaia",
+    "icons": [
+        {
+            "src": "/javax.faces.resource/android-chrome-192x192.png.xhtml?ln=favicon&amp;v=1_0",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/javax.faces.resource/android-chrome-512x512.png.xhtml?ln=favicon&amp;v=1_0",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#d9edf7",
+    "background_color": "#d9edf7",
+    "display": "standalone"
+}

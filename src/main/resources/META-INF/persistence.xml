@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Handcrafted with love by Youcef DEBBAH
+  ~ Copyright 2019 youcef-debbah@hotmail.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="djs">
+
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:jboss/datasources/MySQLDS</jta-data-source>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+
+            <property name="hibernate.globally_quoted_identifiers" value="true"/>
+            <property name="hibernate.globally_quoted_identifiers_skip_column_definitions" value="true"/>
+
+            <property name="hibernate.jdbc.batch_size" value="30"/>
+
+            <property name="c3p0.min_size" value="1"/>
+            <property name="c3p0.max_size" value="8"/>
+            <property name="c3p0.timeout" value="300"/>
+            <property name="c3p0.max_statements" value="50"/>
+            <property name="c3p0.idle_test_period" value="1200"/>
+
+            <!-- Show and print nice SQL on stdout -->
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+
+            <!-- statistics -->
+            <property name="hibernate.generate_statistics" value="false"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>

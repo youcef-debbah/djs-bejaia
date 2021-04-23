@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:pe="http://primefaces.org/ui/extensions" xmlns:h="http://java.sun.com/jsf/html"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="Info"/>
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h2>Last loging of admins</h2>
+                    <ul>
+                        <ui:repeat value="#{infoView.admins}" var="account">
+                            <li>
+                                <ui:fragment rendered="#{not empty account.lastLogin}">
+                                    <h:outputText value="#{account.name}: "/>
+                                    <pe:timeAgo value="#{account.lastLoginDate}"/>
+                                </ui:fragment>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

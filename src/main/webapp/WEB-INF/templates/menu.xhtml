@@ -1,0 +1,153 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pe="http://primefaces.org/ui/extensions"
+        xmlns:pu="http://primefaces.org/ultima"
+        xmlns:f="http://java.sun.com/jsf/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://primefaces.org/ultima ">
+
+    <h:form id="menuform">
+        <div class="layout-menu">
+            <div class="nano">
+                <div class="nano-content menu-scroll-content">
+                    <ui:fragment rendered="#{currentPrincipal.loggedIn}">
+                        <div class="profile">
+                            <div>
+                                <p:link outcome="avatar">
+                                    <pe:letterAvatar rendered="#{empty currentPrincipal.avatar}"
+                                                     width="60" height="60"
+                                                     value="#{currentPrincipal.name}" rounded="true"/>
+                                    <ui:fragment rendered="#{not empty currentPrincipal.avatar}">
+                                        <div class="round-60">
+                                            <img src="#{currentPrincipal.avatar.url}"
+                                                 alt="#{currentPrincipal.avatar.name}"
+                                                 onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar.png']}#{'\''})"/>
+                                        </div>
+                                    </ui:fragment>
+                                </p:link>
+                            </div>
+                            <a id="profile-options" href="#">
+                                <span class="profile-name">#{currentPrincipal.name}</span>
+                                <i class="material-icons">&#xE313;</i>
+                            </a>
+                        </div>
+
+                        <ul id="profile-menu" class="ultima-menu">
+                            <ui:fragment
+                                    rendered="#{currentPrincipal.admin and not facesContext.viewRoot.viewId.endsWith('/inbox.xhtml')}">
+                                <li role="menuitem">
+                                    <p:link id="inboxMenuItem" outcome="inbox">
+                                        <i class="topbar-icon material-icons ui-icon-forum"/>
+                                        <span class="topbar-item-name">#{messages.inbox}</span>
+                                    </p:link>
+                                </li>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{currentPrincipal.association}">
+                                <li role="menuitem">
+                                    <p:link outcome="profile">
+                                        <i class="topbar-icon material-icons ui-icon-person-outline"/>
+                                        <span class="topbar-item-name">#{messages.profile}</span>
+                                    </p:link>
+                                </li>
+
+                                <li role="menuitem">
+                                    <p:link outcome="dossier">
+                                        <i class="topbar-icon material-icons ui-icon-folder"/>
+                                        <span class="topbar-item-name">#{messages.dossier}</span>
+                                    </p:link>
+                                </li>
+
+                                <li role="menuitem">
+                                    <p:link outcome="achievements">
+                                        <i class="topbar-icon material-icons ui-icon-assignment-turned-in"/>
+                                        <span class="topbar-item-name">#{messages.achievements}</span>
+                                    </p:link>
+                                </li>
+                            </ui:fragment>
+
+                            <ui:fragment
+                                    rendered="#{currentPrincipal.association and not facesContext.viewRoot.viewId.endsWith('/chatUser.xhtml')}">
+                                <li role="menuitem">
+                                    <p:link id="chatUserMenuItem" outcome="chatUser">
+                                        <i class="topbar-icon material-icons ui-icon-forum"/>
+                                        <span class="topbar-item-name">#{messages.messaging}</span>
+                                    </p:link>
+                                </li>
+                            </ui:fragment>
+
+                            <li role="menuitem">
+                                <p:commandLink styleClass="ripplelink" action="#{meta.logout}"
+                                               process="@this" onerror="jsoftware95.updateFailed()">
+                                    <i class="material-icons">&#xE8AC;</i>
+                                    <span class="topbar-item-name">#{messages.singOut}</span>
+                                </p:commandLink>
+                            </li>
+                        </ul>
+                    </ui:fragment>
+
+                    <pu:menu widgetVar="me" stateful="false">
+
+                        <p:menuitem value="#{messages.home}" icon="fa fa-home" outcome="homePage"
+                                    styleClass="ripplelink"/>
+
+                        <p:menuitem id="um_singIn" value="#{messages.singIn}" icon="&#xE8AC;" outcome="login"
+                                    rendered="#{currentPrincipal.loggedOut}" styleClass="ripplelink"/>
+
+                        <p:menuitem value="#{messages.newsArticles}" outcome="newsArticles" icon="fa fa-newspaper-o"
+                                    styleClass="ripplelink" rendered="#{not currentPrincipal.admin}"
+                        />
+
+                        <!--                        <p:menuitem value="#{messages.privacy}" icon="&#xE32A;" outcome="privacy" styleClass="ripplelink"/>-->
+
+                        <p:menuitem value="#{messages.aboutUs}" outcome="aboutUs" styleClass="ripplelink"
+                                    icon="fa fa-info-circle"/>
+
+                        <p:submenu rendered="#{currentPrincipal.admin}" styleClass="ripplelink"
+                                   label="#{messages.management}" icon="fa fa-gears">
+                            <p:menuitem value="#{messages.dashboard}" outcome="dashboard"
+                                        rendered="#{currentPrincipal.admin}"
+                                        icon="fa fa-bar-chart-o"/>
+
+                            <p:menuitem value="#{messages.clientsAccounts}" outcome="associations"
+                                        rendered="#{currentPrincipal.admin}"
+                                        icon="fa fa-list"/>
+
+                            <p:menuitem value="#{messages.accountDemands}" outcome="accountDemandsList"
+                                        rendered="#{currentPrincipal.admin}"
+                                        icon="fa fa-list-alt"/>
+
+                            <p:menuitem value="#{messages.adminsAccounts}" outcome="administrators"
+                                        rendered="#{currentPrincipal.superAdmin}"
+                                        icon="fa fa-group"/>
+
+                            <p:menuitem value="#{messages.contractTemplates}" outcome="contractTemplates"
+                                        rendered="#{currentPrincipal.superAdmin}"
+                                        icon="fa fa-files-o"/>
+
+                            <p:menuitem value="#{messages.seasons}" outcome="seasons"
+                                        rendered="#{currentPrincipal.superAdmin}"
+                                        icon="fa fa-calendar"/>
+                        </p:submenu>
+
+                        <p:submenu styleClass="ripplelink" rendered="#{currentPrincipal.admin}"
+                                   label="#{messages.blog}" icon="fa fa-file-text">
+                            <p:menuitem value="#{messages.newsArticles}" outcome="newsArticles"
+                                        icon="fa fa-newspaper-o"/>
+
+                            <p:menuitem value="#{messages.upload}" outcome="uploadedImages"
+                                        icon="fa fa-cloud-upload"/>
+
+                            <p:menuitem value="#{messages.newArticle}" outcome="articleEditor"
+                                        icon="fa fa-plus">
+                                <f:param name="id" value="null"/>
+                            </p:menuitem>
+                        </p:submenu>
+                    </pu:menu>
+                </div>
+            </div>
+        </div>
+    </h:form>
+</ui:composition>

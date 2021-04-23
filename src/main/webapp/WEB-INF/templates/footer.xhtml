@@ -1,0 +1,30 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+>
+    <div class="footer">
+        <div class="card dark clearfix">
+            <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank ui-fluid">
+                <p:menu styleClass="ui-noborder">
+                    <p:menuitem
+                            value="#{initParam['dz.ngnex.djs.email']}" icon="fa fa-envelope-square"
+                            url="mailto:#{initParam['dz.ngnex.djs.email']}"/>
+                    <p:menuitem value="#{messages.address}" icon="fa fa-map-marker"
+                                url="#{initParam['dz.ngnex.djs.addressOnGoogleMaps']}?hl=#{localeManager.language}"/>
+                </p:menu>
+                <p:menu styleClass="ui-noborder">
+                    <p:menuitem value="Facebook" icon="fa fa-facebook-square"
+                                url="#{initParam['dz.ngnex.djs.facebookPage']}"/>
+                    <p:menuitem
+                            value="#{initParam['dz.ngnex.djs.phoneNumber']}" icon="fa fa-phone-square"
+                            url="#{initParam['dz.ngnex.djs.phoneNumberURL']}"/>
+                </p:menu>
+            </p:panelGrid>
+            <div class="simple-frame small-hint clearfix">
+                <span>#{messages.copyright}</span>
+            </div>
+        </div>
+    </div>
+</ui:composition>

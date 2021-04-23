@@ -1,0 +1,44 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.uploadAvatar}"/>
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card big">
+                    <h1>#{messages.uploadNewImage}</h1>
+                    <h:form enctype="multipart/form-data">
+                        <p:fileUpload
+                                fileUploadListener="#{avatarView.handleAvatarUpload}" update=":mainWrapper"
+                                auto="true" multiple="false" sequential="true"
+                                sizeLimit="#{avatarView.maxFileSize}"
+                                invalidSizeMessage="#{messages.fileTooBig}"
+                                label="#{messages.choose}" uploadLabel="#{messages.upload}"
+                                cancelLabel="#{messages.cancel}"
+                        />
+                    </h:form>
+                    <h1>#{messages.currentAvatar}</h1>
+                    <pe:letterAvatar rendered="#{empty currentPrincipal.avatar}"
+                                     width="200" height="200"
+                                     value="#{currentPrincipal.name}" rounded="true"/>
+                    <h:panelGroup rendered="#{not empty currentPrincipal.avatar}"
+                                  layout="block" styleClass="has-padded-buttons">
+                        <p:commandButton icon="ui-icon-closethick" process="@this" update=":mainWrapper"
+                                         styleClass="fcb pink-btn"
+                                         onerror="jsoftware95.updateFailed()"
+                                         actionListener="#{avatarView.deleteAvatar}">
+                            <p:confirm message="#{messages.confirmDelete}"/>
+                        </p:commandButton>
+                        <div class="round-200">
+                            <img src="#{currentPrincipal.avatar.url}" alt="#{currentPrincipal.avatar.name}"
+                                 onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar.png']}#{'\''})"/>
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,110 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{articleView.article.title}"/>
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="big card">
+                    <h1 class="text-Center">#{articleView.article.title}</h1>
+                    <h:outputText value="#{articleView.article.content}" escape="false"/>
+                    <p:button outcome="articleEditor" icon="ui-icon-edit" target="_blank"
+                              rendered="#{currentPrincipal.admin}"
+                              styleClass="fab">
+                        <f:param name="id" value="#{articleView.article.id}"/>
+                    </p:button>
+                </div>
+                <h:form rendered="#{not empty articleView.article.id}">
+                    <div class="card">
+                        <h1>#{messages.comments}</h1>
+                        <div class="ui-g">
+                            <h:panelGroup rendered="#{empty articleView.comments}"
+                                          layout="block" styleClass="ui-g-12">
+                                #{messages.noComments}
+                            </h:panelGroup>
+                            <div class="ui-g-12">
+                                <p:messages for="newComment" showIcon="false" closable="true"/>
+                            </div>
+                            <div class="ui-g-12 ui-fluid">
+                                <p:inputTextarea id="newComment" value="#{articleView.newComment}" required="true"
+                                                 placeholder="#{messages.writeComment}"/>
+                            </div>
+                            <div class="ui-g-12 simple-frame">
+                                <h:panelGroup id="sendComment">
+                                    <p:commandButton icon="ui-icon-send"
+                                                     value="#{messages.sendComment}"
+                                                     disabled="#{currentPrincipal.guest}"
+                                                     actionListener="#{articleView.addComment}"
+                                                     process="@form" update="@form" onerror="jsoftware95.updateFailed()"
+                                    />
+                                </h:panelGroup>
+                                <p:tooltip rendered="#{currentPrincipal.guest}" for="sendComment"
+                                           value="#{messages.youHaveToLogin}" position="bottom"/>
+                            </div>
+                            <p:repeat value="#{articleView.comments}" var="comment">
+                                <div class="ui-g-12" style="display: flex;position: relative;">
+                                    <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
+                                                     styleClass="fcb pink-btn"
+                                                     onerror="jsoftware95.updateFailed()"
+                                                     actionListener="#{articleView.removeComment(comment.id)}"
+                                                     rendered="#{currentPrincipal.admin}">
+                                        <p:confirm message="#{messages.confirmDeleteComment}"/>
+                                    </p:commandButton>
+                                    <div class="extra-right-margin">
+                                        <pe:letterAvatar rendered="#{empty comment.thumbnails}"
+                                                         width="60" height="60"
+                                                         value="#{comment.author}" rounded="true"/>
+                                        <ui:fragment rendered="#{not empty comment.thumbnails}">
+                                            <div class="round-60">
+                                                <img src="#{comment.thumbnails.url}"
+                                                     alt="#{comment.thumbnails.name}"
+                                                     onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar.png']}#{'\''})"/>
+                                            </div>
+                                        </ui:fragment>
+                                    </div>
+                                    <div>
+                                        <p><span class="bold extra-right-margin">#{comment.author}</span>
+                                            <pe:timeAgo styleClass="hint" value="#{meta.asDate(comment.posted)}"/></p>
+                                        <p><h:outputText escape="false"
+                                                         value="#{localeManager.formatTextAsHtml(comment.content)}"/>
+                                        </p>
+                                        <p>
+                                            <h:panelGroup id="likesCount">
+                                                <h:outputText style="color: #909090;margin-right: 1em"
+                                                              rendered="#{comment.likes != 0}"
+                                                              value="#{comment.likes}"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup id="likeButton">
+                                                <p:commandButton actionListener="#{articleView.likeComment(comment.id)}"
+                                                                 styleClass="empty-btn h-spaced"
+                                                                 disabled="#{currentPrincipal.guest}"
+                                                                 icon="ui-icon-thumb-up" process="@this"
+                                                                 update="likesCount"/>
+                                            </h:panelGroup>
+                                            <h:panelGroup id="dislikeButton">
+                                                <p:commandButton
+                                                        actionListener="#{articleView.dislikeComment(comment.id)}"
+                                                        styleClass="empty-btn h-spaced"
+                                                        disabled="#{currentPrincipal.guest}"
+                                                        icon="ui-icon-thumb-down" process="@this"
+                                                        update="likesCount"/>
+                                            </h:panelGroup>
+                                            <p:tooltip rendered="#{currentPrincipal.guest}" for="likeButton"
+                                                       value="#{messages.youHaveToLogin}" position="bottom"/>
+                                            <p:tooltip rendered="#{currentPrincipal.guest}" for="dislikeButton"
+                                                       value="#{messages.youHaveToLogin}" position="bottom"/>
+                                        </p>
+                                    </div>
+                                </div>
+                            </p:repeat>
+                        </div>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

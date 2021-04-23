@@ -1,0 +1,186 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.messaging}"/>
+    <ui:define name="content">
+        <div class="ui-g dashboard">
+            <div class="ui-g-12 ui-md-2"></div>
+            <div class="ui-g-12 ui-md-8">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <h:form id="output">
+                            <h:commandScript name="refreshChatOutput" onevent="ion.sound.play('button_tiny')"
+                                             render="output" actionListener="#{messagingView.fetchMessages}"/>
+                            <f:websocket channel="adminMessageNotifications" onmessage="refreshChatOutput"
+                                         user="#{currentPrincipal.name}"/>
+                            <f:websocket channel="globalMessageNotifications" onmessage="refreshChatOutput"/>
+                            <p:panel styleClass="card chat ui-shadow-content" header="#{messages.chatWithUs}">
+                                <h:panelGroup id="chatbox"
+                                              style="max-height:350px;min-height: 150px;overflow-y: scroll;overflow-x: auto"
+                                              layout="block">
+                                    <h:panelGroup layout="block" rendered="#{empty messagingView.conversation}"
+                                                  styleClass="align-center padded">
+                                        <h:outputText styleClass="hint spaced" value="#{messages.noChatToShow}"/>
+                                    </h:panelGroup>
+                                    <ui:fragment rendered="#{not empty messagingView.conversation}">
+                                        <ul>
+                                            <ui:repeat value="#{messagingView.conversation}" var="message"
+                                                       varStatus="status">
+                                                <ui:fragment rendered="#{status.first}">
+                                                    <li class="clearfix">
+                                                        <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                    </li>
+                                                </ui:fragment>
+                                                <ui:fragment rendered="#{message.source eq 'user'}">
+                                                    <ui:fragment rendered="#{not empty message.attachment}">
+                                                        <p:button icon="ui-icon-attachment" style="float: left"
+                                                                  href="#{meta.attachmentUrl(message.attachment)}"/>
+                                                    </ui:fragment>
+                                                    <li class="clearfix message-own">
+                                                        <span class="#{message.styleClasses}" tabindex="0">
+                                                            <h:outputText
+                                                                    value="#{message.value}" escape="false"/><br/>
+                                                            <span class="small-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                            <pe:timeAgo styleClass="small-timestamp"
+                                                                        value="#{meta.asDate(message.stamp)}"/>
+                                                        </span>
+                                                    </li>
+                                                    <ui:fragment
+                                                            rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
+                                                        <li class="clearfix">
+                                                            <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                        </li>
+                                                    </ui:fragment>
+                                                </ui:fragment>
+
+                                                <ui:fragment rendered="#{message.source eq 'admin'}">
+                                                    <ui:fragment rendered="#{not empty message.attachment}">
+                                                        <p:button icon="ui-icon-attachment" style="float: right"
+                                                                  href="#{meta.attachmentUrl(message.attachment)}"/>
+                                                    </ui:fragment>
+                                                    <li class="clearfix message-from">
+                                                    <span class="#{message.styleClasses}" tabindex="0">
+                                                        <h:outputText
+                                                                value="#{message.value}" escape="false"/><br/>
+                                                            <span class="small-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                            <pe:timeAgo styleClass="small-timestamp"
+                                                                        value="#{meta.asDate(message.stamp)}"/>
+                                                    </span>
+                                                    </li>
+                                                    <ui:fragment
+                                                            rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
+                                                        <li class="clearfix">
+                                                            <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                        </li>
+                                                    </ui:fragment>
+                                                </ui:fragment>
+
+                                                <ui:fragment rendered="#{message.source eq 'global'}">
+                                                    <ui:fragment rendered="#{not status.first}">
+                                                        <li class="clearfix">
+                                                            <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                        </li>
+                                                    </ui:fragment>
+                                                    <ui:fragment rendered="#{not empty message.attachment}">
+                                                        <p:button icon="ui-icon-attachment" style="float: right"
+                                                                  href="#{meta.safeUrl(message.attachment)}"/>
+                                                    </ui:fragment>
+                                                    <li class="clearfix message-from">
+                                                    <span class="global" tabindex="0">
+                                                        <h:outputText value="#{message.value}" escape="false"/><br/>
+                                                            <span class="small-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                            <pe:timeAgo styleClass="small-timestamp"
+                                                                        value="#{meta.asDate(message.stamp)}"/>
+                                                    </span>
+                                                    </li>
+                                                    <ui:fragment
+                                                            rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
+                                                        <li class="clearfix">
+                                                            <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                        </li>
+                                                    </ui:fragment>
+                                                </ui:fragment>
+                                            </ui:repeat>
+                                        </ul>
+                                        <script>jsoftware95.scrollToBottom("output:chatbox")</script>
+                                    </ui:fragment>
+                                </h:panelGroup>
+                            </p:panel>
+                        </h:form>
+                    </div>
+                    <div class="ui-g-12">
+                        <div class="card">
+                            <h:form id="main_form">
+                                <p:focus for="content"/>
+                                <div class="ui-g">
+                                    <div class="ui-g-12 ui-fluid">
+                                        <p:messages for="title" showIcon="false" closable="true"/>
+                                        <p:inputText id="title" placeholder="#{messages.title}"
+                                                     value="#{messagingView.title}"/>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-fluid">
+                                        <p:messages for="content" showIcon="false" closable="true"/>
+                                        <p:inputTextarea id="content" value="#{messagingView.content}"
+                                                         requiredMessage="#{messages.messageCannotBeEmpty}"
+                                                         placeholder="#{messages.writeMessage}"/>
+                                    </div>
+                                </div>
+                                <div class="center-inputs" style="width: calc(100% - 32px)">
+                                    <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
+                                                     actionListener="#{messagingView.sendMessage()}"
+                                                     onerror="jsoftware95.updateFailed()" process="main_form"
+                                                     oncomplete="jsoftware95.scrollToBottom('output:chatbox')"
+                                                     update="main_form output file_form"/>
+                                    #{messages.to}
+                                    <p:selectOneMenu value="#{messagingView.service}"
+                                                     required="true" requiredMessage="sdfsd"
+                                                     styleClass="spaced">
+                                        <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                        <!--suppress ELValidationInJSP -->
+                                        <f:selectItems id="destination"
+                                                       value="#{messagingView.possibleDestinations}"
+                                                       var="item"
+                                                       itemLabel="#{messages[item]}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <p:messages for="destination" showIcon="false" closable="true"/>
+                            </h:form>
+                            <div class="center-inputs">
+                                <h:form id="file_form" enctype="multipart/form-data">
+                                    <h:panelGroup rendered="#{not empty messagingView.attachment}" layout="block">
+                                        <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
+                                        <h:outputText value="#{messagingView.attachment.name}"/>
+                                        <p:button icon="ui-icon-file-download" styleClass="spaced"
+                                                  href="#{meta.attachmentUrl(messagingView.attachment.id)}"/>
+                                        <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
+                                                         styleClass="pink-btn v-spaced"
+                                                         onerror="jsoftware95.updateFailed()"
+                                                         actionListener="#{messagingView.deleteAttachment}">
+                                            <p:confirm message="#{messages.confirmDelete}"/>
+                                        </p:commandButton>
+                                    </h:panelGroup>
+                                    <p:fileUpload
+                                            skinSimple="true" style="width: calc(100% - 16px)"
+                                            fileUploadListener="#{messagingView.handleAttachment}"
+                                            process="@form" update="@form"
+                                            auto="true" multiple="false" sequential="true"
+                                            sizeLimit="#{uploadedImagesView.maxFileSize}"
+                                            invalidSizeMessage="#{messages.fileTooBig}"
+                                            label="#{messages.attachFile}" uploadLabel="#{messages.upload}"
+                                            cancelLabel="#{messages.cancel}"
+                                    />
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-2"></div>
+        </div>
+    </ui:define>
+</ui:composition>

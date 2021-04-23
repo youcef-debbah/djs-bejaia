@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.uploadedFiles}"/>
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>#{messages.uploadNewFiles}</h1>
+                    <h:form enctype="multipart/form-data">
+                        <p:fileUpload
+                                fileUploadListener="#{dossierView.handleFileUpload}" update=":files_list"
+                                auto="true" multiple="true" sequential="true"
+                                sizeLimit="#{dossierView.maxFileSize}"
+                                invalidSizeMessage="#{messages.fileTooBig}"
+                                label="#{messages.choose}" uploadLabel="#{messages.upload}"
+                                cancelLabel="#{messages.cancel}"
+                        />
+                    </h:form>
+                    <h1>#{messages.uploadedFiles}</h1>
+                    <p:dataList id="files_list" value="#{dossierView.files}" var="file"
+                                itemType="none" paginator="true" rows="5" styleClass="simple-datalist"
+                                emptyMessage="#{messages.noData}">
+                        <f:facet name="header">
+                            <h:outputFormat value="#{messages.filesSummary}">
+                                <f:param value="#{dossierView.totalFilesCount}"/>
+                            </h:outputFormat> (#{dossierView.formattedTotalFilesSize})
+                        </f:facet>
+                        <div style="border-bottom: 1px solid #bdbdbd" class="clearfix data-item ui-g">
+                            <div class="ui-g-12 ui-md-5 align-center">
+                                <h:outputLink value="#{file.url}" title="#{file.name}" target="_blank">
+                                    <img src="#{file.url}" alt="#{file.name}"
+                                         onerror="jsoftware95.altImage(this,#{'\''}#{resource['djs:images/doc_preview.png']}#{'\''})"
+                                         height="150" width="auto"/>
+                                </h:outputLink>
+                            </div>
+                            <div class="data-details align-center ui-g-12 ui-md-7">
+                                <p>#{file.nameWithoutExtension}</p>
+                                <p>#{file.formattedSize}</p>
+                                <p class="hint">#{localeManager.formatAsLocalDateTime(file.uploadTime)} - <pe:timeAgo
+                                        value="#{file.uploadTimeAsDate}"/></p>
+                                <h:form>
+                                    <p:button id="viewButton" title="#{messages.viewInSeparateWindow}"
+                                              icon="ui-icon-search" href="#{file.url}" target="_blank"/>
+                                    <p:tooltip for="viewButton" position="bottom"/>
+                                    <p:button id="downloadButton" title="#{messages.download}"
+                                              icon="ui-icon-file-download" href="#{file.urlAsAttachment}"/>
+                                    <p:tooltip for="downloadButton" position="bottom"/>
+                                    <p:commandButton id="deleteButton" title="#{messages.delete}"
+                                                     icon="ui-icon-delete" update=":files_list"
+                                                     onerror="jsoftware95.updateFailed()"
+                                                     actionListener="#{dossierView.delete(file.id)}">
+                                        <p:confirm/>
+                                    </p:commandButton>
+                                    <p:tooltip for="deleteButton" position="bottom"/>
+                                </h:form>
+                            </div>
+                        </div>
+                    </p:dataList>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,819 @@
+body {
+  .ui-paginator {
+    background-color: $primaryDarkColor;
+    padding: $headerPadding;
+
+    > a {
+      margin-top: -1px;
+      box-sizing: border-box;
+      color: $paginatorIconColor;
+
+      span {
+        display: none;
+      }
+
+      &.ui-state-hover {
+        background-color: $primaryLightColor;
+        @include border-radius(50%);
+        @include transition(background-color .3s);
+      }
+    }
+
+    .ui-paginator-next {
+      padding: 0 6px;
+      vertical-align: middle;
+      @include material-icon("\e409");
+
+      &:before {
+        position: relative;
+        left: -6px;
+      }
+    }
+
+    .ui-paginator-last {
+      padding: 0 6px;
+      vertical-align: middle;
+      @include material-icon("\e5dd");
+
+      &:before {
+        position: relative;
+        left: -6px;
+      }
+    }
+
+    .ui-paginator-prev {
+      padding: 0 6px;
+      vertical-align: middle;
+      @include material-icon("\e408");
+
+      &:before {
+        position: relative;
+        left: -5px;
+      }
+    }
+
+    .ui-paginator-first {
+      padding: 0 6px;
+      vertical-align: middle;
+      @include material-icon("\e5dc");
+
+      &:before {
+        position: relative;
+        left: -5px;
+      }
+    }
+
+    .ui-paginator-pages {
+      vertical-align: middle;
+      margin: 0 6px 0 12px;
+
+      a {
+        color: $paginatorIconColor;
+        padding: 1px 8px;
+        @include border-radius(50%);
+        @include transition(background-color .3s);
+
+        &.ui-state-active {
+          color: $accentTextColor;
+        }
+
+        &.ui-state-hover {
+          background-color: $primaryLightColor;
+        }
+      }
+    }
+  }
+
+  .ui-picklist {
+    .ui-picklist-caption {
+      font-size: $inputHeaderFontSize;
+      padding: $inputHeaderPadding;
+    }
+
+    .ui-picklist-list {
+      padding: 0;
+    }
+
+    li.ui-picklist-item {
+      font-size: $inputOptionFontSize;
+      padding-top: $inputOptionTopPadding;
+      padding-bottom: $inputOptionBottomPadding;
+      padding-left: $inputOptionLeftPadding;
+      padding-right: $inputOptionRightPadding;
+      margin: 0;
+      @include border-radius(0px);
+
+      &.ui-state-hover {
+        @include hover-element();
+      }
+    }
+
+    .ui-picklist-buttons {
+      width: 48px;
+
+      .ui-button {
+        &.ui-button-icon-only {
+          width: 40px;
+          margin-right: 0;
+          display: inline-block;
+          margin-bottom: 8px;
+        }
+      }
+    }
+
+    .ui-picklist-buttons-cell {
+      text-align: center;
+    }
+
+    .ui-picklist-filter-container {
+      padding: $inputHeaderPadding;
+
+      .ui-picklist-filter {
+        width: 100%;
+      }
+
+      .ui-icon {
+        color: $textSecondaryColor;
+        top: 8px;
+      }
+    }
+
+    &.ui-picklist-responsive {
+      .ui-picklist-buttons {
+        .ui-button {
+          &.ui-button-icon-only {
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 8px;
+          }
+        }
+      }
+
+      .ui-picklist-list {
+        .ui-picklist-item {
+          .ui-chkbox {
+            margin-right: 8px;
+            vertical-align: top;
+          }
+
+          .ui-chkbox, .ui-chkbox * {
+            box-sizing: content-box;
+          }
+        }
+      }
+    }
+  }
+
+  .ui-orderlist {
+    .ui-orderlist-caption {
+      font-size: $inputHeaderFontSize;
+      padding: $inputHeaderPadding;
+      box-sizing: border-box;
+    }
+
+    .ui-orderlist-list {
+      padding: 0;
+      box-sizing: border-box;
+
+      li.ui-orderlist-item {
+        font-size: $inputOptionFontSize;
+        padding-top: $inputOptionTopPadding;
+        padding-bottom: $inputOptionBottomPadding;
+        padding-left: $inputOptionLeftPadding;
+        padding-right: $inputOptionRightPadding;
+        margin: 0;
+        @include border-radius(0px);
+
+        &.ui-state-hover {
+          @include hover-element();
+        }
+      }
+    }
+
+    .ui-orderlist-controls {
+      width: 60px;
+      text-align: center;
+
+      .ui-button {
+        &.ui-button-icon-only {
+          width: 40px;
+          margin-right: 0;
+          display: inline-block;
+        }
+      }
+    }
+  }
+
+  .ui-datagrid {
+    .ui-datagrid-header {
+      padding: $headerPadding;
+    }
+
+    .ui-panel {
+      .ui-panel-titlebar {
+        background-color: $datatableHeaderCellBgColor;
+        color: $datatableHeaderCellTextColor;
+        border-color: $dividerColor;
+      }
+    }
+  }
+
+  .ui-datalist {
+    .ui-datalist-header {
+      padding: $headerPadding;
+    }
+  }
+
+  .ui-dataview {
+    .ui-dataview-header {
+      padding: $headerPadding;
+
+      & + .ui-paginator-top {
+        @include border-radius(0px);
+      }
+
+      .ui-dataview-layout-options {
+        .ui-button-icon-only {
+          width: 2.5em;
+          @include border-radius(0px);
+        }
+      }
+    }
+  }
+
+  .ui-datatable {
+    .ui-datatable-header,
+    .ui-datatable-footer {
+      padding: $headerPadding;
+
+      .ui-inputfield {
+        color: $headerTextColor;
+
+        &:focus {
+          border-color: $headerTextColor;
+        }
+      }
+    }
+
+    .ui-paginator {
+      padding: $headerPadding;
+    }
+
+    thead {
+      th {
+        padding: 10px 14px;
+        border: 0 none;
+        border-top: 1px solid $dividerColor;
+        background-color: $datatableHeaderCellBgColor;
+
+        &:first-child {
+          border-left: 1px solid $dividerColor;
+        }
+
+        &:last-child {
+          border-right: 1px solid $dividerColor;
+        }
+
+        &.ui-state-hover {
+          @include hover-element();
+        }
+
+        .ui-sortable-column-icon {
+          vertical-align: middle;
+          margin: -4px 0 0 0;
+          color: $textSecondaryColor;
+
+          &.ui-icon-carat-2-n-s {
+            margin-left: 4px;
+          }
+        }
+
+        .ui-column-resizer {
+          @include material-icon("\e86f");
+          font-size: 16px;
+          color: $textSecondaryColor;
+        }
+
+        &.ui-state-active, &.ui-state-highlight {
+          background-color: $accentColor;
+          color: $accentTextColor;
+          border-top-color: $accentColor;
+
+          .ui-icon {
+            color: $accentTextColor;
+          }
+
+          .ui-inputfield {
+            color: $accentTextColor;
+
+            &.ui-state-focus {
+              border-color: $accentTextColor;
+            }
+          }
+        }
+      }
+
+      tr {
+        th {
+          border: 1px solid $dividerColor;
+        }
+      }
+    }
+
+    tfoot {
+      td {
+        padding: 10px 14px;
+        border: 1px solid $dividerColor;
+        background-color: $datatableHeaderCellBgColor;
+      }
+    }
+
+    tbody {
+      tr.ui-datatable-even {
+        background-color: $datatableEvenRowBgColor;
+
+        &.ui-state-hover {
+          @include hover-element();
+        }
+
+        &.ui-state-highlight {
+          background-color: $accentColor;
+          color: $accentTextColor;
+        }
+      }
+
+      tr {
+        td {
+          border: 1px solid $dividerLightColor;
+          padding: 10px 14px;
+
+          .ui-row-toggler {
+            display: inherit;
+          }
+
+          &.ui-state-highlight {
+            .ui-inputfield {
+              color: $headerTextColor;
+              border-color: $headerTextColor;
+
+              &:focus {
+                border-color: $headerTextColor;
+              }
+            }
+          }
+
+          &.ui-state-error {
+            background-color: $errorMessageBgColor;
+            border-color: $errorMessageBorderColor;
+            color: $errorMessageTextColor;
+          }
+        }
+
+        &.ui-rowgroup-header {
+          td {
+            a.ui-rowgroup-toggler {
+              padding-right: 2em;
+
+              .ui-rowgroup-toggler-icon {
+                top: -1px;
+              }
+            }
+          }
+        }
+
+        &.ui-widget-content {
+          border: 0 none;
+        }
+
+        &.ui-state-highlight  {
+          background-color: $accentColor;
+          color: $accentTextColor;
+        }
+
+        .ui-cell-editor-input {
+          input {
+            color: $accentTextColor;
+          }
+        }
+      }
+
+      tr.ui-state-hover {
+        @include hover-element();
+      }
+
+      tr.ui-state-error {
+        background-color: $errorMessageBgColor;
+        border-color: $errorMessageBorderColor;
+        color: $errorMessageTextColor;
+
+        .ui-inputfield,
+        .ui-inputfield.ui-state-error {
+          border-color: $errorMessageTextColor;
+        }
+      }
+
+      tr.ui-state-highlight {
+        td.ui-selection-column {
+          .ui-radiobutton-box {
+            border-color: $datatableHighlightTextColor;
+
+            .ui-radiobutton-icon {
+              background-color: $datatableHighlightTextColor;
+            }
+          }
+
+          .ui-chkbox-box {
+            border-color: $datatableHighlightTextColor;
+            background-color: $datatableHighlightTextColor;
+
+            .ui-chkbox-icon {
+              color: $textSecondaryColor;
+            }
+          }
+        }
+
+        .ui-inputfield {
+          color: $datatableHighlightTextColor;
+          border-color: $datatableHighlightTextColor;
+
+          &:focus {
+            border-color: $datatableHighlightTextColor;
+          }
+        }
+      }
+    }
+
+    > .ui-icon-arrowthick-1-s {
+      font-size: 18px;
+      color: $accentColor;
+    }
+
+    > .ui-icon-arrowthick-1-n {
+      display: none !important;
+    }
+
+    &.ui-datatable-scrollable {
+      .ui-datatable-scrollable-header, .ui-datatable-scrollable-footer {
+        border: 0 none;
+        background-color: transparent;
+
+        .ui-datatable-data {
+          td {
+            color: $textColor;
+          }
+        }
+      }
+
+      thead {
+        tr {
+          th {
+            color: $textColor;
+            font-size: $fontSize;
+          }
+        }
+      }
+
+      tfoot {
+        tr {
+          td {
+            color: $textColor;
+            font-size: $fontSize;
+          }
+        }
+      }
+    }
+  }
+
+  .ui-carousel {
+    .ui-carousel-header {
+      padding: $headerPadding;
+      font-size: $headerFontSize;
+
+      .ui-icon {
+        color: $panelHeaderIconColor;
+      }
+
+      .ui-carousel-dropdown,
+      .ui-carousel-mobile-dropdown {
+        margin: 5px 10px;
+      }
+    }
+
+    .ui-carousel-footer {
+      padding: $headerPadding - 2px;
+      font-size: $headerFontSize - 2px;
+    }
+
+    .ui-carousel-page-links {
+      margin-top: 2px;
+    }
+  }
+
+  .ui-tree {
+    padding: $contentPadding / 2;
+
+    .ui-treenode-children {
+      padding-left: 28px;
+    }
+
+    .ui-treenode-leaf-icon {
+      width: 23px;
+    }
+
+    .ui-treenode-content {
+
+      .ui-chkbox {
+        margin-right: 8px;
+
+        .ui-icon {
+          color: $contentIconColor;
+        }
+      }
+
+      .ui-tree-toggler {
+        vertical-align: middle;
+        margin: 0 0 0 4px;
+      }
+
+      .ui-treenode-icon {
+        vertical-align: middle;
+        margin: 0 4px;
+      }
+
+      .ui-treenode-label {
+        margin: 0;
+        vertical-align: middle;
+      }
+    }
+
+    .ui-tree-droppoint.ui-state-hover {
+      background-color: $accentColor;
+    }
+
+    &.ui-tree-horizontal {
+      padding-left: 0;
+      padding-right: 0;
+
+      .ui-treenode-content {
+        background-color: $contentBgColor;
+        border: 1px solid $dividerColor;
+
+        .ui-tree-toggler {
+          vertical-align: top;
+        }
+
+        .ui-treenode-icon {
+          vertical-align: top;
+          margin-right: 4px;
+        }
+
+        &.ui-state-highlight {
+          background-color: $accentColor;
+          color: $accentTextColor;
+        }
+      }
+    }
+
+    .ui-tree-filter-container .ui-icon {
+      top: 0px;
+      right: 7px;
+    }
+  }
+
+  .ui-tree-draghelper {
+    border: 1px solid $primaryColor;
+  }
+
+  .fc {
+    .fc-button-group {
+      .ui-icon {
+        margin-top: 3px;
+      }
+
+      .ui-state-active {
+        background-color: $accentColor;
+      }
+    }
+
+    .fc-event {
+      background-color: $primaryLightColor;
+      color: $textColor;
+    }
+
+    table {
+      box-sizing: border-box;
+    }
+  }
+
+  .ui-treetable {
+    .ui-treetable-header {
+      padding: $headerPadding;
+      font-size: $headerFontSize;
+    }
+
+    thead {
+      th {
+        background-color: $datatableHeaderCellBgColor;
+        padding: 10px 14px;
+        border: 0 none;
+
+        .ui-icon {
+          color: $textSecondaryColor;
+        }
+
+        &:first-child {
+          border-left: 1px solid $dividerColor;
+        }
+
+        &:last-child {
+          border-right: 1px solid $dividerColor;
+        }
+
+        &.ui-state-hover {
+          @include hover-element();
+        }
+
+        .ui-sortable-column-icon {
+          vertical-align: middle;
+          margin: -4px 0 0 0;
+        }
+
+        &.ui-state-active {
+          background-color: $accentColor;
+          color: $accentTextColor;
+
+          .ui-icon {
+            color: $accentTextColor;
+          }
+        }
+
+        .ui-column-resizer {
+          @include material-icon("\e86f");
+          font-size: 16px;
+          color: $textSecondaryColor;
+        }
+      }
+    }
+
+    tfoot {
+      td {
+        border: 0 none;
+        padding: 10px 14px;
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          border: 0 none;
+          padding: 10px 14px;
+
+          .ui-treetable-toggler {
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 4px;
+            float: none;
+          }
+
+          .ui-chkbox {
+            margin-right: 8px;
+          }
+        }
+
+        &.ui-state-hover {
+          @include hover-element();
+        }
+
+        &.ui-state-highlight {
+          .ui-chkbox {
+            .ui-chkbox-box {
+              border-color: $accentTextColor;
+            }
+          }
+        }
+      }
+    }
+
+    &.ui-treetable-scrollable {
+      .ui-treetable-scrollable-header, .ui-treetable-scrollable-footer {
+        background-color: transparent;
+        border: 0 none;
+      }
+
+      thead {
+        th {
+          background-color: $datatableHeaderCellBgColor;
+          color: $textColor;
+          border-bottom: 1px solid $dividerColor;
+          border-top: 1px solid $dividerColor;
+
+          &.ui-state-active {
+            background-color: $accentColor;
+            color: $accentTextColor;
+          }
+        }
+
+        &.ui-treetable-scrollable-theadclone {
+          th {
+            padding-bottom: 0px;
+            padding-top: 0px;
+            line-height: 0px;
+            border-top: 0 none;
+          }
+        }
+      }
+    }
+  }
+
+  .ui-tagcloud {
+    li {
+      margin: 4px 0px;
+
+      a {
+        @include transition(background-color .3s);
+        @include border-radius(3px);
+
+        &:hover {
+          @include hover-element();
+        }
+      }
+    }
+  }
+
+  .timeline-frame {
+    .timeline-event {
+      border-color: $dividerColor;
+      background-color: $timelineBgColor;
+
+      &.ui-state-active {
+        background-color: $accentColor;
+        border-color: $accentColor;
+        color: $accentTextColor;
+      }
+    }
+
+    .timeline-axis {
+      border-color: $dividerColor;
+    }
+
+    .timeline-navigation {
+      height: 36px;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  body {
+    .ui-picklist {
+      &.ui-picklist-responsive {
+        .ui-picklist-list-wrapper {
+          margin-bottom: 8px;
+        }
+
+        .ui-picklist-buttons {
+          .ui-button {
+            &.ui-button-icon-only {
+              display: inline-block;
+              margin-right: 4px;
+            }
+          }
+
+          .ui-icon-arrow-1-e {
+            @include icon-override("\e037");
+            @include rotate(90deg);
+          }
+
+          .ui-icon-arrowstop-1-e {
+            @include icon-override("\e045");
+            @include rotate(-90deg);
+
+          }
+
+          .ui-icon-arrow-1-w {
+            @include icon-override("\e037");
+            @include rotate(-90deg);
+          }
+
+          .ui-icon-arrowstop-1-w {
+            @include icon-override("\e044");
+            @include rotate(-90deg);
+          }
+        }
+      }
+    }
+
+    .ui-orderlist {
+      &.ui-grid-responsive {
+        .ui-orderlist-controls {
+          text-align: center;
+          width: auto;
+          margin-bottom: 8px;
+
+          .ui-button {
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+  }
+}

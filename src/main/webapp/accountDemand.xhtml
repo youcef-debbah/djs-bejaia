@@ -1,0 +1,139 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.accountDemand}"/>
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>#{messages.demandAnAccountForYourAsso}</h1>
+                    <h:form id="demandForm">
+                        <p:focus id="focus" context="demandForm"/>
+
+                        <div class="ui-g ui-fluid">
+                            <!-- agrement -->
+                            <div class="ui-g-12 ui-md-5">
+                                <p:messages id="agrementMsgs" styleClass="need-validation ui-g-12 ui-g-nopad"
+                                            for="agrement"
+                                            showIcon="false"
+                                            closable="true">
+                                    <p:effect event="load" type="bounce"/>
+                                </p:messages>
+                                <p:outputLabel id="agrementLabel" for="agrement" styleClass="ui-g-12 no-v-pad"
+                                               value="#{messages.agrement}" title="#{messages.agrementHelp}"/>
+                                <div class="ui-g-12 no-h-pad">
+                                    <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-group"/></span>
+                                        <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="agrement" value="#{accountDemandView.demand.agrement}"
+                                             styleClass="need-validation"
+                                             placeholder="#{messages.agrementHelp}"
+                                             title="#{messages.agrementHelp}" required="true"/>
+                            </span>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+
+                            <!-- descreption -->
+                            <div class="ui-g-7">
+                                <p:messages id="descreptionMsgs" styleClass="need-validation ui-g-nopad"
+                                            for="descreption"
+                                            showIcon="false"
+                                            closable="true">
+                                    <p:effect event="load" type="bounce"/>
+                                </p:messages>
+                                <p:outputLabel id="descreptionLabel" for="descreption" styleClass="ui-g-12 no-v-pad"
+                                               value="#{messages.description}" title="#{messages.descriptionHelp}"/>
+                                <div class="ui-g-12 no-h-pad">
+                                    <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon"><span
+                                                class="material-icons ui-icon-description"/></span>
+                                        <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="descreption" value="#{accountDemandView.demand.description}"
+                                         styleClass="need-validation"
+                                         title="#{messages.descriptionHelp}" required="true"/>
+                            </span>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+
+                            <!-- phone -->
+                            <div class="ui-g-12 ui-md-5">
+                                <p:messages styleClass="need-validation ui-g-nopad" for="phone" showIcon="false"
+                                            closable="true">
+                                    <p:effect event="load" type="bounce"/>
+                                </p:messages>
+                                <p:outputLabel for="phone" styleClass="ui-g-12 no-v-pad"
+                                               value="#{messages.phoneNumber}" title="#{messages.phoneNumberHelp}"/>
+                                <div class="ui-g-12 no-h-pad">
+                                    <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-phone"/></span>
+                                        <span class="md-inputfield md-inputfield-fill">
+                            <p:inputMask id="phone" value="#{accountDemandView.demand.phone}"
+                                         styleClass="need-validation" mask="09 99 99 99 99"
+                                         title="#{messages.phoneNumberHelp}" required="true"/>
+                            </span>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+
+                            <!-- president -->
+                            <div class="ui-g-12 ui-md-7">
+                                <p:messages id="presidentMsgs" styleClass="need-validation ui-g-nopad" for="president"
+                                            showIcon="false" closable="true">
+                                    <p:effect event="load" type="bounce"/>
+                                </p:messages>
+                                <p:outputLabel id="presidentLabel" for="president" styleClass="ui-g-12 no-v-pad"
+                                               value="#{messages.president}" title="#{messages.presidentHelp}"/>
+                                <div class="ui-g-12 no-h-pad">
+                                    <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-group"/></span>
+                                        <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="president" value="#{accountDemandView.demand.president}"
+                                             styleClass="need-validation"
+                                             title="#{messages.presidentHelp}" required="true"/>
+                            </span>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+
+                            <!-- adresse -->
+                            <div class="ui-g-12">
+                                <p:messages id="adresseMsgs" styleClass="need-validation ui-g-nopad" for="adresse"
+                                            showIcon="false"
+                                            closable="true">
+                                    <p:effect event="load" type="bounce"/>
+                                </p:messages>
+                                <p:outputLabel id="adresseLabel" for="adresse" styleClass="ui-g-12 no-v-pad"
+                                               value="#{messages.adresse}" title="#{messages.adresseHelp}"/>
+                                <div class="ui-g-12 no-h-pad">
+                                    <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon"><span
+                                                class="ui-icon fa fa-map-marker"/></span>
+                                        <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="adresse" value="#{accountDemandView.demand.adresse}"
+                                         styleClass="need-validation"
+                                         title="#{messages.adresseHelp}" required="true"/>
+                            </span>
+                                    </h:panelGroup>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui-g">
+                            <div class="ui-g-12 text-Center">
+                                <p:commandButton value="#{messages.send}" icon="ui-icon-send"
+                                                 actionListener="#{accountDemandView.sendDemand}"
+                                                 process="@form" update="@(.need-validation) focus"
+                                                 onerror="jsoftware95.updateFailed()"/>
+                            </div>
+                        </div>
+
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

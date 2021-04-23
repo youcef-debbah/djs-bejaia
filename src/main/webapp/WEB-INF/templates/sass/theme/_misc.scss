@@ -1,0 +1,60 @@
+body {
+    .ui-draggable-dragging.ui-state-default {
+        padding: $headerPadding !important;
+        background-color: $primaryColor;
+    }
+    
+    .jqplot-target {
+        font-family: "Roboto","Helvetica Neue",sans-serif;
+    }
+
+    .ui-progressbar {
+        height: 16px;
+        background-color: $primaryLightColor;
+
+        .ui-progressbar-value {
+            height: 16px;
+        }
+
+        .ui-progressbar-label {
+            color: $headerTextColor;
+            top: -3px;
+        }
+    }
+
+    .ui-fileupload {
+        .ui-fileupload-buttonbar {
+            padding: $headerPadding;
+
+            .ui-icon-arrowreturnthick-1-n {
+                @include icon_override('file_upload');
+            }
+
+            .ui-button, .ui-datepicker-current, .ui-datepicker-close {
+                background-color: $accentColor;
+
+                &.ui-state-hover {
+                    background-color: $accentDarkColor;
+                }
+            }
+        }
+
+        .ui-fileupload-content {
+            .ui-messages-error {
+                .ui-icon {
+                    color: $errorMessageTextColor;
+                }
+            }
+        }
+    }
+
+    .ui-galleria {
+        .ui-galleria-nav-prev {
+            left: 0;
+        }
+
+        .ui-galleria-nav-next {
+            right: 0;
+        }
+    }
+}

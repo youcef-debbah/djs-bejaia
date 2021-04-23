@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+    <div class="ui-g">
+        <div class="ui-g-12">
+            <div class="card">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6 auto-middle">
+                        <h1>#{messages.noContent}</h1>
+                        <p>#{messages.contentNotReadyYet}</p>
+                        <p:button outcome="homePage" icon="ui-icon-home" value="#{messages.homePage}"
+                                  style="display:inline-block;margin-top:5px;margin-bottom: 1em"/>
+                    </div>
+                    <div class="ui-g-12 ui-md-6">
+                        <ui:include src="/WEB-INF/templates/jackhammer.xhtml"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ui:composition>

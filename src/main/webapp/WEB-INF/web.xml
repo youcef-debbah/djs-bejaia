@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Handcrafted with love by Youcef DEBBAH
+  ~ Copyright 2019 youcef-debbah@hotmail.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd ">
+
+    <!-- HTTPS configuration -->
+<!--    <security-constraint>-->
+<!--    <web-resource-collection>-->
+<!--    <web-resource-name>all pages</web-resource-name>-->
+<!--    <url-pattern>/*</url-pattern>-->
+<!--    </web-resource-collection>-->
+<!--    <user-data-constraint>-->
+<!--    <description>using HTTPS protocol</description>-->
+<!--    <transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+<!--    </user-data-constraint>-->
+<!--    </security-constraint>-->
+
+    <!-- application parameters -->
+
+    <context-param>
+        <param-name>javax.faces.PROJECT_STAGE</param-name>
+        <!--        <param-value>Development</param-value>-->
+        <param-value>Production</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+        <!--        <param-value>0</param-value>-->
+        <param-value>-1</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+        <param-value>server</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>ultima-djs</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.FONT_AWESOME</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>primefaces.UPLOADER</param-name>
+        <param-value>native</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>javax.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <!-- end users parameters -->
+    <context-param>
+        <description>general description of this web site</description>
+        <param-name>dz.ngnex.djs.description</param-name>
+        <param-value>Direction de la Jeunesse et des Sports de Béjaïa</param-value>
+    </context-param>
+
+    <context-param>
+        <description>international phone number of the organization</description>
+        <param-name>dz.ngnex.djs.phoneNumber</param-name>
+        <param-value>+213 34 16 17 68</param-value>
+    </context-param>
+
+    <context-param>
+        <description>URL of phone number 034 39 23 82</description>
+        <param-name>dz.ngnex.djs.phoneNumberURL</param-name>
+        <param-value>tel:+21334161768</param-value>
+    </context-param>
+
+    <context-param>
+        <description>URL to the address of organization on google maps</description>
+        <param-name>dz.ngnex.djs.addressOnGoogleMaps</param-name>
+        <param-value>
+            https://www.google.com/maps/place/ODEJ+B%C3%A9ja%C3%AFa/@36.7508037,5.0645155,17z/data=!4m12!1m6!3m5!1s0x12f2ccae232cf469:0x88779f22abfff7e9!2zT0RFSiBCw6lqYcOvYQ!8m2!3d36.751053!4d5.0666613!3m4!1s0x12f2ccae232cf469:0x88779f22abfff7e9!8m2!3d36.751053!4d5.0666613
+        </param-value>
+    </context-param>
+
+    <context-param>
+        <description>email of the organization</description>
+        <param-name>dz.ngnex.djs.email</param-name>
+        <param-value>djsbejaia@mjs.gov.dz</param-value>
+    </context-param>
+
+    <context-param>
+        <description>Facebook page of the company</description>
+        <param-name>dz.ngnex.djs.facebookPage</param-name>
+        <param-value>https://www.facebook.com/djsdebejaia</param-value>
+    </context-param>
+
+    <!--    <context-param>-->
+    <!--        <param-name>primefaces.CLIENT_SIDE_VALIDATION</param-name>-->
+    <!--        <param-value>true</param-value>-->
+    <!--    </context-param>-->
+
+    <!-- server configuration -->
+    <filter>
+        <filter-name>Locale Filtre</filter-name>
+        <filter-class>dz.ngnex.control.CharsetFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>Locale Filtre</filter-name>
+        <servlet-name>FacesServlet</servlet-name>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>Contract Servlet</servlet-name>
+        <servlet-class>dz.ngnex.view.ContractServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Contract Servlet</servlet-name>
+        <url-pattern>/contract/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>FacesServlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>FacesServlet</servlet-name>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>landing.xhtml</welcome-file>
+        <welcome-file>home.xhtml</welcome-file>
+        <welcome-file>dashboard.xhtml</welcome-file>
+        <welcome-file>default.xhtml</welcome-file>
+        <welcome-file>index.xhtml</welcome-file>
+    </welcome-file-list>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>secured pages</web-resource-name>
+            <url-pattern>/secured/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>sport_asso</role-name>
+            <role-name>sport_admin</role-name>
+            <role-name>youth_asso</role-name>
+            <role-name>youth_admin</role-name>
+            <role-name>super_admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>pages for users</web-resource-name>
+            <url-pattern>/asso/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>sport_asso</role-name>
+            <role-name>youth_asso</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>pages for administrator</web-resource-name>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>super_admin</role-name>
+            <role-name>sport_admin</role-name>
+            <role-name>youth_admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>pages for administrator</web-resource-name>
+            <url-pattern>/super/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>super_admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/login.xhtml</form-login-page>
+            <form-error-page>/login.xhtml</form-error-page>
+        </form-login-config>
+    </login-config>
+
+    <security-role>
+        <role-name>sport_asso</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>sport_admin</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>youth_asso</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>youth_admin</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>super_admin</role-name>
+    </security-role>
+
+    <filter>
+        <display-name>Faces Filter</display-name>
+        <filter-name>FacesFilter</filter-name>
+        <filter-class>dz.ngnex.control.FacesFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>FacesFilter</filter-name>
+        <servlet-name>FacesServlet</servlet-name>
+    </filter-mapping>
+
+    <error-page>
+        <error-code>401</error-code>
+        <location>/error/access.xhtml</location>
+    </error-page>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error/access.xhtml</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404.xhtml</location>
+    </error-page>
+
+    <error-page>
+        <location>/error/default.xhtml</location>
+    </error-page>
+
+    <listener>
+        <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>dz.ngnex.control.CurrentVisitorsCounter</listener-class>
+    </listener>
+
+    <mime-mapping>
+        <extension>ttf</extension>
+        <mime-type>application/font-sfnt</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>application/font-woff</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>application/font-woff2</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>eot?#iefix</extension>
+        <mime-type>application/vnd.ms-fontobject</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exosemibold</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exobolditalic</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exomedium</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#exoregular</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>svg#fontawesomeregular</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>webmanifest</extension>
+        <mime-type>application/manifest+json</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>ico</extension>
+        <mime-type>image/x-icon</mime-type>
+    </mime-mapping>
+    <mime-mapping>
+        <extension>map</extension>
+        <mime-type>application/json</mime-type>
+    </mime-mapping>
+
+    <session-config>
+        <session-timeout>10</session-timeout>
+    </session-config>
+
+</web-app>

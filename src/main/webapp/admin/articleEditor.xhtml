@@ -1,0 +1,180 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title"
+              value="#{messages.editor}"/>
+    <ui:define name="head">
+        <!--suppress JSUnusedGlobalSymbols -->
+        <script>
+            // <![CDATA[
+            // noinspection JSUnusedLocalSymbols becuase it is called by post ajax reuqests
+            function updateArticleID(id) {
+                let newUrl = window.location.href.replace(/([?&])id=[^&]*/, "");
+                if (id != null)
+                    if (newUrl.indexOf('?') > -1)
+                        newUrl = newUrl + "&id=" + id;
+                    else
+                        newUrl = newUrl + "?id=" + id;
+                window.history.pushState("", "", newUrl);
+            }
+
+            function setThumbnailsAndHide(event, thumbnails) {
+                PF('thumbnailsWidget').getJQ().val(thumbnails);
+                PF('thumbnailsPickerWidget').hide();
+                event.preventDefault();
+                return false;
+            }
+
+            // ]]>
+        </script>
+    </ui:define>
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <h:panelGroup layout="block" styleClass="card compacet-header">
+                    <h:form id="editor">
+                        <p:focus for="thumbnails"/>
+                        <p:toolbar>
+                            <f:facet name="left">
+                                <p:commandButton value="#{messages.save}" icon="ui-icon-save" accesskey="s"
+                                                 actionListener="#{articleEditorView.saveData}"
+                                                 process="editor" update="editor"
+                                                 onerror="jsoftware95.updateFailed()"
+                                                 oncomplete="jsoftware95.selectTabWithMessages(['titleWidget', 'summaryWidget', 'contentWidget']);"
+                                />
+                                <p:commandButton value="#{messages.delete}" icon="ui-icon-delete" accesskey="d"
+                                                 actionListener="#{articleEditorView.deleteArticle}"
+                                                 process="@form" update="@form"
+                                                 onerror="jsoftware95.updateFailed()"
+                                                 disabled="#{empty articleEditorView.articleCreationDate}">
+                                    <p:confirm message="#{messages.confirmDeleteArticle}"/>
+                                </p:commandButton>
+                                <p:button value="#{messages.preview}" icon="ui-icon-search" accesskey="a"
+                                          outcome="articlePreview" target="_blank"
+                                          disabled="#{empty articleEditorView.articleCreationDate}">
+                                    <f:param name="id" value="#{articleEditorView.currentID}"/>
+                                </p:button>
+
+                                <p:button value="#{messages.upload}" outcome="uploadedImages"
+                                          icon="fa fa-cloud-upload" target="_blank"/>
+                            </f:facet>
+                        </p:toolbar>
+                        <ui:fragment rendered="#{not empty articleEditorView.articleLastSaveDate}">
+                            <p class="hint">#{messages.lastSave} #{articleEditorView.articleLastSaveFormatted} -
+                                <pe:timeAgo
+                                        value="#{articleEditorView.articleLastSaveDate}"/></p>
+                        </ui:fragment>
+                        <ui:fragment rendered="#{empty articleEditorView.articleCreationDate}">
+                            <p class="hint">#{messages.articleNotSaved}</p>
+                        </ui:fragment>
+                        <h1>#{messages.accessLevel}</h1>
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="material-icons ui-icon-visibility"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                            <p:selectOneMenu value="#{articleEditorView.access}">
+                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                <!--suppress ELValidationInJSP -->
+                                <f:selectItems value="#{articleEditorView.availableAccessLevels}" var="level"
+                                               itemLabel="#{messages[level]}"/>
+                            </p:selectOneMenu>
+                            </span>
+                        </div>
+
+                        <h1>#{messages.articleThumbnails}</h1>
+                        <p:messages for="thumbnails" showIcon="false" closable="true"/>
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-prefix">
+                                <p:commandButton id="selectThumbnailsButton" icon="fa fa-chain"
+                                                 process="@none" update="thumbnailsOverlay"
+                                                 onsuccess="PF('thumbnailsPickerWidget').show()"
+                                                 onerror="jsoftware95.updateFailed()"/>
+                            </span>
+                            <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="thumbnails" value="#{articleEditorView.thumbnails}" styleClass="full-width"
+                                         type="url" widgetVar="thumbnailsWidget"
+                                         placeholder="#{messages.thumbnailsPlaceholder}"/>
+                            </span>
+                        </div>
+
+                        <p:overlayPanel id="thumbnailsOverlay" styleClass="compact-data align-center"
+                                        widgetVar="thumbnailsPickerWidget" my="false" blockScroll="true"
+                                        dismissable="true" showCloseIcon="true" hideEffect="fade" showEffect="fade">
+                            <p:dataList value="#{uploadedImagesView.files}" var="file" itemType="none"
+                                        paginator="true" rows="3" lazy="true"
+                                        emptyMessage="#{messages.noUploadedFiles}">
+                                <a title="#{messages.chooseThisThumbnails}" href="#"
+                                   onclick="setThumbnailsAndHide(event, '#{file.url}')">
+                                    <img src="#{file.url}" alt="#{file.name}"
+                                         onerror="jsoftware95.altImage(this,#{'\''}#{resource['djs:images/doc_preview.png']}#{'\''})"
+                                         width="auto" height="150px"/>
+                                </a>
+                            </p:dataList>
+                        </p:overlayPanel>
+
+                        <h1>#{messages.title}</h1>
+                        <p:tabView widgetVar="titleWidget" styleClass="simple">
+                            <p:tab title="Française">
+                                <p:messages for="title_fr" showIcon="false" closable="true"/>
+                                <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="title_fr" value="#{articleEditorView.title_fr}"
+                                             styleClass="full-card-width"/>
+                                </span>
+                            </p:tab>
+                            <p:tab title="English">
+                                <p:messages for="title_en" showIcon="false" closable="true"/>
+                                <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="title_en" value="#{articleEditorView.title_en}"
+                                             styleClass="full-card-width"/>
+                                </span>
+                            </p:tab>
+                        </p:tabView>
+
+                        <h1>#{messages.summary}</h1>
+                        <p:tabView widgetVar="summaryWidget" styleClass="simple">
+                            <p:tab title="Française">
+                                <p:messages for="summary_fr" showIcon="false" closable="true"/>
+                                <span class="md-inputfield md-inputfield-fill">
+                                <p:inputTextarea id="summary_fr" value="#{articleEditorView.summary_fr}"
+                                                 styleClass="full-card-width"/>
+                                </span>
+                            </p:tab>
+                            <p:tab title="English">
+                                <p:messages for="summary_en" showIcon="false" closable="true"/>
+                                <span class="md-inputfield md-inputfield-fill">
+                                <p:inputTextarea id="summary_en" value="#{articleEditorView.summary_en}"
+                                                 styleClass="full-card-width"/>
+                                </span>
+                            </p:tab>
+                        </p:tabView>
+
+                        <h1>#{messages.content}</h1>
+                        <p:tabView widgetVar="contentWidget" styleClass="simple">
+                            <p:tab title="Française">
+                                <p:messages for="content_fr" showIcon="false" closable="true"/>
+                                <pe:ckEditor id="content_fr" value="#{articleEditorView.content_fr}"
+                                             width="100%" height="450px"
+                                             language="#{localeManager.language}"
+                                             toolbar="#{meta.ckEditorRichToolbar}"/>
+                            </p:tab>
+                            <p:tab title="English">
+                                <p:messages for="content_en" showIcon="false" closable="true"/>
+                                <pe:ckEditor id="content_en" value="#{articleEditorView.content_en}"
+                                             width="100%" height="450px"
+                                             language="#{localeManager.language}"
+                                             toolbar="#{meta.ckEditorRichToolbar}"/>
+                            </p:tab>
+                        </p:tabView>
+
+                        <ui:fragment rendered="#{not empty articleEditorView.articleCreationDate}">
+                            <p class="hint">#{messages.created} #{articleEditorView.articleCreationFormatted} -
+                                <pe:timeAgo value="#{articleEditorView.articleCreationDate}"/></p>
+                        </ui:fragment>
+                    </h:form>
+                </h:panelGroup>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

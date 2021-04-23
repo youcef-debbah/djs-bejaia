@@ -1,0 +1,110 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:h="http://xmlns.jcp.org/jsf/html"
+        xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+        xmlns:p="http://primefaces.org/ui"
+        xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+        xmlns:f="http://xmlns.jcp.org/jsf/core"
+        xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+>
+    <h:form id="search_form" pt:autocomplete="off">
+        <h:commandScript name="refreshMessageCounter" onevent="ion.sound.play('button_tiny')"
+                         render="inboxLink chatUserLink menuform:inboxMenuItem menuform:chatUserMenuItem"
+                         actionListener="#{messageCounter.refresh}"/>
+
+        <div class="topbar clearfix">
+            <div class="topbar-left">
+                <p:graphicImage library="djs" name="images/flat_djs_logo_white.png"
+                                style="position:absolute;top:7px;left:9px;"/>
+            </div>
+
+            <div class="topbar-right">
+                <a id="menu-button" href="#">
+                    <i/>
+                </a>
+
+                <a id="topbar-menu-button" href="#">
+                    <i class="material-icons">&#xE5D4;</i>
+                </a>
+
+                <ul class="topbar-items">
+                    <li role="menuitem">
+                        <a href="#">
+                            <i class="topbar-icon material-icons ui-icon-language"/>
+                            <span class="topbar-item-name">#{messages.language}</span>
+                        </a>
+                        <ul class="ultima-menu animated">
+                            <li role="menuitem">
+                                <p:commandLink actionListener="#{localeManager.changeLang('en')}" process="@this"
+                                               onerror="jsoftware95.updateFailed()">English</p:commandLink>
+                            </li>
+                            <li role="menuitem">
+                                <p:commandLink actionListener="#{localeManager.changeLang('fr')}" process="@this"
+                                               onerror="jsoftware95.updateFailed()">Française</p:commandLink>
+                            </li>
+                        </ul>
+                    </li>
+                    <ui:fragment rendered="#{currentPrincipal.loggedIn}">
+                        <li role="menuitem">
+                            <p:commandLink action="#{meta.logout}" process="@this"
+                                           onerror="jsoftware95.updateFailed()">
+                                <i class="topbar-icon material-icons">&#xE8AC;</i>
+                                <span class="topbar-item-name">#{messages.singOut}</span>
+                            </p:commandLink>
+                        </li>
+                    </ui:fragment>
+                    <ui:fragment
+                            rendered="#{currentPrincipal.admin and not facesContext.viewRoot.viewId.endsWith('/inbox.xhtml')}">
+                        <li role="menuitem">
+                            <p:link id="inboxLink" outcome="inbox">
+                                <i class="topbar-icon material-icons ui-icon-email"/>
+                                <c:if test="#{messageCounter.enabled}">
+                                    <h:panelGroup rendered="#{messageCounter.totalUnreadCount > 0}"
+                                                  styleClass="topbar-badge animated rubberBand">
+                                        #{messageCounter.totalUnreadCount}
+                                    </h:panelGroup>
+                                </c:if>
+                                <span class="topbar-item-name">#{messages.inbox}</span>
+                            </p:link>
+                        </li>
+
+                        <f:websocket channel="messageNotifications" onmessage="refreshMessageCounter"
+                                     user="#{empty currentPrincipal.service? 'global' : currentPrincipal.service.name()}"/>
+                    </ui:fragment>
+                    <ui:fragment
+                            rendered="#{currentPrincipal.association and not facesContext.viewRoot.viewId.endsWith('/chatUser.xhtml')}">
+                        <li role="menuitem">
+                            <p:link id="chatUserLink" outcome="chatUser">
+                                <i class="topbar-icon material-icons ui-icon-forum"/>
+                                <c:if test="#{messageCounter.enabled}">
+                                    <h:panelGroup rendered="#{messageCounter.totalUnreadCount > 0}"
+                                                  styleClass="topbar-badge animated rubberBand">
+                                        #{messageCounter.totalUnreadCount}
+                                    </h:panelGroup>
+                                </c:if>
+                                <span class="topbar-item-name">#{messages.messaging}</span>
+                            </p:link>
+                        </li>
+
+                        <f:websocket channel="adminMessageNotifications" onmessage="refreshMessageCounter"
+                                     user="#{currentPrincipal.name}"/>
+                    </ui:fragment>
+                    <li class="search-item" role="menuitem">
+                        <h:panelGroup styleClass="md-inputfield">
+                            <p:inputText/>
+                            <label>Search</label>
+                            <p:link outcome="search">
+                                <i class="topbar-icon material-icons">&#xE8B6;</i>
+                            </p:link>
+                        </h:panelGroup>
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <p:remoteCommand action="#{messageCounter.enable}"
+                         update="chatUserLink inboxLink" global="false" autoRun="true"/>
+    </h:form>
+
+</ui:composition>

@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.seasonsManagment}"/>
+
+    <ui:define name="content">
+        <h:form id="seasonMenuForm">
+            <p:dialog id="newSeasonDialog" widgetVar="new-season-dialog" positionType="fixed"
+                      header="#{messages.newSeason}" modal="false" width="350">
+                <h:panelGroup id="newSeasonDialogContent" styleClass="ui-g">
+                    <p:focus context="newSeasonDialogContent"/>
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="season-name" value="#{messages.seasonName}"/>
+                        <p:messages for="season-name" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12 ui-fluid">
+                        <div class="ui-inputgroup">
+                                        <span class="ui-inputgroup-addon"><span
+                                                class="material-icons ui-icon-date-range"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="season-name" value="#{seasonView.newSeasonName}"
+                                             required="true" placeholder="#{messages.eg2019}"/>
+                            </span>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+                <f:facet name="footer">
+                    <p:commandButton widgetVar="add_season_button"
+                                     value="#{messages.add}"
+                                     icon="ui-icon-add" process="newSeasonDialog"
+                                     update="seasonMenu newSeasonDialogContent templatesList"
+                                     onstart="PF('add_season_button').disable()"
+                                     onerror="jsoftware95.updateFailed()"
+                                     oncomplete="PF('add_season_button').enable()"
+                                     actionListener="#{seasonView.addNewSeason}"/>
+                    <p:commandButton value="#{messages.cancel}" type="button"
+                                     onclick="PF('new-season-dialog').hide()" icon="fa fa-remove"/>
+                </f:facet>
+            </p:dialog>
+            <p:toolbar id="seasonMenu">
+                <f:facet name="left">
+                    <h:outputText styleClass="inline-block" value="#{messages.currentSeason}"/>
+                    <p:selectOneMenu value="#{seasonView.currentSeasonID}" styleClass="spaced" style="min-width: 150px">
+                        <f:selectItems value="#{seasonView.seasons}" var="season"
+                                       itemValue="#{season.id}" itemLabel="#{season.name}"/>
+                        <p:ajax process="@this" update="@this deleteSeasonButton"/>
+                    </p:selectOneMenu>
+                </f:facet>
+                <f:facet name="right">
+                    <p:commandButton icon="ui-icon-add" value="#{messages.newSeason}" type="button"
+                                     onclick="PF('new-season-dialog').show()"/>
+                    <p:commandButton id="deleteSeasonButton" disabled="#{empty seasonView.seasons}"
+                                     onerror="jsoftware95.updateFailed()"
+                                     process="@this"
+                                     update="seasonMenu templatesList"
+                                     actionListener="#{seasonView.deleteSeason}"
+                                     icon="ui-icon-remove" value="#{messages.deleteCurrentSeason}">
+                        <p:confirm
+                                message="En supprimant cette saison, vous supprimerez également #{seasonView.currentSeasonStats.contractTemplatesCount} modèles de contrat et les #{seasonView.currentSeasonStats.contractInstancesCount} contrats qui utilisent ces modèles"/>
+                    </p:commandButton>
+                </f:facet>
+            </p:toolbar>
+        </h:form>
+
+        <h:form id="templatesList">
+            <div class="card">
+                <h2>#{messages.contractTemplates}</h2>
+                <div class="ui-g">
+                    <ui:repeat value="#{seasonView.contracts}" var="contract">
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="card float-parent" style="background: #e2e4f4">
+                                <h:outputText value="#{contract.templateName}" styleClass="bold"/>
+                                <span style="float: right">
+                            <h:outputText value="#{messages.season}:" style="margin-left: 0.5em"/>
+                            <p:selectOneMenu id="seasonsMenu" value="#{contract.seasonID}" required="true">
+                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                <f:selectItems value="#{seasonView.seasons}" var="season"
+                                               itemLabel="#{season.name}" itemValue="#{season.id}"/>
+                            </p:selectOneMenu>
+                            </span>
+                            </div>
+                        </div>
+                    </ui:repeat>
+
+                    <h:panelGroup rendered="#{empty seasonView.seasons}" styleClass="ui-g-12 align-center"
+                                  layout="block">
+                        <p><h:outputText value="#{messages.noData}" styleClass="align-center"/></p>
+                    </h:panelGroup>
+
+                    <div class="ui-g-12 align-center">
+                        <p:commandButton value="#{messages.save}" actionListener="#{seasonView.updateContractsSeason}"
+                                         process="@form" update="@form seasonMenuForm"
+                                         onerror="jsoftware95.updateFailed()"/>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

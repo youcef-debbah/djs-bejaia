@@ -1,0 +1,175 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.dashboard}"/>
+
+    <ui:define name="content">
+
+        <div class="ui-g dashboard">
+            <h:panelGroup id="totalUnreadCountCard" rendered="true" styleClass="ui-g-12 ui-md-4">
+                <div class="ui-g card colorbox colorbox-1">
+                    <div class="ui-g-4">
+                        <i class="material-icons ui-icon-mail"/>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">#{messages.messages}</span>
+                        <span class="colorbox-count">#{messageCounter.totalUnreadCount}</span>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup id="currentVisitorsCard" rendered="true" styleClass="ui-g-12 ui-md-4">
+                <div class="ui-g card colorbox colorbox-2">
+                    <div class="ui-g-4">
+                        <i class="material-icons ui-icon-visibility"/>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">#{messages.currentVisitors}</span>
+                        <span id="currentVisitorsCount"
+                              class="colorbox-count">#{commandBoard.currentVisitors}</span>
+                        <script>
+                            // <![CDATA[
+                            function setCurrentVisitorsCount(content) {
+                                document.getElementById('currentVisitorsCount').innerText = content;
+                            }
+
+                            // ]]>
+                        </script>
+                        <f:websocket channel="currentVisitorsNotifications"
+                                     onmessage="setCurrentVisitorsCount"/>
+                    </div>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup id="totalVisitorsCard" rendered="true" styleClass="ui-g-12 ui-md-4">
+                <div class="ui-g card colorbox colorbox-3">
+                    <div class="ui-g-4">
+                        <i class="material-icons ui-icon-shop"/>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="colorbox-name">#{messages.totalVisitors}</span>
+                        <span class="colorbox-count">#{commandBoard.totalVisitors}</span>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <h:panelGroup id="visitorsChartCard" rendered="true" class="ui-g-12 ui-lg-6">
+                <div class="card full-height">
+                    <h:form id="visitorsStat">
+                        <p:chart style="min-height: 300px" type="bar" model="#{commandBoard.visitorsChartModel}"
+                                 responsive="true"/>
+                        <p:separator/>
+                        <div class="ui-g compact-data">
+                            <div class="ui-g-12 ui-lg-6 align-center">
+                                <p:outputLabel for="visitorsStatFrom" value="#{messages.showStatFrom}"
+                                               styleClass="spaced"/>
+                                <br/>
+                                <p:calendar id="visitorsStatFrom" styleClass="text-Center"
+                                            value="#{commandBoard.visitorsStatFrom}" pattern="dd MMMM yyyy"
+                                            showButtonPanel="true" showOtherMonths="true"
+                                            selectOtherMonths="true" mindate="#{localeManager.beginningOfTime}"
+                                            maxdate="#{localeManager.currentTime}">
+                                    <p:ajax event="dateSelect" process="@this" update="@form"
+                                            onerror="jsoftware95.updateFailed()"
+                                            listener="#{commandBoard.updateVisitorsModel}"/>
+                                </p:calendar>
+                            </div>
+                            <div class="ui-g-12 ui-lg-6 align-center">
+                                <p:outputLabel for="visitorsStatTo" value="#{messages.showStatTo}"
+                                               styleClass="spaced"/>
+                                <br/>
+                                <p:calendar id="visitorsStatTo" styleClass="text-Center"
+                                            value="#{commandBoard.visitorsStatTo}" pattern="dd MMMM yyyy"
+                                            showButtonPanel="true" showOtherMonths="true"
+                                            selectOtherMonths="true" mindate="#{localeManager.beginningOfTime}"
+                                            maxdate="#{localeManager.currentTime}">
+                                    <p:ajax event="dateSelect" process="@this" update="@form"
+                                            onerror="jsoftware95.updateFailed()"
+                                            listener="#{commandBoard.updateVisitorsModel}"/>
+                                </p:calendar>
+
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </h:panelGroup>
+            <h:panelGroup id="downloadsCharsCard" rendered="true" styleClass="ui-g-12 ui-lg-6">
+                <div class="card full-height">
+                    <p:chart type="pie" responsive="true"
+                             model="#{commandBoard.downloadsCharsModel}"/>
+                </div>
+            </h:panelGroup>
+
+            <h:form styleClass="full-width">
+                <h:panelGroup id="downloadsProgressPanel">
+                    <h:panelGroup id="downloadsProgressForSportCard" styleClass="ui-g-12 ui-lg-6">
+                        <div class="card">
+                            <h1><span
+                                    class="statistics-title">#{messages.downloadsProgressForSport} (#{commandBoard.currentSeasonName})</span>
+                            </h1>
+                            <c:if test="#{not downloadProgressModel.enabled}">
+                                #{messages.loading}
+                            </c:if>
+                            <c:if test="#{downloadProgressModel.enabled}">
+                                <h:panelGroup rendered="#{empty downloadProgressModel.sportDownloadsProgress}">
+                                    #{messages.noData}
+                                </h:panelGroup>
+                                <ui:repeat value="#{downloadProgressModel.sportDownloadsProgress}" var="progress">
+                                    <h3>
+                                        <span class="statistics-header">#{progress.title}</span>
+                                        (#{localeManager.formatAsDA(progress.totalBudget)})
+                                    </h3>
+                                    <p><span class="statistics-label-1">#{messages.downloaded}</span>
+                                        #{progress.done} (#{localeManager.formatAsDA(progress.doneBudget)})
+                                    </p>
+                                    <p><span class="statistics-label-2">#{messages.notYet}</span>
+                                        #{progress.notYet} (#{localeManager.formatAsDA(progress.notYetBudget)})
+                                    </p>
+                                    <p:progressBar value="#{progress.currentPercentage}" style="line-height: 19px"
+                                                   labelTemplate="{value}%" displayOnly="true" styleClass="spaced"/>
+                                </ui:repeat>
+                            </c:if>
+
+                        </div>
+                    </h:panelGroup>
+                    <h:panelGroup id="downloadsProgressForYouthCard" styleClass="ui-g-12 ui-lg-6">
+                        <div class="card">
+                            <h1><span
+                                    class="statistics-title">#{messages.downloadsProgressForYouth} (#{commandBoard.currentSeasonName})</span>
+                            </h1>
+                            <c:if test="#{not downloadProgressModel.enabled}">
+                                #{messages.loading}
+                            </c:if>
+                            <c:if test="#{downloadProgressModel.enabled}">
+                                <h:panelGroup rendered="#{empty downloadProgressModel.youthDownloadsProgress}">
+                                    #{messages.noData}
+                                </h:panelGroup>
+                                <ui:repeat value="#{downloadProgressModel.youthDownloadsProgress}" var="progress">
+                                    <h3>
+                                        <span class="statistics-header">#{progress.title}</span>
+                                        (#{localeManager.formatAsDA(progress.totalBudget)})
+                                    </h3>
+                                    <p><span class="statistics-label-1">#{messages.downloaded}</span>
+                                        #{progress.done} (#{localeManager.formatAsDA(progress.doneBudget)})
+                                    </p>
+                                    <p><span class="statistics-label-2">#{messages.notYet}</span>
+                                        #{progress.notYet} (#{localeManager.formatAsDA(progress.notYetBudget)})
+                                    </p>
+                                    <p:progressBar value="#{progress.currentPercentage}" style="line-height: 19px"
+                                                   labelTemplate="{value}%" displayOnly="true" styleClass="spaced"/>
+                                </ui:repeat>
+                            </c:if>
+                        </div>
+                    </h:panelGroup>
+                </h:panelGroup>
+
+                <p:remoteCommand action="#{downloadProgressModel.enable}" async="true"
+                                 update="downloadsProgressPanel" global="false" autoRun="true"/>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>
+
+

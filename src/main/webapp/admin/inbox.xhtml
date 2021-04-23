@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.inbox}"/>
+
+    <ui:define name="head">
+        <script>
+            $('.ui-galleria').width('100%');
+            $('.ui-galleria-panel-wrapper').width('100%');
+            $('.ui-galleria-panel').width('100%');
+        </script>
+    </ui:define>
+
+    <ui:define name="overlay">
+        <h:form id="dialog_form">
+            <p:dialog id="dialog" widgetVar="global_msg_dialog" positionType="fixed"
+                      header="#{messages.sendGlobalMessage}" modal="false" width="350">
+
+                <h:panelGroup id="dialogContent" styleClass="ui-g ui-fluid" layout="block">
+                    <p:focus context="dialogContent"/>
+                    <div class="ui-g-12 compact">
+                        <h:outputLabel for="content" value="#{messages.sendMessageToAllAssociations}"/>
+                        <p:messages for="content" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12">
+                        <p:inputTextarea id="content" value="#{globalMessagingView.content}"
+                                         requiredMessage="#{messages.messageCannotBeEmpty}"
+                                         placeholder="#{messages.writeMessage}"/>
+                    </div>
+                </h:panelGroup>
+
+                <f:facet name="footer">
+                    <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
+                                     actionListener="#{globalMessagingView.sendGlobalMessage}"
+                                     widgetVar="widget_send_global_msg_button"
+                                     onstart="PF('widget_send_global_msg_button').disable()"
+                                     onerror="jsoftware95.updateFailed()"
+                                     oncomplete="PF('widget_send_global_msg_button').enable()"
+                                     process="dialog" update="dialogContent"/>
+                    <p:commandButton value="#{messages.cancel}" type="button"
+                                     onclick="PF('global_msg_dialog').hide()" icon="fa fa-remove"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="spreadsheet_form">
+            <h:commandScript name="refreshInbox" onevent="ion.sound.play('button_tiny')"
+                             render="acc_container" actionListener="#{inboxView.refreshMessages}"/>
+            <f:websocket channel="messageNotifications" onmessage="refreshInbox"
+                         user="#{empty currentPrincipal.service? 'global' : currentPrincipal.service.name()}"/>
+            <h:panelGroup id="messages" layout="block" styleClass="card">
+                <h1>#{messages.clientsMessages}</h1>
+                <!--suppress ELValidationInJSP -->
+                <p:dataTable id="acc_container" widgetVar="main_sheet_widget" var="message"
+                             value="#{inboxView.messages}"
+                             draggableColumns="true" resizableColumns="true" emptyMessage="#{messages.noChatToShow}"
+                             selectionMode="single" selection="#{inboxView.currentMessage}"
+                             rowKey="#{message.id}" styleClass="compact-data"
+                             scrollable="true" scrollHeight="400">
+
+                    <p:ajax event="rowSelect" listener="#{inboxView.markAsSeen}"
+                            update="spreadsheet_form:toolbar spreadsheet_form:messagePanel"
+                            onerror="jsoftware95.updateFailed()"
+                    />
+
+                    <p:column headerText="#{messages.date}" sortBy="#{message.epoch}"
+                              styleClass="align-center">
+                        <h:panelGroup rendered="#{message.state == 'NOT_READ_YET'}"
+                                      style="float:left;"
+                                      styleClass="middled material-icons ui-icon-fiber-new new-tag"/>
+                        <h:outputText value="#{localeManager.formatAsLocalDateTime(message.epoch)}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.title}" sortBy="#{message.title}" styleClass="align-center">
+                        <h:outputText value="#{message.title}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.content}" sortBy="#{message.content}" styleClass="align-center">
+                        <h:outputText value="#{message.content}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.sender}" sortBy="#{message.senderName}"
+                              styleClass="align-center">
+                        <h:outputText value="#{message.senderName}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.destination}" sortBy="#{message.destination}"
+                              styleClass="align-center" rendered="#{currentPrincipal.superAdmin}">
+                        <h:outputText value="#{messages[message.destination]}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <p:toolbar id="toolbar" styleClass="scrollable-toolbar">
+                    <f:facet name="left">
+                        <p:button disabled="#{empty inboxView.currentMessage.senderName}" outcome="chatAdmin"
+                                  value="#{messages.chatWithSender}" icon="ui-icon-forum">
+                            <f:param name="sender" value="#{inboxView.currentMessage.senderName}"/>
+                        </p:button>
+
+                        <p:commandButton type="button" accesskey="g"
+                                         value="#{messages.sendGlobalMessage}" icon="ui-icon-message"
+                                         onclick="PF('global_msg_dialog').show()"/>
+
+                        <p:commandButton id="delete_button" value="#{messages.delete}" icon="ui-icon-delete"
+                                         onerror="jsoftware95.updateFailed()"
+                                         disabled="#{empty inboxView.currentMessage}"
+                                         update="@form" action="#{inboxView.deleteCurrentMessage}"/>
+
+                        <p:button value="#{messages.downloadAttachment}" icon="ui-icon-attachment"
+                                  disabled="#{empty inboxView.currentMessage.attachment}"
+                                  href="#{meta.safeUrl(inboxView.currentMessage.attachment.urlAsAttachment)}"/>
+                    </f:facet>
+                    <f:facet name="right">
+                        <div class="dark-input">
+                            <div class="ui-inputgroup">
+                                <div class="ui-inputgroup-addon">
+                                    <i class="topbar-icon ui-icon fa fa-filter"/>
+                                </div>
+                                <p:inputText
+                                        onkeyup="jsoftware95.filterTableRowsBy(this.value,PF('main_sheet_widget').tbody)"
+                                        placeholder="#{messages.filter}"/>
+                            </div>
+
+                        </div>
+                    </f:facet>
+                </p:toolbar>
+                <h1>#{messages.selectedMessage}</h1>
+                <p:panel header="#{inboxView.currentMessage.title}"
+                         id="messagePanel" layout="block" styleClass="card">
+                    <ui:fragment rendered="#{not empty inboxView.currentMessage}">
+                        <h:outputText value="#{inboxView.currentMessage.content}" escape="false"/>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{empty inboxView.currentMessage}">
+                        #{messages.noMessageSelected}
+                    </ui:fragment>
+                </p:panel>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

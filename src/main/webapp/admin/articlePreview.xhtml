@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.preview} - #{articleView.article.title}"/>
+    <ui:define name="content">
+        <div class="card compacet-header spaced">
+            <h1>#{messages.summaryPreview}</h1>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-12 ui-md-6">
+                <div class="card info">
+                    <p class="left-top-corner tag">Aperçu français</p>
+                    <h1 class="align-center">#{articleView.article.title_fr}</h1>
+                    <p class="content">
+                        <img src="#{empty articleView.article.thumbnails? resource['djs:images/full_djs_logo.svg'] : articleView.article.thumbnails}"
+                             alt="Vignettes"
+                             width="auto" height="150" class="thumbnails"/>#{articleView.article.summary_fr}</p>
+                    <p class="align-center clear-both">
+                        <p:button value="En savoir plus" outcome="article" styleClass="extra-bottom-margin"
+                                  icon="ui-icon-info-outline">
+                            <f:param name="id" value="#{articleView.article.id}"/>
+                        </p:button>
+                    </p>
+                    <p class="left-bottom-corner hint">Dernière mise à jour #{localeManager.formatAsLocalDate(articleView.article.lastUpdate)}</p>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="card info">
+                    <p class="left-top-corner tag">English preview</p>
+                    <h1 class="align-center">#{articleView.article.title_en}</h1>
+                    <p class="content">
+                        <img src="#{empty articleView.article.thumbnails? resource['djs:images/full_djs_logo.svg'] : articleView.article.thumbnails}"
+                             alt="Thumbnails"
+                             width="auto" height="150" class="thumbnails"/>#{articleView.article.summary_en}</p>
+                    <p class="align-center clear-both">
+                        <p:button value="Learn more" outcome="article" styleClass="extra-bottom-margin"
+                                  icon="ui-icon-info-outline">
+                            <f:param name="id" value="#{articleView.article.id}"/>
+                        </p:button>
+                    </p>
+                    <p class="left-bottom-corner hint">Last update #{localeManager.formatAsLocalDate(articleView.article.lastUpdate)}</p>
+                </div>
+            </div>
+        </div>
+        <div class="card compacet-header spaced">
+            <h1>#{messages.contentPreview}</h1>
+        </div>
+        <div class="big card spaced">
+            <p:tabView styleClass="simple">
+                <p:tab title="Française">
+                    <h1>#{articleView.article.title_fr}</h1>
+                    <h:outputText value="#{articleView.article.content_fr}" escape="false"/>
+                </p:tab>
+                <p:tab title="English">
+                    <h1>#{articleView.article.title_en}</h1>
+                    <h:outputText value="#{articleView.article.content_en}" escape="false"/>
+                </p:tab>
+            </p:tabView>
+        </div>
+    </ui:define>
+</ui:composition>

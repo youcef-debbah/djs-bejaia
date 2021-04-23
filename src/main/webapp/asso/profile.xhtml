@@ -1,0 +1,390 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.profile}"/>
+
+    <ui:define name="overlay">
+        <h:form id="newSectionForm">
+            <p:dialog id="newSectionDialog" widgetVar="new_section_dialog" positionType="fixed"
+                      header="#{messages.newSection}" modal="false" width="350">
+
+                <h:panelGroup id="dialogContent" styleClass="ui-g ui-fluid" layout="block">
+                    <p:focus context="dialogContent"/>
+                    <!-- type -->
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="section-name" value="Nom de section"/>
+                        <p:messages for="section-name" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="material-icons ui-icon-mode-edit"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                            <p:selectOneMenu id="section-name" required="true" value="#{sectionsView.newSectionName}"
+                                             style="min-width: 150px">
+                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                <f:selectItems value="#{sectionsView.availableSectionNames}"/>
+                            </p:selectOneMenu>
+                            </span>
+                        </div>
+                    </div>
+
+                </h:panelGroup>
+
+                <f:facet name="footer">
+                    <p:commandButton id="addSectionButton" widgetVar="widget_addSectionButton"
+                                     value="#{messages.add}"
+                                     icon="fa fa-user-plus" process="@form"
+                                     update="dialogContent spreadsheet_form:sections_table"
+                                     onstart="PF('widget_addSectionButton').disable()"
+                                     onerror="jsoftware95.updateFailed()"
+                                     oncomplete="PF('widget_addSectionButton').enable()"
+                                     actionListener="#{sectionsView.addNewSection()}"/>
+                    <p:commandButton value="#{messages.cancel}" type="button"
+                                     onclick="PF('new_section_dialog').hide()" icon="fa fa-remove"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="spreadsheet_form">
+            <p:panel header="#{currentPrincipal.name}">
+                <div class="ui-g">
+                    <!-- descreption -->
+                    <div class="ui-g-12 ui-fluid">
+                        <p:outputLabel id="descreptionLabel" for="descreption" value="#{messages.description}"/>
+                        <div>
+                            <p:inputText id="descreption" value="#{singleUserView.currentAccount.description}"
+                                         styleClass="need-validation read-only" disabled="true"/>
+                        </div>
+                    </div>
+
+                    <!-- montant -->
+                    <div class="ui-g-12">
+
+                        <!--suppress ELValidationInJSP -->
+                        <p:dataTable id="contracts_table" value="#{sectionsView.assignedContracts}"
+                                     var="contract" emptyMessage="#{messages.noAssignedContract}"
+                                     rowKey="#{contract.id}"
+                                     selectionMode="single" selection="#{usersView.currentContract}">
+                            <p:column headerText="#{messages.contractName}" styleClass="align-center">
+                                #{contract.contractTemplate.name}
+                            </p:column>
+                            <p:column headerText="#{messages.globalMontant}" styleClass="align-center">
+                                <h:outputFormat value="#{messages.currencyInDA}">
+                                    <f:param value="#{contract.globalMontant}"/>
+                                </h:outputFormat>
+                            </p:column>
+                            <p:column headerText="#{messages.state}" styleClass="align-center">
+                                #{contract.retrait > 0? messages.downloaded : messages.notDownloaded}
+                            </p:column>
+                            <p:ajax event="rowSelect"
+                                    update="@form"/>
+                        </p:dataTable>
+                    </div>
+                    <div class="ui-g-12">
+                        <div class="simple-frame">
+                            <h:panelGroup id="downloadButtonWrapper">
+                            <p:button id="downloadButton" widgetVar="download_button"
+                                      value="#{messages.download} #{usersView.currentContract.contractTemplate.name}"
+                                      icon="fa fa-file-pdf-o"
+                                      styleClass="need-validation"
+                                      outcome="downloadContract" disabled="#{not sectionsView.canDownloadContract or not usersView.currentContract.contractTemplate.canBeDownloadedAt(localeManager.currentEpoch)}">
+                                <f:param name="account" value="#{sectionsView.currentAssociation.id}"/>
+                                <f:param name="contract" value="#{sectionsView.currentContract.id}"/>
+                            </p:button>
+                            </h:panelGroup>
+                            <p:tooltip
+                                    rendered="#{not usersView.currentContract.contractTemplate.canBeDownloadedAt(localeManager.currentEpoch)}"
+                                    for="downloadButtonWrapper"
+                                    value="#{messages.youcannotDownloadUntil} #{localeManager.formatAsLocalDateTime(usersView.currentContract.contractTemplate.downloadDate)}"
+                                    position="bottom"/>
+                        </div>
+                    </div>
+                    <!-- notice -->
+                    <div class="ui-g-12">
+                        <div class="ui-messages ui-messages-noicon ui-widget">
+                            <div class="ui-messages-info ui-corner-all">
+                                <div class="ui-messages-info-summary">#{messages.pleaseFillMissingInfo}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-g ui-fluid">
+                    <p:focus id="focus" for="agrement"/>
+                    <!-- agrement -->
+                    <div class="ui-g-12 ui-md-7">
+                        <p:messages id="agrementMsgs" styleClass="need-validation ui-g-12 ui-g-nopad" for="agrement"
+                                    showIcon="false"
+                                    closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                        <p:outputLabel id="agrementLabel" for="agrement" styleClass="ui-g-12 no-v-pad"
+                                       value="#{messages.agrement}" title="#{messages.agrementHelp}"/>
+                        <div class="ui-g-12 no-h-pad">
+                            <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-group"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="agrement" value="#{profile.currentAssociation.agrement}"
+                                             styleClass="need-validation"
+                                             placeholder="#{messages.agrementHelp}"
+                                             title="#{messages.agrementHelp}" required="true"/>
+                            </span>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <!-- compte -->
+                    <div class="ui-g-12 ui-md-5">
+                        <p:messages id="compteMsgs" styleClass="need-validation ui-g-12 ui-g-nopad" for="compte"
+                                    showIcon="false"
+                                    closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                        <p:outputLabel id="compteLabel" for="compte" styleClass="ui-g-12 no-v-pad"
+                                       value="#{messages.compte}" title="#{messages.compteHelp}"/>
+                        <div class="ui-g-12 no-h-pad">
+                            <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-credit-card"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="compte" value="#{profile.currentAssociation.compte}" required="true"
+                                         title="#{messages.compteHelp}" styleClass="need-validation"/>
+                            </span>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <!-- president -->
+                    <div class="ui-g-12 ui-md-7">
+                        <p:messages id="presidentMsgs" styleClass="need-validation ui-g-nopad" for="president"
+                                    showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                        <p:outputLabel id="presidentLabel" for="president" styleClass="ui-g-12 no-v-pad"
+                                       value="#{messages.president}" title="#{messages.presidentHelp}"/>
+                        <div class="ui-g-12 no-h-pad">
+                            <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-group"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="president" value="#{profile.currentAssociation.president}"
+                                             styleClass="need-validation"
+                                             title="#{messages.presidentHelp}" required="true"/>
+                            </span>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <!-- phone -->
+                    <div class="ui-g-12 ui-md-5">
+                        <p:messages styleClass="need-validation ui-g-nopad" for="phone" showIcon="false"
+                                    closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                        <p:outputLabel for="phone" styleClass="ui-g-12 no-v-pad"
+                                       value="#{messages.phoneNumber}" title="#{messages.phoneNumberHelp}"/>
+                        <div class="ui-g-12 no-h-pad">
+                            <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-phone"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:inputMask id="phone" value="#{profile.currentAssociation.phone}"
+                                         styleClass="need-validation" mask="09 99 99 99 99"
+                                         title="#{messages.phoneNumberHelp}" required="true"/>
+                            </span>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <!-- adresse -->
+                    <div class="ui-g-12">
+                        <p:messages id="adresseMsgs" styleClass="need-validation ui-g-nopad" for="adresse"
+                                    showIcon="false"
+                                    closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                        <p:outputLabel id="adresseLabel" for="adresse" styleClass="ui-g-12 no-v-pad"
+                                       value="#{messages.adresse}" title="#{messages.adresseHelp}"/>
+                        <div class="ui-g-12 no-h-pad">
+                            <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-map-marker"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="adresse" value="#{profile.currentAssociation.adresse}"
+                                         styleClass="need-validation"
+                                         title="#{messages.adresseHelp}" required="true"/>
+                            </span>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <!-- banque -->
+                    <div class="ui-g-12 ui-md-7">
+                        <p:messages id="banqueMsgs" styleClass="need-validation ui-g-nopad" for="banque"
+                                    showIcon="false"
+                                    closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                        <p:outputLabel id="banqueLabel" for="banque" styleClass="ui-g-12 no-v-pad"
+                                       value="#{messages.banque}" title="#{messages.banqueHelp}"/>
+                        <div class="ui-g-12 no-h-pad">
+                            <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-bank"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="banque" value="#{profile.currentAssociation.banque}" required="true"
+                                         styleClass="need-validation"
+                                         validatorMessage="#{messages.invalidBankAccount}"
+                                         title="#{messages.banqueHelp}">
+                                <f:validateRegex pattern="[^+]*"/>
+                            </p:inputText>
+                            </span>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <!-- agence -->
+                    <div class="ui-g-12 ui-md-5">
+                        <p:messages styleClass="need-validation ui-g-nopad" for="agence"
+                                    showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                        <p:outputLabel for="adresse" styleClass="ui-g-12 no-v-pad"
+                                       value="#{messages.agence}" title="#{messages.agenceHelp}"/>
+                        <div class="ui-g-12 no-h-pad">
+                            <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-map-marker"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="agence" value="#{profile.currentAssociation.agence}"
+                                         styleClass="need-validation"
+                                         title="#{messages.agenceHelp}" required="true"/>
+                            </span>
+                            </h:panelGroup>
+                        </div>
+                    </div>
+                </div>
+
+                <h:panelGroup id="dynamicProperties" styleClass="ui-g">
+                    <ui:repeat value="#{propertiesView.potentialValues}"
+                               var="propertyValue">
+                        <h:panelGroup layout="block" styleClass="ui-g-12"
+                                      rendered="#{propertyValue.property.type ne 'NOTE'}">
+                            <h:outputText value="#{propertyValue.property.label}"
+                                          styleClass="ui-outputlabel"/>
+                        </h:panelGroup>
+                        <h:panelGroup layout="block" styleClass="ui-g-12">
+                            <ui:fragment rendered="#{propertyValue.property.type eq 'NOTE'}">
+                                <div class="ui-messages ui-messages-noicon ui-widget">
+                                    <div class="ui-messages-info ui-corner-all">
+                                        <div class="ui-messages-info-summary">#{propertyValue.property.label}</div>
+                                    </div>
+                                </div>
+                            </ui:fragment>
+                            <ui:fragment
+                                    rendered="#{propertyValue.property.type eq 'TEXT' or propertyValue.property.type eq 'GOAL'}">
+                                <p:messages for="TEXT_input" showIcon="false" closable="true"/>
+                                <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                    <p:inputTextarea id="TEXT_input"
+                                                     required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ASSOCIATION'}"
+                                                     placeholder="#{propertyValue.property.defaultValue}"
+                                                     value="#{propertyValue.value}"
+                                                     style="width: calc(100% - 16px)"/>
+                                </h:panelGroup>
+                            </ui:fragment>
+                            <ui:fragment
+                                    rendered="#{propertyValue.property.type eq 'MONETARY_AMOUNT' or propertyValue.property.type eq 'BUDGET'}">
+                                <p:messages for="MONETARY_AMOUNT_input" showIcon="false" closable="true"/>
+                                <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                    <p:inputNumber id="MONETARY_AMOUNT_input"
+                                                   required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ASSOCIATION'}"
+                                                   value="#{propertyValue.valueAsDecimal}"
+                                                   minValue="0" styleClass="need-validation"
+                                                   onfocus="this.setSelectionRange(0, this.value.length)"
+                                                   symbol=" DA" symbolPosition="suffix"
+                                                   decimalPlaces="2" decimalSeparator=","
+                                                   thousandSeparator="&#160;"/>
+                                </h:panelGroup>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{propertyValue.property.type eq 'INTEGER'}">
+                                <p:messages for="INTEGER_input" showIcon="false" closable="true"/>
+                                <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                    <p:inputNumber id="INTEGER_input"
+                                                   required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ASSOCIATION'}"
+                                                   value="#{propertyValue.value}"
+                                                   styleClass="need-validation"
+                                                   onfocus="this.setSelectionRange(0, this.value.length)"
+                                                   decimalPlaces="0"
+                                                   thousandSeparator="&#160;"
+                                    />
+                                </h:panelGroup>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{propertyValue.property.type eq 'DATE'}">
+                                <p:messages for="DATE_input" showIcon="false" closable="true"/>
+                                <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
+                                    <p:calendar id="DATE_input"
+                                                required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ASSOCIATION'}"
+                                                value="#{propertyValue.valueAsDate}"
+                                                styleClass="need-validation"/>
+                                </h:panelGroup>
+                            </ui:fragment>
+                        </h:panelGroup>
+                    </ui:repeat>
+                </h:panelGroup>
+
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <h:panelGroup class="simple-frame">
+                            <p:commandButton widgetVar="save_button" value="#{messages.save}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             icon="ui-icon-save" process="@form"
+                                             update="@(.need-validation) dynamicProperties focus"
+                                             actionListener="#{singleUserView.saveChanges}"/>
+                        </h:panelGroup>
+                    </div>
+                </div>
+
+                <h:panelGroup rendered="#{sectionsView.currentAssociationIsSport}"
+                              styleClass="ui-g" layout="block">
+                    <div class="ui-g-12">
+                        <div class="ui-messages ui-messages-noicon ui-widget">
+                            <div class="ui-messages-info ui-corner-all">
+                                <div class="ui-messages-info-summary">Les sections de votre association:</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--suppress ELValidationInJSP -->
+                    <p:dataTable id="sections_table" value="#{sectionsView.sections}" var="section"
+                                 sortBy="#{section.index}"
+                                 emptyMessage="pas de sections">
+
+                        <p:column headerText="#{messages.sectionName}">
+                            <p:commandButton actionListener="#{sectionsView.deleteSection(section.id)}" process="@this"
+                                             update="sections_table" icon="ui-icon-delete"/>
+                            <h:outputText styleClass="spaced" value="#{section.name}"/>
+                        </p:column>
+
+                        <p:column headerText="#{messages.montantSection}">
+                            <h:outputFormat value="#{messages.currencyInDA}">
+                                <f:param value="#{sectionsView.calcSectionTotalBudget(section.id)}"/>
+                            </h:outputFormat>
+                        </p:column>
+
+                        <p:column headerText="#{messages.progressState}">
+                            #{messages[section.processingState]}
+                        </p:column>
+
+                    </p:dataTable>
+                    <div class="ui-g-12 simple-frame">
+                        <p:commandButton id="newSectionButton" type="button" accesskey="n"
+                                         value="#{messages.newSection}" icon="fa fa-plus"
+                                         onclick="PF('new_section_dialog').show()"/>
+                    </div>
+                </h:panelGroup>
+            </p:panel>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

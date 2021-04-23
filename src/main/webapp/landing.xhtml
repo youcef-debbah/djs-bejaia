@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{localeManager.locale}">
+    <h:head>
+        <f:facet name="first">
+            <ui:include src="/WEB-INF/templates/common-meta.xhtml"/>
+        </f:facet>
+        <title>#{messages.companyName}</title>
+        <h:outputScript name="js/ripple.js" library="ultima-layout"/>
+        <!--suppress ES6ConvertVarToLetConst -->
+        <script type="text/javascript">
+            $(function () {
+                $('#menu-button').on('click', function (e) {
+                    var menu = $('#menu');
+                    if (menu.hasClass('lmenu-active')) {
+                        menu.addClass('fadeOutUp');
+
+                        setTimeout(function () {
+                            menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+                        }, 500);
+                    } else {
+                        menu.addClass('lmenu-active fadeInDown');
+                    }
+                    e.preventDefault();
+                });
+            });
+        </script>
+    </h:head>
+
+    <h:body styleClass="landing-body">
+        <ui:include src="/WEB-INF/templates/common-overlay.xhtml"/>
+        <div class="landing-wrapper">
+            <div id="header">
+                <h:form>
+                    <div class="header-top clearfix">
+                        <span class="logo"/>
+
+                        <!--                        <a id="menu-button" href="#">-->
+                        <!--                            <span class="fa fa-bars"/>-->
+                        <!--                        </a>-->
+
+                        <ul id="menu" class="animated">
+                            <li><p:link outcome="homePage">#{messages.homePage}</p:link></li>
+                            <ui:fragment rendered="#{currentPrincipal.accessType.association}">
+                                <li><p:link outcome="profile">#{messages.profile}</p:link></li>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{currentPrincipal.admin}">
+                                <li><p:link outcome="associations">#{messages.associations}</p:link></li>
+                            </ui:fragment>
+                            <li><p:link outcome="newsArticles" value="#{messages.newsArticles}"/></li>
+                            <ui:fragment rendered="#{currentPrincipal.loggedIn}">
+                                <li><p:commandLink action="#{meta.logout}" onerror="jsoftware95.updateFailed()"
+                                >#{messages.singOut}</p:commandLink></li>
+                            </ui:fragment>
+                            <li><p:link outcome="aboutUs" value="#{messages.aboutUs}"/></li>
+                            <ui:fragment rendered="#{not localeManager.isLanguageEquals('en')}">
+                                <li><p:commandLink onerror="jsoftware95.updateFailed()"
+                                                   actionListener="#{localeManager.changeLang('en')}">English</p:commandLink>
+                                </li>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{not localeManager.isLanguageEquals('fr')}">
+                                <li><p:commandLink onerror="jsoftware95.updateFailed()"
+                                                   actionListener="#{localeManager.changeLang('fr')}">Française</p:commandLink>
+                                </li>
+                            </ui:fragment>
+                        </ul>
+                    </div>
+                </h:form>
+
+                <div class="header-content clearfix">
+                    <h1>#{messages.slogan}</h1>
+                    <ui:fragment rendered="#{currentPrincipal.loggedOut}">
+                        <p:button outcome="login" value="#{messages.singIn}" styleClass="secondary bold"/>
+                    </ui:fragment>
+                </div>
+            </div>
+
+            <div id="features">
+                <h2>#{messages.nextGenerationIsHere}</h2>
+                <p>#{messages.happyToServe}</p>
+                <p>#{messages.ourMotives}</p>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-4">
+                        <h3>#{messages.dossier}</h3>
+                        <p>#{messages.sendDossier}</p>
+                        <p:link outcome="login">
+                            <f:param name="next" value="dossier"/>
+                            <div class="feature-icon">
+                                <i class="material-icons ui-icon-folder"/>
+                            </div>
+                        </p:link>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <h3>#{messages.support}</h3>
+                        <p>#{messages.supportDetails}</p>
+                        <p:link outcome="userHome">
+                            <div class="feature-icon">
+                                <i class="material-icons ui-icon-attach-money"/>
+                            </div>
+                        </p:link>
+                    </div>
+                    <div class="ui-g-12 ui-md-4">
+                        <h3>#{messages.achievements}</h3>
+                        <p>#{messages.achievementsDetails}</p>
+                        <p:link outcome="login">
+                            <f:param name="next" value="achievements"/>
+                            <div class="feature-icon">
+                                <i class="material-icons ui-icon-assignment-turned-in"/>
+                            </div>
+                        </p:link>
+                    </div>
+
+                </div>
+            </div>
+
+            <h:panelGroup rendered="#{not empty landingView.topNews}" id="promotion" layout="block"
+                          styleClass="clearfix">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-lg-7">
+                        <h1 style="color: #3F51B5;line-height: 1em;">#{messages.checkLatestNews}</h1>
+                        <p:button outcome="newsArticles" value="#{messages.seeAllArticles}" styleClass="secondary"/>
+                    </div>
+                    <div class="ui-g-12 ui-lg-5">
+                        <ui:repeat value="#{landingView.topNews}" var="article">
+                            <div class="card info">
+                                <h2 class="align-center">#{article.title}</h2>
+                                <p class="content">
+                                    <img src="#{empty article.thumbnails? resource['djs:images/full_djs_logo.svg'] : article.thumbnails}"
+                                         alt="#{messages.thumbnails}"
+                                         width="auto" height="150" class="thumbnails"/>#{article.summary}</p>
+                                <p class="align-center clear-both">
+                                    <p:button value="#{messages.learnMore}" outcome="article"
+                                              icon="ui-icon-info-outline">
+                                        <f:param name="id" value="#{article.id}"/>
+                                    </p:button>
+                                </p>
+                            </div>
+                        </ui:repeat>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <div id="pricing">
+                <h2>#{messages.ourMission}</h2>
+                <p>#{messages.djsMission}</p>
+            </div>
+
+        </div>
+
+        <ui:include src="/WEB-INF/templates/footer.xhtml"/>
+
+        <h:outputStylesheet name="css/animate.min.css" library="ultima-layout"/>
+        <h:outputStylesheet name="css/ripple.css" library="ultima-layout"/>
+        <h:outputStylesheet name="css/layout-djs.css" library="ultima-layout"/>
+    </h:body>
+</f:view>
+</html>

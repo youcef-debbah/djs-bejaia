@@ -1,0 +1,141 @@
+@import '../variables';
+
+//Common
+$headerFontSize: 16px;
+$headerPadding: 10px 16px;
+$headerBgColor: $primaryColor;
+$headerTextColor: #ffffff;
+$headerIconColor: #ffffff;
+$contentFontSize: 16px;
+$contentPadding: 10px 16px;
+$contentBgColor: #ffffff;
+$contentIconColor: #757575;
+$overlayBgColor: #58575c;
+$errorMessageFontSize: 12px;
+$errorMessageIconFontSize: 15px;
+
+//Inputfield
+$inputHeaderFontSize: 16px;
+$inputHeaderPadding: 10px 16px;
+$inputFontSize: 16px;
+$inputOptionFontSize: 16px;
+$inputBgColor: transparent;
+$inputBorderColor: #bdbdbd;
+$inputBorderErrorColor: #e62a10;
+$inputErrorTextColor: #e62a10;
+$inputFieldLabelTextColor: #999999;
+$inputFieldBoxBgColor: #f7f7f7;
+$inputFieldFillBgColor: #f7f7f7;
+$inputAutoFillBorderColor: #bdbdbd;
+
+//groups
+$inputGroupBorderColor: #bdbdbd;
+$inputGroupBgColor: transparent;
+$inputGroupTextColor: #757575;
+$inputGroupIconColor: #bdbdbd;
+$inputGroupAddonMinWidth: 2*$fontSize;
+$inputGroupCheckboxWidth: 18px;
+$inputGroupCheckboxHeight: 18px;
+$inputGroupPadding: 2px 2px 1px 2px;
+$inputGroupBorderRadius: 0px;
+$inputGroupIconFontSize: 1.5em;
+
+// Button
+$buttonFontSize: 1em;
+$buttonTextColor: #ffffff;
+
+// Input lists
+$inputListItemBgColor: #ffffff;
+$inputListItemCheckboxBorderColor: #ffffff;
+$inputListItemFilterTextColor: #ffffff;
+
+//Keypad
+$keypadBgColor: #ffffff;
+$keypadSpecialKeyBgColor: $primaryColor;
+$keypadSpecialKeyTextColor: #ffffff;
+$keypadSpecialKeyHoverBgColor: $primaryDarkColor;
+$keypadSpecialKeyHoverTextColor: #ffffff;
+
+//input switch
+$inputSwitchOffHandleBgColor: #ffffff;
+
+//checkbox
+$checkboxBorderColor: #757575;
+
+//radiobutton
+$radioButtonBorderColor: #757575;
+
+//calendar
+$calendarNavIconColor: #ffffff;
+$calendarCellTextColor: #ffffff;
+
+//messages, growl, toast
+$messageIconColor: #FFFFFF;
+$infoMessageBgColor: #6fb760;
+$infoMessageBorderColor: darken($infoMessageBgColor, 3%);
+$infoMessageTextColor: #FFFFFF;
+
+$fatalMessageBgColor: #212121;
+$fatalMessageBorderColor: #212121;
+$fatalMessageTextColor: #ffffff;
+
+$warnMessageBgColor: #f7c243;
+$warnMessageBorderColor: #f7c243;
+$warnMessageTextColor: #FFFFFF;
+
+$errorMessageBgColor: #ff6657;
+$errorMessageBorderColor: #ff6657;
+$errorMessageTextColor: #FFFFFF;
+
+//paginator
+$paginatorIconColor: #ffffff;
+
+//scrollPanel
+$scrollPanelBgColor: #ffffff;
+
+//table
+$dividerLightColor: #cacaca;
+$datatableEvenRowBgColor: #f4f4f4;
+$datatableHeaderCellBgColor: #ffffff;
+$datatableHeaderCellTextColor: $textColor;
+$datatableHighlightTextColor: #ffffff;
+
+//panel common
+$panelHeaderBgColor: $primaryColor;
+$panelHeaderBorderColor: $primaryColor;
+$panelHeaderTextColor: #ffffff;
+$panelHeaderIconColor: #ffffff;
+
+//dataview
+$dataviewHeaderBgColor: #ffffff;
+
+//schedule
+$scheduleEventBgColor: $primaryLightColor;
+$scheduleEventTextColor: #ffffff;
+
+//steps
+$stepsItemBgColor: #ffffff;
+$stepsItemNumberColor: #ffffff;
+$stepsItemTextColor: $textSecondaryColor;
+$menuitemIconColor: #757575;
+
+//tabview
+$tabsNavBgColor: #ffffff;
+
+//panel common
+$panelHeaderBgColor: $primaryColor;
+$panelHeaderBorderColor: $primaryColor;
+$panelHeaderTextColor: #ffffff;
+$panelHeaderIconColor: #ffffff;
+
+//dialog
+$dialogHeaderBgColor: #ffffff;
+$dialogHeaderTextColor: $textColor;
+$dialogFooterButtonBgColor: #ffffff;
+$dialogFooterButtonTextColor: $textColor;
+
+//tooltip
+$tooltipBgColor: #323232;
+
+//timeline
+$timelineBgColor: #ffffff;

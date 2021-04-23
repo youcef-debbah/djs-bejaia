@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Handcrafted with love by Youcef DEBBAH
+  ~ Copyright 2019 youcef-debbah@hotmail.com
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="djs">
+
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <jta-data-source>java:jboss/datasources/MySQLTestDS</jta-data-source>
+
+        <properties>
+            <property name="hibernate.dialect" value="dz.ngnex.util.Mysql57Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="drop-and-create"/>
+<!--            <property name="hibernate.hbm2ddl.auto" value="validate"/>-->
+
+            <!-- connection pooling -->
+            <property name="c3p0.min_size" value="5"/>
+            <property name="c3p0.max_size" value="20"/>
+            <property name="c3p0.timeout" value="300"/>
+            <property name="c3p0.max_statements" value="50"/>
+            <property name="c3p0.idle_test_period" value="3000"/>
+
+            <!-- Show and print nice SQL on stdout -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="false"/>
+            <property name="hibernate.use_sql_comments" value="true"/>
+
+            <!-- quote identifiers -->
+            <property name="hibernate.globally_quoted_identifiers" value="true"/>
+            <property name="hibernate.globally_quoted_identifiers_skip_column_definitions" value="true"/>
+
+            <!-- charset -->
+            <property name="hibernate.connection.CharSet" value="utf8"/>
+            <property name="hibernate.connection.characterEncoding" value="utf8"/>
+            <property name="hibernate.connection.useUnicode" value="true"/>
+        </properties>
+
+    </persistence-unit>
+</persistence>

@@ -1,0 +1,134 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.allContracts}"/>
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g dashboard">
+
+                <div class="ui-g-12 align-center">
+                    <h1 class="v-spaced">#{messages.allContractsOfAsso}: #{contractsView.association.name}</h1>
+                </div>
+
+                <div class="ui-g-12 ui-md-6">
+                    <div class="ui-g card colorbox colorbox-1">
+                        <div class="ui-g-4">
+                            <i class="material-icons ui-icon-access-time"/>
+                        </div>
+                        <div class="ui-g-8">
+                            <span class="colorbox-name">#{messages.budgetOfActiveContracts}</span>
+                            <span class="colorbox-count">#{localeManager.formatAsDA(contractsView.totalBudgetOfActiveContracts)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-md-6">
+                    <div class="ui-g card colorbox colorbox-3">
+                        <div class="ui-g-4">
+                            <i class="material-icons ui-icon-history"/>
+                        </div>
+                        <div class="ui-g-8">
+                            <span class="colorbox-name">#{messages.budgetOfArchivedContracts}</span>
+                            <span class="colorbox-count">#{localeManager.formatAsDA(contractsView.totalBudgetOfArchivedContracts)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ui-g-12">
+                    <div class="ui-g-12 card mid">
+                        <h:panelGroup rendered="#{empty contractsView.contracts}" styleClass="ui-g-12 align-center">
+                            <h:outputText value="#{messages.noData}"/>
+                        </h:panelGroup>
+                        <ui:repeat value="#{contractsView.contracts}" var="contract">
+                            <div class="ui-g-12 card #{contract.state eq 'ACTIVE'? 'active' : 'notActive'}">
+                                <ui:fragment rendered="#{contract.state eq 'ARCHIVED'}">
+                                    <h:panelGroup id="stateTag"
+                                                  styleClass="icon-tag right material-icons ui-icon-archive"/>
+                                    <p:tooltip for="stateTag" value="#{messages.thisContractArchived}"/>
+                                </ui:fragment>
+                                <h3 class="v-spaced bold">#{messages.contract += ': ' += contract.contractTemplate.name += ' - ' += contract.contractTemplate.season.name}</h3>
+                                <h:outputText styleClass="bold" value="#{messages.globalMontant}: "/>
+                                <h:outputText value="#{localeManager.formatAsDA(contract.globalMontant)}"/>
+                                <br/>
+                                <h:outputText styleClass="bold" value="#{messages.downloads}: "/>
+                                <h:outputText value="#{contract.retrait}"/>
+                                <br/>
+                                <h:outputText styleClass="bold" value="#{messages.assignmentDate}: "/>
+                                <h:outputText value="#{localeManager.formatAsLocalDateTime(contract.assignmentDate)}"/>
+                                <ui:fragment rendered="#{not empty contract.assignmentDate}">
+                                    (<pe:timeAgo value="#{meta.asDate(contract.assignmentDate)}"/>)
+                                </ui:fragment>
+                                <br/>
+                                <h:outputText styleClass="bold" value="#{messages.lastUpdate}: "/>
+                                <h:outputText value="#{localeManager.formatAsLocalDateTime(contract.lastUpdate)}"/>
+                                <ui:fragment rendered="#{not empty contract.lastUpdate}">
+                                    (<pe:timeAgo value="#{meta.asDate(contract.lastUpdate)}"/>)
+                                </ui:fragment>
+                                <ui:fragment rendered="#{contract.retrait gt 0}">
+                                    <br/>
+                                    <h:outputText styleClass="bold" value="#{messages.lastDownload}: "/>
+                                    <h:outputText
+                                            value="#{localeManager.formatAsLocalDateTime(contract.lastDownload)}"/>
+                                    <ui:fragment rendered="#{not empty contract.lastDownload}">
+                                        (<pe:timeAgo value="#{meta.asDate(contract.lastDownload)}"/>)
+                                    </ui:fragment>
+                                </ui:fragment>
+                                <br/>
+                                <h:outputText styleClass="bold" value="#{messages.achievementLevel}: "/>
+                                <h:outputText
+                                        value="#{empty contract.achievementLevel? messages.nothing : messages[contract.achievementLevel]}"/>
+                                <ui:fragment rendered="#{not empty contract.achievement.trim()}">
+                                    <br/>
+                                    <h:outputText styleClass="bold" value="#{messages.achievementsDone}"/>
+                                    <br/>
+                                    <h:outputText escape="false"
+                                                  value="#{localeManager.formatTextAsHtml(contract.achievement)}"/>
+                                </ui:fragment>
+                                <div class="ui-g-12">
+
+                                    <p:button id="preview_button"
+                                              value="#{messages.preview}"
+                                              data-title="#{messages.preview}"
+                                              target="_blank" accesskey="p"
+                                              icon="fa fa-file-pdf-o" outcome="downloadContract">
+                                        <f:param name="preview" value="true"/>
+                                        <f:param name="account" value="#{contractsView.association.id}"/>
+                                        <f:param name="contract" value="#{contract.id}"/>
+                                    </p:button>
+
+                                    <p:commandButton id="deleteContractButton" process="@this" update="@form"
+                                                     actionListener="#{contractsView.delete(contract.id)}"
+                                                     onerror="jsoftware95.updateFailed()"
+                                                     icon="ui-icon-delete" value="#{messages.delete}">
+                                        <p:confirm/>
+                                    </p:commandButton>
+
+<!--                                    <p:commandButton rendered="#{contract.state ne 'ARCHIVED'}"-->
+<!--                                                     id="archiveContractButton" process="@this" update="@form"-->
+<!--                                                     actionListener="#{contractsView.archiveContractInstance(contract.id)}"-->
+<!--                                                     onerror="jsoftware95.updateFailed()"-->
+<!--                                                     icon="ui-icon-archive" value="#{messages.archive}">-->
+<!--                                        <p:confirm message="#{messages.confirmArchiving}"/>-->
+<!--                                    </p:commandButton>-->
+
+<!--                                    <p:commandButton rendered="#{contract.state ne 'ACTIVE'}"-->
+<!--                                                     id="unarchiveContractButton" process="@this" update="@form"-->
+<!--                                                     actionListener="#{contractsView.unarchiveContractInstance(contract.id)}"-->
+<!--                                                     onerror="jsoftware95.updateFailed()"-->
+<!--                                                     icon="ui-icon-unarchive" value="#{messages.unarchive}">-->
+<!--                                        <p:confirm message="#{messages.confirmUnarchiving}"/>-->
+<!--                                    </p:commandButton>-->
+                                </div>
+                            </div>
+                        </ui:repeat>
+
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

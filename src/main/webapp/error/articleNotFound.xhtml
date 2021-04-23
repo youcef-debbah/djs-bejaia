@@ -1,0 +1,15 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.articleNotFound}"/>
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>#{messages.articleNotFound}</h1>
+                    #{messages.articleNotFoundDetails}
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

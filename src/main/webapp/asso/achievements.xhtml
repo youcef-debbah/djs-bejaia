@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.achievements}"/>
+    <ui:define name="content">
+        <div class="card big">
+            <ui:fragment rendered="#{empty contractsView.contracts}">
+                <h1>#{messages.youDontHaveSub}</h1>
+            </ui:fragment>
+            <ui:fragment rendered="#{not empty contractsView.contracts}">
+                <h1 class="text-Center">#{messages.achievementsDetails}</h1>
+            </ui:fragment>
+            <ui:repeat value="#{contractsView.contracts}" var="contract">
+                <h:form styleClass="card #{contract.state eq 'ACTIVE'? 'active' : 'notActive'}">
+                    <ui:fragment rendered="#{contract.state eq 'ARCHIVED'}">
+                        <h:panelGroup id="stateTag" styleClass="icon-tag right material-icons ui-icon-archive"/>
+                        <p:tooltip for="stateTag" value="#{messages.thisContractArchived}"/>
+                    </ui:fragment>
+                    <h2 class="v-spaced">#{messages.contract}: #{contract.contractTemplate.name}</h2>
+                    <div class="ui-g">
+                        <ui:fragment rendered="#{not empty contract.achievements}">
+                            <h:outputText value="#{messages.objectives}" styleClass="bold"/>
+                            <br/>
+                            <div class="ui-g-12 ui-g-nopad">
+                                <ui:repeat value="#{contract.achievements}" var="achievement">
+                                    <p><h:outputText escape="false" value="#{achievement.valueAsHtml}"/></p>
+                                </ui:repeat>
+                            </div>
+                            <div class="ui-g-12 ui-g-nopad bottom-spaced">
+                                <h:outputText value="#{messages.achievementLevelOfAbove}#{' '}"/>
+                                <p:selectOneMenu value="#{contract.achievementLevel}">
+                                    <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                    <!--suppress ELValidationInJSP -->
+                                    <f:selectItems value="#{contractsView.allAchievementLevels}" var="level"
+                                                   itemLabel="#{messages[level]}" itemValue="#{level}"/>
+                                    <p:ajax listener="#{contractsView.saveAchievementLevel(contract.id)}"
+                                            process="@this" update="@this"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </ui:fragment>
+                        <h:outputText value="#{messages.achievementsDone}" styleClass="bold"/>
+                        <br/>
+                        <div class="ui-g-12 ui-fluid">
+                            <p:inplace id="achievementsDone" editor="true">
+                                <f:facet name="output">
+                                    <h:outputText
+                                            value="#{localeManager.formatTextAsHtml(contract.achievement)}#{messages.clickToEdit}"
+                                            escape="false"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputTextarea value="#{contract.achievement}"/>
+                                </f:facet>
+                                <p:ajax event="save" listener="#{contractsView.saveAchievements(contract.id)}"
+                                        process="@this" update="@this"/>
+                            </p:inplace>
+                        </div>
+                    </div>
+                </h:form>
+            </ui:repeat>
+        </div>
+    </ui:define>
+</ui:composition>

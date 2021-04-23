@@ -1,0 +1,576 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="propriétés supplémentaires"/>
+
+    <ui:define name="overlay">
+        <h:form id="activityForm">
+            <p:dialog id="activity_dialog" widgetVar="add-activity-dialog" positionType="fixed"
+                      header="Nouveaux activité" modal="false" width="350">
+                <h:panelGroup id="activityDialogContent" styleClass="ui-g">
+                    <p:focus context="activityDialogContent"/>
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="activity-name" value="Nom"/>
+                        <p:messages for="activity-name" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12 ui-fluid">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="material-icons ui-icon-mode-edit"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="activity-name" value="#{templateView.newActivityName}"
+                                             required="true"/>
+                            </span>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+                <f:facet name="footer">
+                    <p:commandButton widgetVar="activity_dialog_add_button"
+                                     value="#{messages.add}"
+                                     icon="ui-icon-add" process="activity_dialog"
+                                     update="main_form:activities-section activityDialogContent"
+                                     onstart="PF('activity_dialog_add_button').disable()"
+                                     onerror="jsoftware95.updateFailed()"
+                                     oncomplete="PF('activity_dialog_add_button').enable()"
+                                     actionListener="#{templateView.addNewActivity}"/>
+                    <p:commandButton value="#{messages.cancel}" type="button"
+                                     onclick="PF('add-activity-dialog').hide()" icon="fa fa-remove"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+        <h:form id="propertyForm">
+            <p:dialog id="dialog" widgetVar="add-property-dialog" positionType="fixed"
+                      header="Nouveaux champs de saisie" modal="false" width="350">
+                <h:panelGroup id="dialogContent" styleClass="ui-g">
+                    <p:focus context="dialogContent"/>
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="field-name" value="Nom"/>
+                        <p:messages for="field-name" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12 ui-fluid">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="material-icons ui-icon-mode-edit"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="field-name" value="#{templateView.newPropertyName}"
+                                             required="true"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="field-type" value="Type"/>
+                        <p:messages for="field-type" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12 ui-fluid">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="material-icons ui-icon-mode-edit"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                            <p:selectOneMenu id="field-type" required="true" value="#{templateView.newPropertyType}">
+                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                <!--suppress ELValidationInJSP -->
+                                <f:selectItems value="#{templateView.fieldTypes}"
+                                               var="type"
+                                               itemLabel="#{messages[type]}"
+                                               itemValue="#{type}"/>
+                            </p:selectOneMenu>
+                            </span>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+                <f:facet name="footer">
+                    <p:commandButton widgetVar="dialog_add_button"
+                                     value="#{messages.add}"
+                                     icon="ui-icon-add" process="dialog"
+                                     update="main_form:properties-section dialogContent"
+                                     onstart="PF('dialog_add_button').disable()"
+                                     onerror="jsoftware95.updateFailed()"
+                                     oncomplete="PF('dialog_add_button').enable()"
+                                     actionListener="#{templateView.addNewProperty}"/>
+                    <p:commandButton value="#{messages.cancel}" type="button"
+                                     onclick="PF('add-property-dialog').hide()" icon="fa fa-remove"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+        <h:form id="templateForm">
+            <p:dialog id="template_dialog" widgetVar="template_main_dialog" positionType="fixed"
+                      header="#{messages.newContractModel}" modal="false" width="350">
+                <h:panelGroup id="templateDialogContent" styleClass="ui-g" layout="block">
+                    <p:focus context="templateDialogContent"/>
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="template-name" value="Nom"/>
+                        <p:messages for="template-name" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12 ui-fluid">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="material-icons ui-icon-mode-edit"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="template-name" value="#{templateView.newTemplateName}"
+                                             required="true"/>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <p:outputLabel for="template-source" value="Valeur initial"/>
+                        <p:messages for="template-source" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12 ui-fluid">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="material-icons ui-icon-mode-edit"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                            <p:selectOneMenu id="template-source" required="true"
+                                             value="#{templateView.sourceTemplateID}">
+                                    <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                    <f:selectItems value="#{templateView.availableTemplateSources}"
+                                                   var="info" itemValue="#{info.id}"
+                                                   itemLabel="#{info.name}#{empty info.seasonName? '' : (' - ' += info.seasonName)}"/>
+                            </p:selectOneMenu>
+                            </span>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+                <f:facet name="footer">
+                    <p:commandButton widgetVar="template_dialog_add_button"
+                                     value="#{messages.add}"
+                                     icon="ui-icon-add" process="template_dialog"
+                                     update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent"
+                                     onstart="PF('template_dialog_add_button').disable()"
+                                     onerror="jsoftware95.updateFailed()"
+                                     oncomplete="PF('template_dialog_add_button').enable()"
+                                     actionListener="#{templateView.addNewTemplate()}"/>
+                    <p:commandButton value="#{messages.cancel}" type="button"
+                                     onclick="PF('template_main_dialog').hide()" icon="fa fa-remove"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="main_form">
+            <h:panelGroup id="all-sections" styleClass="card spaced" layout="block">
+                <h:panelGroup id="template-panel" layout="block">
+                    <h1>#{messages.contractModleForSeason} #{templateView.currentSeasonName}</h1>
+                    <p:toolbar>
+                        <f:facet name="left">
+                            <p:commandButton accesskey="s"
+                                             value="#{messages.save}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             icon="ui-icon-save" process="template-panel" update="template-panel"
+                                             disabled="#{empty templateView.currentTemplate}"
+                                             actionListener="#{templateView.saveCurrentTemplate}"/>
+
+                            <p:commandButton icon="ui-icon-add" value="#{messages.add}" type="button"
+                                             onclick="PF('template_main_dialog').show()"/>
+
+                            <p:commandButton icon="ui-icon-remove"
+                                             value="#{messages.delete}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             process="@this"
+                                             update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent"
+                                             disabled="#{empty templateView.currentTemplate}"
+                                             actionListener="#{templateView.deleteCurrentTemplate}"/>
+
+                            <p:selectOneMenu id="current-template" value="#{templateView.currentTemplateID}"
+                                             styleClass="spaced" style="min-width: 200px">
+                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                <f:selectItems value="#{templateView.templates}" var="template"
+                                               itemLabel="#{template.name}" itemValue="#{template.id}"/>
+                                <p:ajax process="@this"
+                                        update="@form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent"/>
+                            </p:selectOneMenu>
+                            <h:outputFormat rendered="#{not empty templateView.currentTemplateID}"
+                                            value="#{messages.usedBy}" styleClass="inline-block">
+                                <f:param value="#{templateView.usageCountOfCurrentTemplate}"/>
+                            </h:outputFormat>
+                        </f:facet>
+                    </p:toolbar>
+
+                    <ui:fragment rendered="#{not empty templateView.currentTemplate.lastUpdate}">
+                        <p class="hint">#{messages.lastSave} #{localeManager.formatAsLocalDateTime(templateView.currentTemplate.lastUpdate)} -
+                            <pe:timeAgo
+                                    value="#{localeManager.toDate(templateView.currentTemplate.lastUpdate)}"/></p>
+                    </ui:fragment>
+
+                    <h3>#{messages.articlesTemplate} <p:commandButton id="generalVarsButton" type="button"
+                                                                      icon="ui-icon-content-copy"/></h3>
+                    <p:overlayPanel styleClass="simple-overlay" for="generalVarsButton"
+                                    widgetVar="generalVarsOverlay"
+                                    dismissable="true" hideEffect="fade" showEffect="fade">
+                        <ui:repeat value="#{templateView.generalVars}" var="variable">
+                            <div class="v-spaced">
+                                <p:commandButton id="generalVarCopyButton" type="button"
+                                                 icon="ui-icon-content-copy"/>
+                                #{variable.rawName}
+                                <pe:clipboard trigger="generalVarCopyButton" action="copy"
+                                              text="#{variable.variableName}"
+                                              onsuccess="PF('generalVarsOverlay').hide();jsoftware95.success('#{messages.variableNameCopied}');"
+                                              onerror="jsoftware95.error('#{messages.couldNotCopy}', '#{variable.variableName}');"/>
+                            </div>
+                        </ui:repeat>
+                    </p:overlayPanel>
+
+                    <p:messages for="template" showIcon="false" closable="true">
+                        <p:effect event="load" type="bounce"/>
+                    </p:messages>
+                    <pe:ckEditor id="template" value="#{templateView.template}"
+                                 toolbar="#{meta.ckEditorRichToolbar}"
+                                 disabled="#{empty templateView.currentTemplate}"
+                                 height="450px" width="100%"/>
+
+                    <h3>#{messages.downloadDate}</h3>
+                    <p:calendar id="downloadDate" value="#{templateView.downloadDate}" locale="#{localeManager.locale}"
+                                timeZone="#{localeManager.adminTimeZone}" autocomplete="false"
+                                pattern="dd/MM/yyyy HH:mm" effect="fade"/>
+                    <p:tooltip value="#{messages.associationsCanNotDownloadBeforeThisDate}" for="downloadDate"/>
+                </h:panelGroup>
+
+                <h3>#{messages.contractProperties}</h3>
+                <h:panelGroup id="properties-section" layout="block">
+                    <!--suppress ELValidationInJSP -->
+                    <p:dataTable id="properties-table" value="#{templateView.properties}" var="property"
+                                 rowKey="#{property.id}" selection="#{templateView.currentProperty}"
+                                 sortBy="#{property.index}"
+                                 selectionMode="single" emptyMessage="#{messages.noData}">
+
+                        <p:ajax update="main_form:toolbar main_form:input propertyForm:dialog"
+                                event="rowSelect"/>
+
+                        <p:column headerText="Nom">
+                            <ui:fragment rendered="#{property.type ne 'NOTE'}">
+                                <p:commandButton id="copyPropertyNameButton" type="button" icon="ui-icon-content-copy"/>
+                                <pe:clipboard trigger="copyPropertyNameButton" action="copy"
+                                              text="#{property.variableName}"
+                                              onsuccess="jsoftware95.success('#{messages.variableNameCopied}');"
+                                              onerror="jsoftware95.error('#{messages.couldNotCopy}', '#{property.variableName}');"/>
+                            </ui:fragment>
+                            #{property.name}
+                        </p:column>
+                        <p:column headerText="Accès" width="110" styleClass="align-center">
+                            #{messages[property.access]}
+                        </p:column>
+                        <p:column headerText="Type" width="50" styleClass="align-center">
+                            #{messages[property.type]}
+                        </p:column>
+                        <p:column headerText="Requis" width="90" styleClass="align-center">
+                            #{messages[property.required]}
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:toolbar id="toolbar">
+                        <f:facet name="left">
+                            <p:commandButton value="#{messages.save}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             icon="ui-icon-save" process="properties-section"
+                                             update="properties-section"
+                                             disabled="#{empty templateView.currentProperty}"
+                                             actionListener="#{templateView.saveCurrentProperty}"/>
+
+                            <p:commandButton icon="ui-icon-add" value="#{messages.add}" type="button"
+                                             disabled="#{empty templateView.currentTemplate}"
+                                             onclick="PF('add-property-dialog').show()"/>
+
+                            <p:commandButton id="delete_button" disabled="#{empty templateView.currentProperty}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             process="@this"
+                                             update="properties-section"
+                                             actionListener="#{templateView.deleteCurrentProperty}"
+                                             icon="ui-icon-remove" value="#{messages.delete}"/>
+
+                            <p:commandButton id="property_up_button"
+                                             disabled="#{templateView.currentPropertyIsFirst}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             process="@this"
+                                             update="properties-section"
+                                             actionListener="#{templateView.moveCurrentPropertyUp}"
+                                             icon="ui-icon-arrow-upward" value="#{messages.moveUp}"/>
+
+
+                            <p:commandButton id="property_down_button"
+                                             disabled="#{templateView.currentPropertyIsLast}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             process="@this"
+                                             update="properties-section"
+                                             actionListener="#{templateView.moveCurrentPropertyDown}"
+                                             icon="ui-icon-arrow-downward" value="#{messages.moveDown}"/>
+                        </f:facet>
+                    </p:toolbar>
+
+                    <h:panelGroup id="input" layout="block" styleClass="ui-g ui-fluid">
+                        <div class="ui-g-12">
+                            <p:messages for="fieldLabel" showIcon="false" closable="true">
+                                <p:effect event="load" type="bounce"/>
+                            </p:messages>
+                            <p:messages for="feildDefaultHeader" showIcon="false" closable="true">
+                                <p:effect event="load" type="bounce"/>
+                            </p:messages>
+                            <p:messages for="feildDefaultValue" showIcon="false" closable="true">
+                                <p:effect event="load" type="bounce"/>
+                            </p:messages>
+                            <p:messages for="feildPrototype" showIcon="false" closable="true">
+                                <p:effect event="load" type="bounce"/>
+                            </p:messages>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-6">
+                            <!-- Accès -->
+                            <div>
+                                <p:outputLabel id="fieldAccessLabel" for="fieldAccess" value="Accès"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:selectOneMenu id="fieldAccess" value="#{templateView.propertyAccess}"
+                                                     disabled="#{empty templateView.currentProperty}" required="true">
+                                        <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                        <!--suppress ELValidationInJSP -->
+                                        <f:selectItems value="#{templateView.accessLevels}"
+                                                       var="level"
+                                                       itemLabel="#{messages[level]}"
+                                                       itemValue="#{level}"/>
+                                    </p:selectOneMenu>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h:panelGroup layout="block" styleClass="ui-g-12 ui-md-6"
+                                      rendered="#{templateView.currentProperty.type ne 'NOTE'}">
+                            <!-- Requis -->
+                            <div>
+                                <p:outputLabel id="requiredLabel" for="required" value="Requis"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:selectOneMenu id="required" value="#{templateView.propertyRequiredLevel}"
+                                                     style="width: 100%"
+                                                     disabled="#{empty templateView.currentProperty}" required="true">
+                                        <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                        <!--suppress ELValidationInJSP -->
+                                        <f:selectItems value="#{templateView.requiredLevels}"
+                                                       var="level"
+                                                       itemLabel="#{messages[level]}"
+                                                       itemValue="#{level}"/>
+                                    </p:selectOneMenu>
+                                    </span>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+
+                        <div class="ui-g-12">
+                            <!-- étiquette -->
+                            <div>
+                                <p:outputLabel id="fieldLabelLabel" for="fieldLabel"
+                                               value="#{messages.inputLabel} #{messages.notIncludedInContract}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="fieldLabel" value="#{templateView.propertyLabel}"
+                                                 disabled="#{empty templateView.currentProperty}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h:panelGroup layout="block" styleClass="ui-g-12 ui-md-6"
+                                      rendered="#{templateView.currentProperty.type ne 'NOTE'}">
+                            <!-- default header -->
+                            <div>
+                                <p:outputLabel for="feildDefaultHeader"
+                                               value="#{messages.defaultHeader} #{messages.includedInContract}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="feildDefaultHeader" value="#{templateView.propertyDefaultHeader}"
+                                                 disabled="#{empty templateView.currentProperty}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block" styleClass="ui-g-12 ui-md-6"
+                                      rendered="#{templateView.currentProperty.type ne 'NOTE'}">
+                            <!-- default value -->
+                            <div>
+                                <p:outputLabel for="feildDefaultValue"
+                                               value="#{messages.defaultValue} #{messages.includedInContract}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="feildDefaultValue" value="#{templateView.propertyDefaultValue}"
+                                                 disabled="#{empty templateView.currentProperty}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block" styleClass="ui-g-12"
+                                      rendered="#{templateView.currentProperty.type ne 'NOTE'}">
+                            <!-- prototype -->
+                            <div>
+                                <p:outputLabel for="feildPrototype"
+                                               value="#{messages.prototype} #{messages.includedInContract}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputTextarea id="feildPrototype" value="#{templateView.propertyPrototype}"
+                                                     disabled="#{empty templateView.currentProperty}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </h:panelGroup>
+
+                    </h:panelGroup>
+                </h:panelGroup>
+                <h3>Ventilation de budget sur les sections</h3>
+                <h:panelGroup id="activities-section" layout="block">
+
+                    <!--suppress ELValidationInJSP -->
+                    <p:dataTable id="activites-table" value="#{templateView.activities}" var="activity"
+                                 rowKey="#{activity.id}" selection="#{templateView.currentActivity}"
+                                 selectionMode="single" emptyMessage="#{messages.noData}">
+
+                        <p:ajax update="main_form:activity_toolbar main_form:activity_input activityForm:activityDialogContent"
+                                event="rowSelect"/>
+
+                        <p:column headerText="Nom">
+                            <p:commandButton id="copyActivityNameButton" type="button" icon="ui-icon-content-copy"/>
+                            <pe:clipboard trigger="copyActivityNameButton" action="copy"
+                                          text="#{activity.variableName}"
+                                          onsuccess="jsoftware95.success('#{messages.variableNameCopied}');"
+                                          onerror="jsoftware95.error('#{messages.couldNotCopy}', '#{activity.variableName}');"/>
+                            #{activity.name}
+                        </p:column>
+
+                        <p:column headerText="#{messages.ventilationLabel} #{messages.includedInContract}">
+                            #{activity.label}
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:toolbar id="activity_toolbar">
+                        <f:facet name="left">
+                            <p:commandButton value="#{messages.save}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             icon="ui-icon-save" process="activities-section"
+                                             update="activities-section"
+                                             disabled="#{empty templateView.currentActivity}"
+                                             actionListener="#{templateView.saveCurrentActivity}"/>
+
+                            <p:commandButton icon="ui-icon-add" value="#{messages.add}" type="button"
+                                             disabled="#{empty templateView.currentTemplate}"
+                                             onclick="PF('add-activity-dialog').show()"/>
+
+                            <p:commandButton id="activity_delete_button"
+                                             disabled="#{empty templateView.currentActivity}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             process="@this"
+                                             update="activities-section"
+                                             actionListener="#{templateView.deleteCurrentActivity}"
+                                             icon="ui-icon-remove" value="#{messages.delete}"/>
+                        </f:facet>
+                    </p:toolbar>
+
+                    <h:panelGroup id="activity_input" layout="block" styleClass="ui-g ui-fluid">
+                        <div class="ui-g-12">
+                            <!-- label -->
+                            <div>
+                                <p:messages for="activityLabel" showIcon="false" closable="true">
+                                    <p:effect event="load" type="bounce"/>
+                                </p:messages>
+                                <p:outputLabel for="activityLabel"
+                                               value="#{messages.ventilationLabel} #{messages.includedInContract}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="activityLabel" value="#{templateView.activityLabel}"
+                                                 required="true"
+                                                 disabled="#{empty templateView.currentActivity}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--                        <div class="ui-g-12">-->
+                        <!--                            &lt;!&ndash; header &ndash;&gt;-->
+                        <!--                            <div>-->
+                        <!--                                <p:messages for="activityHeader" showIcon="false" closable="true">-->
+                        <!--                                    <p:effect event="load" type="bounce"/>-->
+                        <!--                                </p:messages>-->
+                        <!--                                <p:outputLabel for="activityHeader" value="#{messages.ventilationHeader} #{messages.includedInContract}"/>-->
+                        <!--                                <div class="ui-inputgroup">-->
+                        <!--                                    <span class="ui-inputgroup-addon"><span-->
+                        <!--                                            class="material-icons ui-icon-mode-edit"/></span>-->
+                        <!--                                    <span class="md-inputfield md-inputfield-fill">-->
+                        <!--                                    <p:inputText id="activityHeader" value="#{templateView.activityHeader}"-->
+                        <!--                                                 disabled="#{empty templateView.currentActivity}"/>-->
+                        <!--                                    </span>-->
+                        <!--                                </div>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+
+                        <div class="ui-g-12 ui-md-12">
+                            <!-- section prototype -->
+                            <div>
+                                <p:messages for="sectionPrototype" showIcon="false" closable="true">
+                                    <p:effect event="load" type="bounce"/>
+                                </p:messages>
+                                <p:outputLabel for="sectionPrototype"
+                                               value="#{messages.oneSeactionModel} #{messages.includedInContract}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputTextarea id="sectionPrototype"
+                                                     value="#{templateView.activitySectionPrototype}"
+                                                     disabled="#{empty templateView.currentActivity}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ui-g-12 ui-md-4">
+                            <!-- min ventilation -->
+                            <div>
+                                <p:messages for="minVentilation" showIcon="false" closable="true">
+                                    <p:effect event="load" type="bounce"/>
+                                </p:messages>
+                                <p:outputLabel for="minVentilation" value="#{messages.minVentilationCount}"/>
+                                <div class="ui-inputgroup">
+                                    <span class="ui-inputgroup-addon"><span
+                                            class="material-icons ui-icon-mode-edit"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                                        <p:spinner id="minVentilation" min="0" max="10"
+                                                   value="#{templateView.activityMinVentilation}"
+                                                   disabled="#{empty templateView.currentActivity}"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

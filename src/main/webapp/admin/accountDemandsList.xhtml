@@ -1,0 +1,168 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.accountDemandsList}"/>
+    <ui:define name="content">
+        <h:form id="spreadsheet_form">
+            <h:panelGroup id="newUserDialogPanel">
+                <p:dialog id="newUserDialog" widgetVar="main_dialog" positionType="fixed"
+                          header="#{messages.newAssociation}" modal="false" width="350">
+
+                    <h:panelGroup id="dialogContent" styleClass="ui-g ui-fluid" layout="block">
+                        <p:focus context="dialogContent"/>
+                        <!-- username -->
+                        <div class="ui-g-12 compact">
+                            <p:outputLabel for="dialog_username" value="#{messages.username}"/>
+                            <p:messages for="dialog_username" showIcon="false" closable="true"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-user"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="dialog_username" value="#{newAccDialog.newUsername}" required="true"/>
+                            </span>
+                            </div>
+                        </div>
+
+                        <!-- password -->
+                        <div class="ui-g-12 compact">
+                            <p:outputLabel for="dialog_password"
+                                           value="#{messages.password}" title="#{messages.passwordHelp}"/>
+                            <p:messages for="dialog_password" showIcon="false" closable="true"/>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-lock"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:password id="dialog_password" redisplay="false"
+                                        value="#{newAccDialog.newPassword}" required="true"
+                                        title="#{messages.passwordHelp}" feedback="false" inline="false"
+                                        promptLabel="#{messages.enterPassword}"
+                                        weakLabel="#{messages.weak}" goodLabel="#{messages.good}"
+                                        strongLabel="#{messages.strong}"/>
+                            </span>
+                            </div>
+                        </div>
+
+                        <!-- categorie -->
+                        <div class="ui-g-12">
+                            <p:outputLabel for="dialog_categorie"
+                                           value="#{messages.categorie}"/>
+                        </div>
+
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-legal"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                                    <p:selectOneMenu id="dialog_categorie" value="#{newAccDialog.accountType}"
+                                                     required="true">
+                                        <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                        <!--suppress ELValidationInJSP -->
+                                        <f:selectItems value="#{newAccDialog.availableAccountTypes}"
+                                                       var="type"
+                                                       itemLabel="#{messages[type]}"
+                                                       itemValue="#{type}"
+                                        />
+                                    </p:selectOneMenu>
+                            </span>
+                            </div>
+                        </div>
+                    </h:panelGroup>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="saveAccountButton" widgetVar="widget_new_user_button"
+                                         value="#{messages.singUp}"
+                                         icon="fa fa-user-plus"
+                                         process="newUserDialogPanel accountsPanel"
+                                         update="dialogContent accountsPanel"
+                                         onstart="PF('widget_new_user_button').disable()"
+                                         onerror="jsoftware95.updateFailed()"
+                                         oncomplete="PF('widget_new_user_button').enable()"
+                                         actionListener="#{newAccDialog.newUser(accountDemandsList.currentDemand.id)}"/>
+                        <p:commandButton value="#{messages.cancel}" type="button"
+                                         onclick="PF('main_dialog').hide()" icon="fa fa-remove"/>
+                    </f:facet>
+                </p:dialog>
+            </h:panelGroup>
+            <h:panelGroup id="accountsPanel" styleClass="ui-g">
+                <div class="ui-g-12">
+                    <div class="card big">
+                        <h1>#{messages.accountDemands}</h1>
+                        <!--suppress ELValidationInJSP -->
+                        <p:dataTable id="acc_container" widgetVar="main_sheet_widget" var="account"
+                                     value="#{accountDemandsList.demands}"
+                                     draggableColumns="true" resizableColumns="true"
+                                     emptyMessage="#{messages.noAccountDemandsToShow}"
+                                     selectionMode="single" selection="#{accountDemandsList.currentDemand}"
+                                     rowKey="#{account.id}" styleClass="compact-data"
+                                     scrollable="true" scrollHeight="400">
+
+                            <p:ajax update="spreadsheet_form:demands_dashboard spreadsheet_form:dialogContent"
+                                    event="rowSelect"/>
+
+                            <p:column headerText="#{messages.username}" sortBy="#{account.name}"
+                                      toggleable="false"
+                                      filterBy="#{account.name}" filterMatchMode="contains">
+                                <h:outputText styleClass="spaced" value="#{account.name}"/>
+                            </p:column>
+
+                            <p:column headerText="#{messages.description}"
+                                      filterBy="#{account.description}" filterMatchMode="contains">
+                                <h:outputText id="description" value="#{account.description}" />
+                                <p:tooltip for="description" value="#{account.description}" position="top" />
+                            </p:column>
+
+                            <p:column headerText="#{messages.agrement}"
+                                      filterBy="#{account.agrement}" filterMatchMode="contains">
+                                <h:outputText value="#{account.agrement}"/>
+                            </p:column>
+
+                            <p:column headerText="#{messages.phoneNumber}"
+                                      filterBy="#{account.phone}" filterMatchMode="contains">
+                                <h:outputText value="#{account.phone}"/>
+                            </p:column>
+
+                            <p:column headerText="#{messages.date}">
+                                <h:outputText id="date"
+                                              value="#{localeManager.formatAsLocalDateTime(account.created)}"/>
+                                <p:tooltip for="date" position="top">
+                                    <pe:timeAgo value="#{meta.asDate(account.created)}"/>
+                                </p:tooltip>
+                            </p:column>
+                        </p:dataTable>
+
+                        <p:toolbar id="demands_dashboard" styleClass="scrollable-toolbar">
+                            <f:facet name="left">
+                                <h:panelGroup>
+                                    <p:commandButton id="newUserButton" type="button" accesskey="n"
+                                                     disabled="#{empty accountDemandsList.currentDemand or not empty accountDemandsList.currentDemand.name}"
+                                                     value="#{messages.newAssociation}" icon="fa fa-plus"
+                                                     onclick="PF('main_dialog').show()"/>
+
+                                    <p:commandButton id="delete_button" value="#{messages.deleteDemand}"
+                                                     icon="ui-icon-delete"
+                                                     onerror="jsoftware95.updateFailed()"
+                                                     disabled="#{empty accountDemandsList.currentDemand}"
+                                                     process="@this" update="@form"
+                                                     action="#{accountDemandsList.deleteCurrentDemand}">
+                                        <p:confirm message="#{messages.confirmDemandDelete}"/>
+                                    </p:commandButton>
+                                </h:panelGroup>
+                            </f:facet>
+                            <f:facet name="right">
+                                <p:commandButton id="accountsColumnsToggler" type="button"
+                                                 value="#{messages.tableColumns}"
+                                                 icon="ui-icon-view-column"/>
+                                <p:columnToggler datasource="acc_container" trigger="accountsColumnsToggler"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </div>
+                </div>
+            </h:panelGroup>
+        </h:form>
+    </ui:define>
+</ui:composition>

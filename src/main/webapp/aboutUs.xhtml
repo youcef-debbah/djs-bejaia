@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.aboutUs}"/>
+    <ui:define name="content">
+        <div class="ui-g">
+            <div class="card ui-g-12">
+                <h1>#{messages.directorSpeechTitle}</h1>
+                <h:graphicImage library="djs" name="/images/directeur.jpg" styleClass="thumbnails"/>
+                <p>#{messages.directorSpeech1}</p>
+                <p>#{messages.directorSpeech2}</p>
+                <p>#{messages.directorSpeech3}</p>
+                <p>#{messages.directorSpeech4}</p>
+                <p>#{messages.directorSpeech5}</p>
+                <p>#{messages.sincerely}</p>
+                <p class="hint">#{messages.directorName}</p>
+            </div>
+            <div class="card ui-g-12">
+                <h1>#{messages.organisation}</h1>
+                #{messages.djsBejaia} #{messages.includesServices}
+                <ul>
+                    <li>#{messages.educationService}</li>
+                    <li>#{messages.activitiesService}</li>
+                    <li>#{messages.investService}</li>
+                    <li>#{messages.trainingService}</li>
+                </ul>
+
+                <p:organigram value="#{organisationView.root}" var="node" styleClass="auto-center">
+                    <p:organigramNode type="default">
+                        <h:outputText value="#{messages[node.data]}"/>
+                    </p:organigramNode>
+                    <p:organigramNode type="desktop">
+                        <h:outputText value="#{messages[node.data]}"/>
+                    </p:organigramNode>
+                    <p:organigramNode type="service">
+                        <h:outputText value="#{messages[node.data]}"/>
+                    </p:organigramNode>
+                </p:organigram>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+                <div class="card full-height">
+                    <h1>#{messages.geography}</h1>
+                    <p>#{messages.geographyInfo}</p>
+                </div>
+            </div>
+
+            <div class="ui-g-12 ui-md-6">
+                <div class="card full-height">
+                    <h1>#{messages.weather}</h1>
+                    <p>#{messages.weatherInfo}</p>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>#{messages.geology}</h1>
+                    <p>#{messages.geologyInfo1}</p>
+                    <p>#{messages.geologyInfo2}</p>
+                </div>
+            </div>
+
+            <div class="ui-g-12">
+                <div class="card">
+                    <h1>#{messages.history}</h1>
+                    <p>#{messages.historyInfo1}</p>
+                    <p>#{messages.historyInfo2}</p>
+                    <p>#{messages.historyInfo3}</p>
+                    <p>#{messages.historyInfo4}</p>
+                    <p>#{messages.historyInfo5}</p>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>
