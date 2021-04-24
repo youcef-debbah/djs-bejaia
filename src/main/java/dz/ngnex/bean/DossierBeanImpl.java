@@ -3,7 +3,7 @@ package dz.ngnex.bean;
 import dz.ngnex.entity.*;
 import dz.ngnex.util.TestWithTransaction;
 import org.apache.logging.log4j.Logger;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -103,7 +103,7 @@ public class DossierBeanImpl implements DossierBean {
         file.getContentType(),
         getUniqueFilename(file),
         uploader,
-        file.getContents());
+        file.getContent());
 
     fileEntity.setUploadTime(System.currentTimeMillis());
     fileEntity.setSize((int) file.getSize());

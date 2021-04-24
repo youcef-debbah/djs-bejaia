@@ -3,7 +3,7 @@ package dz.ngnex.bean;
 import dz.ngnex.entity.BinaryContent;
 import dz.ngnex.entity.DossierInfoEntity;
 import dz.ngnex.entity.FilesStatistics;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import javax.ejb.Local;
 import java.util.List;
