@@ -12,7 +12,7 @@ import dz.ngnex.util.InjectableByTests;
 import dz.ngnex.util.WebKit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.primefaces.model.file.UploadedFile;
+import org.primefaces.model.UploadedFile;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

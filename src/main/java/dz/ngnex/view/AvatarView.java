@@ -5,7 +5,7 @@ import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.Meta;
 import dz.ngnex.util.ViewModel;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.file.UploadedFile;
+import org.primefaces.model.UploadedFile;
 
 import javax.inject.Inject;
 import java.io.Serializable;

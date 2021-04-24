@@ -7,7 +7,7 @@ import dz.ngnex.entity.DossierInfoEntity;
 import dz.ngnex.entity.FilesStatistics;
 import dz.ngnex.util.ViewModel;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.file.UploadedFile;
+import org.primefaces.model.UploadedFile;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

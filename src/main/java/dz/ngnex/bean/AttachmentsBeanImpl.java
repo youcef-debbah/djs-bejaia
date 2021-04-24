@@ -2,7 +2,7 @@ package dz.ngnex.bean;
 
 import dz.ngnex.entity.*;
 import dz.ngnex.util.TestWithTransaction;
-import org.primefaces.model.file.UploadedFile;
+import org.primefaces.model.UploadedFile;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -42,7 +42,7 @@ public class AttachmentsBeanImpl implements AttachmentsBean {
         file.getContentType(),
         getUniqueFilename(file),
         uploader,
-        file.getContent());
+        file.getContents());
     fileEntity.setUploadTime(System.currentTimeMillis());
     fileEntity.setSize((int) file.getSize());
 
