@@ -52,7 +52,8 @@ public class ViewExpiredExceptionHandler extends ExceptionHandlerWrapper {
     }
 
     Map<String, String> parameters = ctx.getExternalContext().getRequestParameterMap();
-    if (parameters.get(Constants.DialogFramework.CONVERSATION_PARAM) != null) {
+    // DialogFramework in primefaces X
+    if (parameters.get(Constants.DIALOG_FRAMEWORK.CONVERSATION_PARAM) != null) {
       PrimeFaces.current().dialog().closeDynamic(null);
     }
 
