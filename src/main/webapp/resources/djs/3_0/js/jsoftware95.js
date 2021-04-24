@@ -227,6 +227,8 @@ jsoftware95.debug = function (id) {
         console.log(element.innerHTML);
     else
         console.log('element: ' + id + " is null")
+
+    console.log('done');
 }
 
 jsoftware95.init();
