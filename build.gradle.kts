@@ -33,7 +33,7 @@ java {
 
 repositories {
     flatDir { dir("lib") }
-    jcenter()
+    mavenCentral()
     maven {
         name = "JBoss Community repository"
         setUrl("http://repository.jboss.org/nexus/content/groups/public")
