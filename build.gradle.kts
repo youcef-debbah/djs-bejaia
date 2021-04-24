@@ -120,7 +120,8 @@ configurations.configureEach {
 //}
 
 fun passClasspathAsSystemProperty(test: Test) {
-    val classpathFiles: String = test.classpath.files
+    val files : Set<File> = test.classpath.files
+    val classpathFiles: String = files
             .filter { it.isFile }
             .map { it.absolutePath }
             .reduce { path1, path2 -> path1 + File.pathSeparatorChar + path2 }
