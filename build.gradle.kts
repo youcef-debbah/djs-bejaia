@@ -53,13 +53,13 @@ dependencies {
     val hibernateVersion = "5.4.30.Final"
 
     providedCompile("javax:javaee-api:8.0.1")
-    providedCompile("org.glassfish:javax.faces:2.3.9")
+    providedCompile("org.glassfish:javax.faces:2.3.8")
     providedCompile("org.hibernate:hibernate-core:$hibernateVersion")
     providedCompile("org.hibernate:hibernate-entitymanager:$hibernateVersion")
 
     implementation("org.jetbrains:annotations:17.0.0")
 
-    implementation("org.omnifaces:omnifaces:3.3")
+    implementation("org.omnifaces:omnifaces:3.11")
     implementation("org.primefaces:primefaces:7.0")
     implementation("org.primefaces.extensions:primefaces-extensions:7.0.2")
     implementation("org.primefaces.extensions:resources-ckeditor:7.0.2")
