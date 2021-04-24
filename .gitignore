@@ -6,7 +6,7 @@ h2/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-*.log
+*.tlog
 
 ### STS ###
 .apt_generated
