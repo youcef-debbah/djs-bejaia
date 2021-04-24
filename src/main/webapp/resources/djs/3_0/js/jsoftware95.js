@@ -221,4 +221,12 @@ jsoftware95.init = function () {
 
 };
 
+jsoftware95.debug = function (id) {
+    let element = document.getElementById(id);
+    if (element != null)
+        console.log(element.innerHTML);
+    else
+        console.log('element: ' + id + " is null")
+}
+
 jsoftware95.init();
