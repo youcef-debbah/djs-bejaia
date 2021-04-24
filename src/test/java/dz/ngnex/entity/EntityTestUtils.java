@@ -65,12 +65,12 @@ public final class EntityTestUtils {
   }
 
   public static AccountDemandEntity createAccountDemand(String description, AccountDemandBean accountDemandBean) {
-    AccountDemandEntity demand = new AccountDemandEntity()
-        .setDescription(description)
-        .setAdresse("demand address")
-        .setPresident("demand president")
-        .setPhone("demand phone")
-        .setAgrement("demand agreement number");
+    AccountDemandEntity demand = new AccountDemandEntity();
+    demand.setDescription(description);
+    demand.setAdresse("demand address");
+    demand.setPresident("demand president");
+    demand.setPhone("demand phone");
+    demand.setAgrement("demand agreement number");
 
     return accountDemandBean.send(demand);
   }

@@ -22,7 +22,9 @@ public class TestInjectionScope extends DatabaseTest {
 
   @Test
   public void identityShouldBePreservedInTestMethod() {
-    AccountDemandEntity demand = accountDemandBean.send(new AccountDemandEntity().setDescription("identity test"));
+    AccountDemandEntity demandEntity = new AccountDemandEntity();
+    demandEntity.setDescription("identity test");
+    AccountDemandEntity demand = accountDemandBean.send(demandEntity);
     AccountDemandEntity demand1 = accountDemandBean1.find(demand.getId());
     AccountDemandEntity demand2 = accountDemandBean2.find(demand.getId());
     assertThat("injected EJB beans are not sharing the same hibernate context", demand1 == demand2);
