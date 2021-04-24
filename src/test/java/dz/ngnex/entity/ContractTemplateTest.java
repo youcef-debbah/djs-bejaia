@@ -299,30 +299,30 @@ public class ContractTemplateTest extends DatabaseTest {
     assertThat(contractInstances, hasSize(contractInstancesCount));
   }
 
-  @Test
-  public void test11_updateTemplateSeason() throws IntegrityException {
-    Integer tempSeasonID = seasonBean.addSeason("ContractBeanTest_Season_temp").getId();
-    seasonBean.clear();
-
-    principalBean.updateContractsSeason(Arrays.asList(
-        new TemplateInfo(SOURCE_TEMPLATE_ID, SOURCE_TEMPLATE_NAME, tempSeasonID),
-        new TemplateInfo(COPY_TEMPLATE_ID, COPY_TEMPLATE_NAME, tempSeasonID))
-    );
-
-    principalBean.clear();
-    assertThat(em.find(ContractTemplateEntity.class, SOURCE_TEMPLATE_ID).getSeason().getId(), equalTo(tempSeasonID));
-    assertThat(em.find(ContractTemplateEntity.class, COPY_TEMPLATE_ID).getSeason().getId(), equalTo(tempSeasonID));
-    principalBean.clear();
-
-    principalBean.updateContractsSeason(Arrays.asList(
-        new TemplateInfo(SOURCE_TEMPLATE_ID, SOURCE_TEMPLATE_NAME, SEASON_ID),
-        new TemplateInfo(COPY_TEMPLATE_ID, COPY_TEMPLATE_NAME, SEASON_ID))
-    );
-
-    principalBean.clear();
-    assertThat(em.find(ContractTemplateEntity.class, SOURCE_TEMPLATE_ID).getSeason().getId(), equalTo(SEASON_ID));
-    assertThat(em.find(ContractTemplateEntity.class, COPY_TEMPLATE_ID).getSeason().getId(), equalTo(SEASON_ID));
-  }
+//  @Test
+//  public void test11_updateTemplateSeason() throws IntegrityException {
+//    Integer tempSeasonID = seasonBean.addSeason("ContractBeanTest_Season_temp").getId();
+//    seasonBean.clear();
+//
+//    principalBean.updateContractsSeason(Arrays.asList(
+//        new TemplateInfo(SOURCE_TEMPLATE_ID, SOURCE_TEMPLATE_NAME, tempSeasonID),
+//        new TemplateInfo(COPY_TEMPLATE_ID, COPY_TEMPLATE_NAME, tempSeasonID))
+//    );
+//
+//    principalBean.clear();
+//    assertThat(em.find(ContractTemplateEntity.class, SOURCE_TEMPLATE_ID).getSeason().getId(), equalTo(tempSeasonID));
+//    assertThat(em.find(ContractTemplateEntity.class, COPY_TEMPLATE_ID).getSeason().getId(), equalTo(tempSeasonID));
+//    principalBean.clear();
+//
+//    principalBean.updateContractsSeason(Arrays.asList(
+//        new TemplateInfo(SOURCE_TEMPLATE_ID, SOURCE_TEMPLATE_NAME, SEASON_ID),
+//        new TemplateInfo(COPY_TEMPLATE_ID, COPY_TEMPLATE_NAME, SEASON_ID))
+//    );
+//
+//    principalBean.clear();
+//    assertThat(em.find(ContractTemplateEntity.class, SOURCE_TEMPLATE_ID).getSeason().getId(), equalTo(SEASON_ID));
+//    assertThat(em.find(ContractTemplateEntity.class, COPY_TEMPLATE_ID).getSeason().getId(), equalTo(SEASON_ID));
+//  }
 
   @Test
   public void test12_findSelectedPrincipal() {
