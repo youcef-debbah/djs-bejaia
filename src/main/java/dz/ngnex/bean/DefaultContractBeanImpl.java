@@ -37,7 +37,7 @@ public class DefaultContractBeanImpl implements ContractBean {
 
   @Override
   public ContractTemplateEntity updateTemplate(ContractTemplateEntity updatedEntity, String updater) {
-    Integer id = DatabaseEntity.requireID(updatedEntity).getId();
+    DatabaseEntity.requireID(updatedEntity);
     updatedEntity.setTemplate(secureHtml(updatedEntity.getTemplate()));
     updatedEntity.setLastUpdate(System.currentTimeMillis());
     updatedEntity.setLastUpdater(updater);
@@ -145,10 +145,18 @@ public class DefaultContractBeanImpl implements ContractBean {
   }
 
   @Override
+  public ContractTemplateEntity renameTemplate(ContractTemplateEntity templateEntity, String newTemplateName, String updater) throws IntegrityException {
+    DatabaseEntity.requireID(templateEntity);
+    checkTemplateName(newTemplateName);
+    templateEntity.setLastUpdate(System.currentTimeMillis());
+    templateEntity.setName(newTemplateName);
+    templateEntity.setLastUpdater(updater);
+    return em.merge(templateEntity);
+  }
+
+  @Override
   public ContractTemplateEntity addNewTemplate(String newTemplateName, Integer sourceTemplateID, String updater) throws IntegrityException {
-    Check.argNotNull(newTemplateName);
-    DatabaseEntity.checkIdentifierSyntax(newTemplateName);
-    checkDuplicatedTemplateName(newTemplateName);
+    checkTemplateName(newTemplateName);
 
     SeasonEntity currentSeason = em.getReference(SeasonEntity.class, getCurrentSeasonID());
 
@@ -172,6 +180,12 @@ public class DefaultContractBeanImpl implements ContractBean {
       }
     }
     return newTemplate;
+  }
+
+  private void checkTemplateName(String newTemplateName) throws IntegrityException {
+    Check.argNotNull(newTemplateName);
+    DatabaseEntity.checkIdentifierSyntax(newTemplateName);
+    checkDuplicatedTemplateName(newTemplateName);
   }
 
   private void checkDuplicatedTemplateName(String newTemplateName) throws IntegrityException {

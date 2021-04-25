@@ -39,6 +39,9 @@ public interface ContractBean {
   void deleteProperty(PropertyEntity property);
 
   ContractTemplateEntity addNewTemplate(String newTemplateName, Integer sourceTemplateID) throws IntegrityException;
+
+  ContractTemplateEntity renameTemplate(ContractTemplateEntity templateEntity, String newTemplateName, String updater) throws IntegrityException;
+
   ContractTemplateEntity addNewTemplate(String newTemplateName, Integer sourceTemplateID, String updater) throws IntegrityException;
 
   long countContractInstances(Integer templateID);

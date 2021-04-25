@@ -78,6 +78,9 @@ public class TemplateView implements Serializable {
   private List<TemplateDetails> templatesSources;
 
   @Size(min = Constrains.Min_IDENTIFIER_SIZE, max = Constrains.MAX_IDENTIFIER_SIZE)
+  private String updatedTemplateName;
+
+  @Size(min = Constrains.Min_IDENTIFIER_SIZE, max = Constrains.MAX_IDENTIFIER_SIZE)
   private String newTemplateName;
   private Integer sourceTemplateID;
 
@@ -174,6 +177,7 @@ public class TemplateView implements Serializable {
   public void setCurrentTemplateID(Integer id) {
     if (id == null) {
       currentTemplate = null;
+      updatedTemplateName = null;
       template = null;
       downloadDate = null;
 
@@ -194,6 +198,7 @@ public class TemplateView implements Serializable {
 
   private void setCurrentTemplateHelper(ContractTemplateEntity newTemplate) {
     currentTemplate = newTemplate;
+    updatedTemplateName = newTemplate.getName();
     template = newTemplate.getTemplate();
     downloadDate = meta.asDate(newTemplate.getDownloadDate());
 
@@ -207,7 +212,7 @@ public class TemplateView implements Serializable {
   }
 
   public void saveCurrentTemplate() {
-    if (currentTemplate != null) {
+    if (getCurrentTemplateID() != null) {
       try {
         currentTemplate.setTemplate(template);
         currentTemplate.setDownloadDate(meta.asEpoch(downloadDate));
@@ -219,6 +224,21 @@ public class TemplateView implements Serializable {
     }
   }
 
+  public void renameTemplate() {
+    if (getCurrentTemplateID() != null)
+      try {
+        ContractTemplateEntity renamedTemplate = contractBean.renameTemplate(currentTemplate, updatedTemplateName, WebKit.getUserPrincipalName());
+        fetchTemplates();
+        setCurrentTemplateHelper(renamedTemplate);
+        meta.dataUpdatedSuccessfully();
+        PrimeFaces.current().executeScript("PF('edit_template_dialog_widget').hide()");
+      } catch (Exception e) {
+        ContractTemplateEntity currentTemplate = getCurrentTemplate();
+        updatedTemplateName = currentTemplate != null ? currentTemplate.getName() : null;
+        meta.handleException(e);
+      }
+  }
+
   public void addNewTemplate() {
     try {
       ContractTemplateEntity newTemplate = contractBean.addNewTemplate(newTemplateName, sourceTemplateID, WebKit.getUserPrincipalName());
@@ -228,11 +248,10 @@ public class TemplateView implements Serializable {
       setCurrentActivity(null);
       initNewTemplate();
       meta.dataUpdatedSuccessfully();
-      PrimeFaces.current().executeScript("PF('template_main_dialog').hide()");
+      PrimeFaces.current().executeScript("PF('add_template_dialog_widget').hide()");
     } catch (Exception e) {
       meta.handleException(e);
     }
-    System.out.println("templates count after add: " + templates.size());
   }
 
   public void deleteCurrentTemplate() {
@@ -483,6 +502,14 @@ public class TemplateView implements Serializable {
       }
     else
       meta.noSelectionError();
+  }
+
+  public String getUpdatedTemplateName() {
+    return updatedTemplateName;
+  }
+
+  public void setUpdatedTemplateName(String updatedTemplateName) {
+    this.updatedTemplateName = updatedTemplateName;
   }
 
   public String getNewTemplateName() {

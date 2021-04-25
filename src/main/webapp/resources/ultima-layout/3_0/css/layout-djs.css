@@ -3349,6 +3349,11 @@ body.layout-compact .ui-slider.ui-slider-horizontal .ui-slider-handle {
   border: none;
 }
 
+html body .ckEditor-container textarea {
+  visibility: hidden;
+  width: 100%;
+  height: 550px;
+}
 html body label {
   padding: 2px;
 }

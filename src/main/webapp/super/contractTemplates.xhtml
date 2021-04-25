@@ -103,12 +103,12 @@
             </p:dialog>
         </h:form>
         <h:form id="templateForm">
-            <p:dialog id="template_dialog" widgetVar="template_main_dialog" positionType="fixed"
+            <p:dialog id="template_dialog" widgetVar="add_template_dialog_widget" positionType="fixed"
                       header="#{messages.newContractModel}" modal="false" width="350">
                 <h:panelGroup id="templateDialogContent" styleClass="ui-g" layout="block">
                     <p:focus context="templateDialogContent"/>
                     <div class="ui-g-12 compact">
-                        <p:outputLabel for="template-name" value="Nom"/>
+                        <p:outputLabel for="template-name" value="#{messages.name}"/>
                         <p:messages for="template-name" showIcon="false" closable="true">
                             <p:effect event="load" type="bounce"/>
                         </p:messages>
@@ -149,13 +149,49 @@
                     <p:commandButton widgetVar="template_dialog_add_button"
                                      value="#{messages.add}"
                                      icon="ui-icon-add" process="template_dialog"
-                                     update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent"
+                                     update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent templateEditForm:templateEditDialogContent"
                                      onstart="PF('template_dialog_add_button').disable()"
                                      onerror="jsoftware95.updateFailed()"
                                      oncomplete="PF('template_dialog_add_button').enable()"
                                      actionListener="#{templateView.addNewTemplate()}"/>
                     <p:commandButton value="#{messages.cancel}" type="button"
-                                     onclick="PF('template_main_dialog').hide()" icon="fa fa-remove"/>
+                                     onclick="PF('add_template_dialog_widget').hide()" icon="fa fa-remove"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+        <h:form id="templateEditForm">
+            <p:dialog id="template_edit_dialog" widgetVar="edit_template_dialog_widget" positionType="fixed"
+                      header="#{messages.renameContractModel}" modal="false" width="350">
+                <h:panelGroup id="templateEditDialogContent" styleClass="ui-g" layout="block">
+                    <p:focus context="templateEditDialogContent"/>
+                    <div class="ui-g-12 compact">
+                        <p:outputLabel for="template-new-name" value="#{messages.name}"/>
+                        <p:messages for="template-new-name" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12 ui-fluid">
+                        <div class="ui-inputgroup">
+                            <span class="ui-inputgroup-addon"><span class="material-icons ui-icon-mode-edit"/></span>
+                            <span class="md-inputfield md-inputfield-fill">
+                                <p:inputText id="template-new-name" value="#{templateView.updatedTemplateName}"
+                                             required="true"/>
+                            </span>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+                <f:facet name="footer">
+                    <p:commandButton widgetVar="template_edit_dialog_save_button"
+                                     value="#{messages.save}"
+                                     icon="ui-icon-save" process="template_edit_dialog"
+                                     update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent templateEditForm:templateEditDialogContent"
+                                     onstart="PF('template_edit_dialog_save_button').disable()"
+                                     onerror="jsoftware95.updateFailed()"
+                                     oncomplete="PF('template_edit_dialog_save_button').enable()"
+                                     actionListener="#{templateView.renameTemplate()}"/>
+                    <p:commandButton value="#{messages.cancel}" type="button"
+                                     onclick="PF('edit_template_dialog_widget').hide()" icon="fa fa-remove"/>
                 </f:facet>
             </p:dialog>
         </h:form>
@@ -164,25 +200,26 @@
     <ui:define name="content">
         <h:form id="main_form">
             <h:panelGroup id="all-sections" styleClass="card spaced" layout="block">
-                <h:panelGroup id="template-panel" layout="block">
+                <h:panelGroup id="template-panel" layout="block" styleClass="ckEditor-container">
                     <h1>#{messages.contractModleForSeason} #{templateView.currentSeasonName}</h1>
                     <p:toolbar>
                         <f:facet name="left">
                             <p:commandButton accesskey="s"
-                                             value="#{messages.save}"
                                              onerror="jsoftware95.updateFailed()"
                                              icon="ui-icon-save" process="template-panel" update="template-panel"
                                              disabled="#{empty templateView.currentTemplate}"
                                              actionListener="#{templateView.saveCurrentTemplate}"/>
 
-                            <p:commandButton icon="ui-icon-add" value="#{messages.add}" type="button"
-                                             onclick="PF('template_main_dialog').show()"/>
+                            <p:commandButton icon="ui-icon-edit" type="button"
+                                             onclick="PF('edit_template_dialog_widget').show()"/>
+
+                            <p:commandButton icon="ui-icon-add" type="button"
+                                             onclick="PF('add_template_dialog_widget').show()"/>
 
                             <p:commandButton icon="ui-icon-remove"
-                                             value="#{messages.delete}"
                                              onerror="jsoftware95.updateFailed()"
                                              process="@this"
-                                             update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent"
+                                             update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent templateEditForm:templateEditDialogContent"
                                              disabled="#{empty templateView.currentTemplate}"
                                              actionListener="#{templateView.deleteCurrentTemplate}"/>
 
@@ -192,7 +229,7 @@
                                 <f:selectItems value="#{templateView.templates}" var="template"
                                                itemLabel="#{template.name}" itemValue="#{template.id}"/>
                                 <p:ajax process="@this"
-                                        update="@form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent"/>
+                                        update="@form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent templateEditForm:templateEditDialogContent"/>
                             </p:selectOneMenu>
                             <h:outputFormat rendered="#{not empty templateView.currentTemplateID}"
                                             value="#{messages.usedBy}" styleClass="inline-block">

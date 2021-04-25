@@ -61,6 +61,12 @@ $warningColor: #ffc8007d;
 
 html body {
 
+  .ckEditor-container textarea {
+    visibility: hidden;
+    width: 100%;
+    height: 550px;
+  }
+
   label {
     padding: 2px;
   }
