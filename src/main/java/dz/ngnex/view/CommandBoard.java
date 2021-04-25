@@ -200,7 +200,7 @@ public class CommandBoard implements Serializable {
     if (fromDate.isAfter(toDate)) {
       FacesContext context = FacesContext.getCurrentInstance();
       context.addMessage("global", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-          messages.get("invalidInterval"), messages.get("fromMustBeBeforTO")));
+          messages.get("invalidInterval"), messages.get("fromMustBeBeforeTO")));
     }
 
     Map<LocalDate, Integer> stats = statisticManager.getVisitorsStatistic(fromDate, toDate);

@@ -4424,7 +4424,7 @@ body .ui-datatable .ui-paginator {
   padding: 10px 16px;
 }
 body .ui-datatable thead th {
-  padding: 10px 14px;
+  padding: 10px 5px;
   border: 0 none;
   border-top: 1px solid #bdbdbd;
   background-color: #ffffff;

@@ -5,7 +5,7 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/WEB-INF/templates/template.xhtml">
-    <ui:param name="title" value="#{messages.accociationAccounts}"/>
+    <ui:param name="title" value="#{messages.associationAccounts}"/>
 
     <ui:define name="content">
         <h:form id="spreadsheet_form">
@@ -223,7 +223,7 @@
                             event="rowSelect"/>
 
                     <p:column headerText="#{messages.username}" sortBy="#{account.name}"
-                              toggleable="false"
+                              toggleable="false" style="width: 125px"
                               filterBy="#{account.name}" filterMatchMode="contains">
                         <h:panelGroup id="downloaded">
                             <h:panelGroup
@@ -258,18 +258,21 @@
                         <h:outputText value="#{account.description}"/>
                     </p:column>
 
-                    <p:column headerText="#{messages.agrement}"
+                    <p:column headerText="#{messages.agrementShort}" style="width: 90px"
                               sortBy="#{account.canonicAgrement}"
-                              styleClass="#{account.validRegistrationNumber? '' : 'warning'}"
+                              styleClass="#{account.validRegistrationNumber? '' : 'warning'} align-center"
                               filterBy="#{account.agrement}" filterMatchMode="contains">
                         <h:outputText value="#{account.agrement}"/>
                     </p:column>
 
-                    <p:column headerText="#{messages.phoneNumber}"
+                    <p:column headerText="#{messages.phoneNumberShort}" style="width: 105px" styleClass="align-center"
                               filterBy="#{account.phone}" filterMatchMode="contains">
                         <h:outputText value="#{account.phone}"/>
                     </p:column>
                 </p:dataTable>
+                <script>
+                    jsoftware95.debug('spreadsheet_form:acc_container')
+                </script>
 
                 <!--                <p:contextMenu id="account_context_menu" for="acc_container">-->
                 <!--                    <p:menuitem id="chat_menu_item" action="#{usersView.chatWithCurrentAssociation}"-->
@@ -291,7 +294,7 @@
                 <!--                                onerror="jsoftware95.updateFailed()"-->
                 <!--                                process="@this" update="@form"-->
                 <!--                                action="#{usersView.deleteCurrentAccount}">-->
-                <!--                        <p:confirm message="#{messages.confirmeUserDelete}"/>-->
+                <!--                        <p:confirm message="#{messages.confirmUserDelete}"/>-->
                 <!--                    </p:menuitem>-->
                 <!--                </p:contextMenu>-->
 
@@ -309,7 +312,7 @@
                                              onerror="jsoftware95.updateFailed()"
                                              disabled="#{empty profile.currentAssociation}"
                                              process="@this" update="@form" action="#{usersView.deleteCurrentAccount}">
-                                <p:confirm message="#{messages.confirmeUserDelete}"/>
+                                <p:confirm message="#{messages.confirmUserDelete}"/>
                             </p:commandButton>
 
                             <p:button id="chat_button" disabled="#{empty profile.currentAssociation}"
