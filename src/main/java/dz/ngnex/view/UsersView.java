@@ -54,6 +54,7 @@ import javax.ejb.EJB;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.Reception;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -67,6 +68,7 @@ public class UsersView implements Serializable {
   private static final long serialVersionUID = -7529359910608973878L;
 
   private static final Logger log = LogManager.getLogger(UsersView.class);
+  private static final String ASSOCIATION_ID = "asso_id";
 
   @EJB
   PrincipalBean principalBean;
@@ -96,11 +98,20 @@ public class UsersView implements Serializable {
 
   @Inject
   private CurrentPrincipal currentPrincipal;
+  private BasicAssociationEntity targetAssociation;
 
   @PostConstruct
   public void init() {
     service = currentPrincipal.getService();
     refreshAll();
+
+    Integer currentAssociationID = WebKit.getRequestParamAsInt(ASSOCIATION_ID);
+    targetAssociation = principalBean.getSingleAssociation(currentAssociationID);
+    setCurrentAccount(targetAssociation);
+  }
+
+  public BasicAssociationEntity getTargetAssociation() {
+    return targetAssociation;
   }
 
   public void refreshAll() {

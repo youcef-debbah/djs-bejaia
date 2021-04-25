@@ -18,6 +18,12 @@
 var jsoftware95 = jsoftware95 || {};
 var messages = messages || {};
 
+jsoftware95.click = function (widget) {
+    let jq = PF(widget).getJQ();
+    if (!jq.hasClass('ui-state-disabled'))
+        jq.click();
+}
+
 jsoftware95.altImage = function (imageElement, altImage) {
     imageElement.onerror = "";
     if (imageElement.src !== altImage)

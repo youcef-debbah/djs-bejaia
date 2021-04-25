@@ -17,7 +17,8 @@ import javax.interceptor.InvocationContext;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 @Stateless
 @TestWithTransaction
@@ -45,6 +46,18 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
   public List<BasicAssociationEntity> getAllAssociations() {
     return em.createQuery("select a from BasicAssociationEntity a", BasicAssociationEntity.class)
         .getResultList();
+  }
+
+  @Override
+  public BasicAssociationEntity getSingleAssociation(Integer id) {
+    if (id == null)
+      return null;
+    else {
+      List<BasicAssociationEntity> result = em.createQuery("select a from BasicAssociationEntity a where a.id = :id", BasicAssociationEntity.class)
+          .setParameter("id", id)
+          .getResultList();
+      return result.isEmpty() ? null : result.get(0);
+    }
   }
 
   @Override

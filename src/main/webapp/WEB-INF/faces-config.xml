@@ -104,6 +104,11 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
+            <from-outcome>associationInfo</from-outcome>
+            <to-view-id>/admin/associationInfo.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
             <from-outcome>administrators</from-outcome>
             <to-view-id>/super/administrators.xhtml</to-view-id>
             <redirect/>

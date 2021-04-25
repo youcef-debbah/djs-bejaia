@@ -139,8 +139,8 @@ public final class WebKit {
     Objects.requireNonNull(name);
     try {
       return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(name);
-    } catch (NullPointerException e) {
-      log.error("could not get request param: " + name, e);
+    } catch (RuntimeException e) {
+      log.warn("could not get request param: " + name, e);
       return null;
     }
   }
