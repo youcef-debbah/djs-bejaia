@@ -223,7 +223,7 @@
                             event="rowSelect"/>
 
                     <p:column headerText="#{messages.username}" sortBy="#{account.name}"
-                              toggleable="false" style="width: 125px"
+                              toggleable="false" style="width: 130px"
                               filterBy="#{account.name}" filterMatchMode="contains">
                         <h:panelGroup id="downloaded">
                             <h:panelGroup
@@ -242,7 +242,9 @@
                         <p:tooltip for="downloaded"
                                    value="#{messages[account.contractDownloadState]} #{messages.forTheCurrentSeason}"/>
 
-                        <h:outputText styleClass="spaced" value="#{account.name}"/>
+                        <!--//TODO-->
+                        <h:link id="assoLink" styleClass="spaced" outcome="associations">#{account.name}</h:link>
+                        <p:tooltip for="assoLink" value="#{messages.openAssoProfile}"/>
 
                         <h:panelGroup id="hasDossier" rendered="#{account.hasDossier}"
                                       styleClass="middled material-icons ui-icon-folder archive"/>
@@ -258,7 +260,7 @@
                         <h:outputText value="#{account.description}"/>
                     </p:column>
 
-                    <p:column headerText="#{messages.agrementShort}" style="width: 90px"
+                    <p:column headerText="#{messages.agrementShort}" style="width: 95px"
                               sortBy="#{account.canonicAgrement}"
                               styleClass="#{account.validRegistrationNumber? '' : 'warning'} align-center"
                               filterBy="#{account.agrement}" filterMatchMode="contains">
@@ -270,9 +272,10 @@
                         <h:outputText value="#{account.phone}"/>
                     </p:column>
                 </p:dataTable>
-                <script>
-                    jsoftware95.debug('spreadsheet_form:acc_container')
-                </script>
+
+<!--                <script>-->
+<!--                    jsoftware95.debug('spreadsheet_form:acc_container')-->
+<!--                </script>-->
 
                 <!--                <p:contextMenu id="account_context_menu" for="acc_container">-->
                 <!--                    <p:menuitem id="chat_menu_item" action="#{usersView.chatWithCurrentAssociation}"-->
@@ -366,13 +369,13 @@
                                     <p:confirm/>
                                 </p:commandButton>
                                 <p:tooltip for="deleteContractButton" value="#{messages.deleteThisContract}"/>
-<!--                                <p:commandButton id="archiveContractButton" process="@this" update="@form"-->
-<!--                                                 actionListener="#{usersView.archiveContractInstance(contract.id)}"-->
-<!--                                                 onerror="jsoftware95.updateFailed()"-->
-<!--                                                 icon="ui-icon-archive">-->
-<!--                                    <p:confirm message="#{messages.confirmArchiving}"/>-->
-<!--                                </p:commandButton>-->
-<!--                                <p:tooltip for="archiveContractButton" value="#{messages.moveThisContractToArchive}"/>-->
+                                <!--                                <p:commandButton id="archiveContractButton" process="@this" update="@form"-->
+                                <!--                                                 actionListener="#{usersView.archiveContractInstance(contract.id)}"-->
+                                <!--                                                 onerror="jsoftware95.updateFailed()"-->
+                                <!--                                                 icon="ui-icon-archive">-->
+                                <!--                                    <p:confirm message="#{messages.confirmArchiving}"/>-->
+                                <!--                                </p:commandButton>-->
+                                <!--                                <p:tooltip for="archiveContractButton" value="#{messages.moveThisContractToArchive}"/>-->
                                 #{contract.contractTemplate.name}
                             </p:column>
                             <p:column headerText="#{messages.globalMontant}">
@@ -384,11 +387,13 @@
                                 <h:outputFormat value="#{messages.times}">
                                     <f:param value="#{contract.retrait}"/>
                                 </h:outputFormat>
-                                <ui:fragment rendered="#{not contract.contractTemplate.canBeDownloadedAt(localeManager.currentEpoch)}">
-                                    <h:panelGroup id="downloadAlert" styleClass="topbar-icon material-icons ui-icon-alert"
+                                <ui:fragment
+                                        rendered="#{not contract.contractTemplate.canBeDownloadedAt(localeManager.currentEpoch)}">
+                                    <h:panelGroup id="downloadAlert"
+                                                  styleClass="topbar-icon material-icons ui-icon-alert"
                                                   style="vertical-align: middle;padding-left: 0.2em;"/>
                                     <p:tooltip for="downloadAlert" position="bottom"
-                                            value="#{messages.cannotBeDownloadedUntil} #{localeManager.formatAsLocalDateTime(usersView.currentContract.contractTemplate.downloadDate)}"/>
+                                               value="#{messages.cannotBeDownloadedUntil} #{localeManager.formatAsLocalDateTime(usersView.currentContract.contractTemplate.downloadDate)}"/>
                                 </ui:fragment>
                             </p:column>
                             <p:ajax event="rowSelect"
