@@ -27,3 +27,4 @@
 *.png binary
 *.gif binary
 *.class binary
+*.tlog binary
