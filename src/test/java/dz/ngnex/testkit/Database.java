@@ -50,6 +50,6 @@ public enum Database {
   public abstract void setup(Properties properties, PoolingDataSource ds);
 
   public static Database defaultDatabase() {
-    return H2_IN_MEMORY;
+    return H2_IN_FILE;
   }
 }

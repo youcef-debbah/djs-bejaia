@@ -3,6 +3,7 @@ package dz.ngnex.bean;
 import dz.ngnex.entity.*;
 import dz.ngnex.util.HtmlCleaner;
 import dz.ngnex.util.TestWithTransaction;
+import dz.ngnex.view.ReceiverItem;
 import org.apache.logging.log4j.Logger;
 
 import javax.ejb.EJB;
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,26 +35,30 @@ public class MessagesBeanImpl implements MessagesBean {
   @Override
   public void sendGlobalAdminMessage(String adminName, String content) {
     AdminMessageEntity message = new AdminMessageEntity();
-    message.setAdminName(adminName);
-    message.setContent(HtmlCleaner.secureHtml(content));
     message.setState(MessageState.READ);
-    sendAdminMessageHelper(message, null);
+    sendAdminMessageHelper(message, adminName, content, System.currentTimeMillis(), null);
   }
 
   @Override
   public void sendAdminMessage(String adminName, String content, String receiverUsername, AttachmentContentEntity attachment) {
     AdminMessageEntity adminMessage = new AdminMessageEntity();
-    adminMessage.setAdminName(adminName);
-    adminMessage.setContent(HtmlCleaner.secureHtml(content));
-    adminMessage.setReceiverName(receiverUsername);
-    sendAdminMessageHelper(adminMessage, attachment);
+    adminMessage.setReceiverName(Objects.requireNonNull(receiverUsername));
+    sendAdminMessageHelper(adminMessage, adminName, content, System.currentTimeMillis(), attachment);
   }
 
-  private void sendAdminMessageHelper(AdminMessageEntity message, AttachmentContentEntity attachment) {
-    Objects.requireNonNull(message.getAdminName());
-    Objects.requireNonNull(message.getContent());
+  @Override
+  public void sendAdminMessages(String adminName, String content, Collection<String> receivers, AttachmentContentEntity attachment) {
+    for (String receiver : receivers) {
+      AdminMessageEntity adminMessage = new AdminMessageEntity();
+      adminMessage.setReceiverName(Objects.requireNonNull(receiver));
+      sendAdminMessageHelper(adminMessage, adminName, content, System.currentTimeMillis(), attachment);
+    }
+  }
 
-    message.setEpoch(System.currentTimeMillis());
+  private void sendAdminMessageHelper(AdminMessageEntity message, String adminName, String content, long epoch, AttachmentContentEntity attachment) {
+    message.setAdminName(Objects.requireNonNull(adminName));
+    message.setContent(HtmlCleaner.secureHtml(Objects.requireNonNull(content)));
+    message.setEpoch(epoch);
 
     if (attachment != null)
       message.setAdminAttachment(em.getReference(AttachmentInfoEntity.class, attachment.getId()));
@@ -164,6 +170,19 @@ public class MessagesBeanImpl implements MessagesBean {
           .setParameter("destination", destination)
           .setMaxResults(100)
           .getResultList();
+  }
+
+  @Override
+  public List<ReceiverItem> getAllReceivers(Service destination) {
+    if (destination == Service.SPORT_SERVICE)
+      return em.createQuery("select new dz.ngnex.view.ReceiverItem(asso.name, asso.phone, asso.agrement) from SportAssociationEntity asso order by asso.lastUpdate, asso.name", ReceiverItem.class)
+          .getResultList();
+    else if (destination == Service.YOUTH_SERVICE)
+      return em.createQuery("select new dz.ngnex.view.ReceiverItem(asso.name, asso.phone, asso.agrement) from YouthAssociationEntity asso order by asso.lastUpdate, asso.name", ReceiverItem.class)
+          .getResultList();
+
+    return em.createQuery("select new dz.ngnex.view.ReceiverItem(asso.name, asso.phone, asso.agrement) from BasicAssociationEntity asso order by asso.lastUpdate, asso.name", ReceiverItem.class)
+        .getResultList();
   }
 
   @Override

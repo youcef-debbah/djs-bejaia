@@ -108,7 +108,7 @@ public class AvatarBeanImpl implements AvatarBean {
   }
 
   private boolean isNameUnique(String fileName) {
-    return em.createQuery("SELECT count(f) from AvatarInfoEntity f where f.name = :name", Long.class)
+    return em.createQuery("SELECT count(f.id) from AvatarInfoEntity f where f.name = :name", Long.class)
         .setParameter("name", fileName)
         .getSingleResult() == 0;
   }

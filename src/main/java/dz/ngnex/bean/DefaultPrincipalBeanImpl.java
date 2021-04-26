@@ -214,10 +214,11 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
       throw new IntegrityException("principal name already used: " + name, "identifierUsed");
   }
 
-  private Long countPrincipalNameUsage(String name) {
-    return em.createQuery("select count(association.id) from BasicPrincipalEntity association where association.name = :name", Long.class)
+  private int countPrincipalNameUsage(String name) {
+    return em.createQuery("select association.id from BasicPrincipalEntity association where association.name = :name", Integer.class)
+        .setMaxResults(1)
         .setParameter("name", name)
-        .getSingleResult();
+        .getResultList().size();
   }
 
   @Override

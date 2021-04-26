@@ -57,7 +57,7 @@ public class DefaultSectionsBeanImpl implements SectionsBean {
   }
 
   private void checkDuplicatedSectionName(EntityManager em, Integer associationID, String name) throws IntegrityException {
-    Long similarNames = em.createQuery("select count(s) from SectionEntity s where s.association.id = :associationID and s.name = :name", Long.class)
+    Long similarNames = em.createQuery("select count(s.id) from SectionEntity s where s.association.id = :associationID and s.name = :name", Long.class)
         .setParameter("associationID", associationID)
         .setParameter("name", name)
         .getSingleResult();

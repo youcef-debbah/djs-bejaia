@@ -136,7 +136,7 @@ public class DossierBeanImpl implements DossierBean {
   }
 
   private boolean isNameUnique(String fileName) {
-    return em.createQuery("SELECT count(f) from DossierInfoEntity f where f.name = :name", Long.class)
+    return em.createQuery("SELECT count(f.id) from DossierInfoEntity f where f.name = :name", Long.class)
         .setParameter("name", fileName)
         .getSingleResult() == 0;
   }

@@ -113,7 +113,7 @@
                         </h:form>
                     </div>
                     <div class="ui-g-12">
-                        <div class="card">
+                        <div class="card last">
                             <h:form id="main_form">
                                 <p:focus for="content"/>
                                 <div class="ui-g">
@@ -130,7 +130,7 @@
                                                          placeholder="#{messages.writeMessage}"/>
                                     </div>
                                 </div>
-                                <div class="center-inputs" style="width: calc(100% - 32px)">
+                                <div class="align-center" style="width: calc(100% - 32px)">
                                     <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
                                                      actionListener="#{messagingView.sendMessage()}"
                                                      onerror="jsoftware95.updateFailed()" process="main_form"
@@ -150,11 +150,21 @@
                                 </div>
                                 <p:messages for="destination" showIcon="false" closable="true"/>
                             </h:form>
-                            <div class="center-inputs">
+                            <div class="align-center">
                                 <h:form id="file_form" enctype="multipart/form-data">
+                                    <p:fileUpload styleClass="no-preview top-spaced hidden-overflow" skinSimple="true"
+                                                  fileUploadListener="#{messagingView.handleAttachment}"
+                                                  process="@form" update="@form"
+                                                  auto="true" multiple="false" sequential="true"
+                                                  sizeLimit="#{uploadedImagesView.maxFileSize}"
+                                                  invalidSizeMessage="#{messages.fileTooBig}"
+                                                  label="#{empty messagingView.attachment? messages.attachFile : messages.replaceFile}"
+                                                  uploadLabel="#{messages.upload}" cancelLabel="#{messages.cancel}"
+                                    />
                                     <h:panelGroup rendered="#{not empty messagingView.attachment}" layout="block">
                                         <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
                                         <h:outputText value="#{messagingView.attachment.name}"/>
+                                        <span class="inline-block slightly-spaced">
                                         <p:button icon="ui-icon-file-download" styleClass="spaced"
                                                   href="#{meta.attachmentUrl(messagingView.attachment.id)}"/>
                                         <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
@@ -163,17 +173,8 @@
                                                          actionListener="#{messagingView.deleteAttachment}">
                                             <p:confirm message="#{messages.confirmDelete}"/>
                                         </p:commandButton>
+                                        </span>
                                     </h:panelGroup>
-                                    <p:fileUpload
-                                            skinSimple="true" style="width: calc(100% - 16px)"
-                                            fileUploadListener="#{messagingView.handleAttachment}"
-                                            process="@form" update="@form"
-                                            auto="true" multiple="false" sequential="true"
-                                            sizeLimit="#{uploadedImagesView.maxFileSize}"
-                                            invalidSizeMessage="#{messages.fileTooBig}"
-                                            label="#{messages.attachFile}" uploadLabel="#{messages.upload}"
-                                            cancelLabel="#{messages.cancel}"
-                                    />
                                 </h:form>
                             </div>
                         </div>

@@ -98,7 +98,7 @@ public class DefaultContractBeanImpl implements ContractBean {
         if (name.equals(property.getName()))
           throw IntegrityException.newIdentifierUsedException(name, PropertyEntity.class);
     } else {
-      Long similarNamesCount = em.createQuery("select count(p.name) from PropertyEntity p where p.contract.id = :contractID and p.name = :name", Long.class)
+      Long similarNamesCount = em.createQuery("select count(p.id) from PropertyEntity p where p.contract.id = :contractID and p.name = :name", Long.class)
           .setParameter("name", name)
           .setParameter("contractID", contract.getId())
           .getSingleResult();
@@ -129,7 +129,7 @@ public class DefaultContractBeanImpl implements ContractBean {
         if (name.equals(activity.getName()))
           throw IntegrityException.newIdentifierUsedException(name, ActivityEntity.class);
     } else {
-      Long similarNamesCount = em.createQuery("select count(p.name) from ActivityEntity p where p.contract.id = :contractID and p.name = :name", Long.class)
+      Long similarNamesCount = em.createQuery("select count(p.id) from ActivityEntity a where a.contract.id = :contractID and a.name = :name", Long.class)
           .setParameter("name", name)
           .setParameter("contractID", contract.getId())
           .getSingleResult();

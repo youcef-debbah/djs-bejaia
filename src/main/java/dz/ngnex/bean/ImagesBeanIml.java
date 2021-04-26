@@ -115,7 +115,7 @@ public class ImagesBeanIml implements ImagesBean {
   }
 
   private boolean isNameUnique(String fileName) {
-    return em.createQuery("SELECT count(f) from ImageInfoEntity f where f.name = :name", Long.class)
+    return em.createQuery("SELECT count(f.id) from ImageInfoEntity f where f.name = :name", Long.class)
         .setParameter("name", fileName)
         .getSingleResult() == 0;
   }

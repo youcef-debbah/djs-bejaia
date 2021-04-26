@@ -14,14 +14,14 @@
                     <h:form enctype="multipart/form-data">
                         <p:fileUpload
                                 fileUploadListener="#{dossierView.handleFileUpload}" update=":files_list"
-                                auto="true" multiple="true" sequential="true"
+                                auto="true" multiple="true" sequential="true" styleClass="hidden-overflow"
                                 sizeLimit="#{dossierView.maxFileSize}"
                                 invalidSizeMessage="#{messages.fileTooBig}"
                                 label="#{messages.choose}" uploadLabel="#{messages.upload}"
                                 cancelLabel="#{messages.cancel}"
                         />
                     </h:form>
-                    <h1>#{messages.uploadedFiles}</h1>
+                    <h1 class="small-top">#{messages.uploadedFiles}</h1>
                     <p:dataList id="files_list" value="#{dossierView.files}" var="file"
                                 itemType="none" paginator="true" rows="5" styleClass="simple-datalist"
                                 emptyMessage="#{messages.noData}">

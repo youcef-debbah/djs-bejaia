@@ -225,9 +225,47 @@ html body {
     padding: 3px;
   }
 
-  .ui-fileupload .ui-fileupload-buttonbar {
-    padding: 3px;
-    margin-top: 0.5em;
+  .ui-fileupload {
+    .ui-fileupload-row div {
+      vertical-align: middle;
+    }
+    .ui-fileupload-cancel {
+      background-color: $accentColor;
+    }
+
+    .ui-fileupload-buttonbar {
+      padding: 3px;
+    }
+
+    .ui-fileupload-content {
+      border: none;
+      padding: 0;
+      margin: 0;
+
+      .ui-fileupload-files {
+        margin: 3px 0;
+      }
+
+      div {
+        white-space: pre;
+      }
+
+      .ui-fileupload-progress {
+        width: 100%;
+        padding: 0;
+
+        .ui-progressbar {
+          width: 100%;
+          top: 0;
+        }
+      }
+    }
+
+    &.no-preview .ui-fileupload-content {
+      .ui-fileupload-preview {
+        display: none;
+      }
+    }
   }
 
   .ui-button {
@@ -651,6 +689,14 @@ body .ui-widget-header .ui-selectonemenu .ui-selectonemenu-trigger .ui-icon {
   margin-bottom: 0.5em
 }
 
+.top-spaced {
+  margin-top: 0.5em
+}
+
+.last {
+  margin-bottom: 0;
+}
+
 .active {
   background-color: #e6ffec;
 }
@@ -751,12 +797,35 @@ li span:focus {
 }
 
 .inline-block {
-  margin: 8px;
   display: inline-block;
+}
+
+h1.small-top {
+  margin-top: 16px;
+}
+
+.overflow-ellipsis {
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.ui-autocomplete-itemtip {
+  min-width: 130px;
+}
+
+.hidden-overflow {
+  overflow: hidden;
 }
 
 @media screen and (max-width: 40em) {
   .ui-fileupload-buttonbar .ui-button.ui-button-text-icon-left {
     padding: 0 25px;
   }
+}
+
+.ui-fileupload-preview canvas {
+  width: 80px;
+  height: auto;
 }

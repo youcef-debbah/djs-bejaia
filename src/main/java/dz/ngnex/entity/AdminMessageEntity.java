@@ -39,7 +39,7 @@ public class AdminMessageEntity extends BasicMessageEntity {
     this.adminName = adminName;
     }
 
-  @OneToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "adminAttachment", foreignKey = @ForeignKey(name = "fk_admin_message_to_attachment"))
   public AttachmentInfoEntity getAdminAttachment() {
     return adminAttachment;

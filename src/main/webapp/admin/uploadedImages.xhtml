@@ -14,14 +14,14 @@
                     <h:form enctype="multipart/form-data">
                         <p:fileUpload
                                 fileUploadListener="#{uploadedImagesView.handleFileUpload}" update=":files_list"
-                                auto="true" multiple="true" sequential="true"
+                                auto="true" multiple="true" sequential="true" styleClass="hidden-overflow"
                                 sizeLimit="#{uploadedImagesView.maxFileSize}"
                                 invalidSizeMessage="#{messages.fileTooBig}"
                                 label="#{messages.choose}" uploadLabel="#{messages.upload}"
                                 cancelLabel="#{messages.cancel}"
                         />
                     </h:form>
-                    <h1>#{messages.uploadedFiles}</h1>
+                    <h1 class="small-top">#{messages.uploadedFiles}</h1>
                     <p:dataList id="files_list" value="#{uploadedImagesView.files}" var="file"
                                 itemType="none" paginator="true" rows="5" styleClass="simple-datalist"
                                 emptyMessage="#{messages.noData}">
@@ -39,7 +39,7 @@
                                 </h:outputLink>
                             </div>
                             <div class="data-details align-center ui-g-12 ui-md-7">
-                                <p>#{file.nameWithoutExtension}</p>
+                                <p class="hidden-overflow">#{file.nameWithoutExtension}</p>
                                 <p>#{file.formattedSize}</p>
                                 <p class="hint">#{localeManager.formatAsLocalDateTime(file.uploadTime)} - <pe:timeAgo
                                         value="#{file.uploadTimeAsDate}"/></p>

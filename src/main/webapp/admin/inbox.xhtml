@@ -15,8 +15,8 @@
     </ui:define>
 
     <ui:define name="overlay">
-        <h:form id="dialog_form">
-            <p:dialog id="dialog" widgetVar="global_msg_dialog" positionType="fixed"
+        <h:form id="global_msg_form">
+            <p:dialog widgetVar="global_msg_dialog" positionType="absolute"
                       header="#{messages.sendGlobalMessage}" modal="false" width="350">
 
                 <h:panelGroup id="dialogContent" styleClass="ui-g ui-fluid" layout="block">
@@ -41,12 +41,94 @@
                                      onstart="PF('widget_send_global_msg_button').disable()"
                                      onerror="jsoftware95.updateFailed()"
                                      oncomplete="PF('widget_send_global_msg_button').enable()"
-                                     process="dialog" update="dialogContent"/>
+                                     process="global_msg_form" update="dialogContent"/>
                     <p:commandButton value="#{messages.cancel}" type="button"
                                      onclick="PF('global_msg_dialog').hide()" icon="fa fa-remove"/>
                 </f:facet>
             </p:dialog>
         </h:form>
+
+        <p:dialog widgetVar="group_msg_dialog" positionType="absolute"
+                  header="#{messages.sendGroupMessage}" modal="false" width="400">
+            <h:form id="group_msg_form">
+                <h:panelGroup id="groupDialogContent" styleClass="ui-g ui-fluid" layout="block">
+                    <p:focus context="groupDialogContent"/>
+                    <div class="ui-g-12 compact">
+                        <!--@elvariable id="receiver" type="dz.ngnex.view.ReceiverItem"-->
+                        <p:autoComplete id="receiversInput" multiple="true"
+                                        placeholder="#{messages.toReceiver}"
+                                        value="#{inboxView.selectedReceivers}"
+                                        completeMethod="#{inboxView.completeReceiver}"
+                                        var="receiver" itemLabel="#{receiver.name}" itemValue="#{receiver}"
+                                        converter="ReceiverItemConverter"
+                                        forceSelection="true" scrollHeight="250">
+                            <f:facet name="itemtip">
+                                <div class="inline-block align-center full-width">
+                                    <h:outputText styleClass="bold" value="#{receiver.name}"/>
+                                </div>
+                                <br/>
+                                <i class="ui-icon fa fa-certificate middled"/>
+                                <h:outputText styleClass="middled" value="#{receiver.agrement}"/>
+                                <br/>
+                                <i class="ui-icon fa fa-phone middled"/>
+                                <h:outputText styleClass="middled" value="#{receiver.phone}"/>
+                            </f:facet>
+                        </p:autoComplete>
+                    </div>
+                    <div class="ui-g-12 compact">
+                        <p:messages for="groupContent" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12">
+                        <p:inputTextarea id="groupContent" value="#{inboxView.groupMessageContent}"
+                                         requiredMessage="#{messages.messageCannotBeEmpty}"
+                                         placeholder="#{messages.writeMessage}"/>
+                    </div>
+                </h:panelGroup>
+            </h:form>
+            <h:form id="file_form" enctype="multipart/form-data" styleClass="align-center full-width">
+                <p:fileUpload styleClass="no-preview top-spaced hidden-overflow" skinSimple="true"
+                              fileUploadListener="#{inboxView.handleAttachment}"
+                              process="file_form" update="file_form"
+                              uploadIcon="ui-icon-attach-file"
+                              auto="true" multiple="false" sequential="true"
+                              sizeLimit="#{uploadedImagesView.maxFileSize}"
+                              invalidSizeMessage="#{messages.fileTooBig}"
+                              label="#{empty inboxView.attachment? messages.attachFile : messages.replaceFile}"
+                              uploadLabel="#{messages.upload}" cancelLabel="#{messages.cancel}"
+                />
+                <h:panelGroup rendered="#{not empty inboxView.attachment}"
+                              layout="block">
+                    <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
+                    <h:outputText value="#{inboxView.attachment.name}"/>
+                    <span class="inline-block slightly-spaced">
+                        <p:button
+                                icon="ui-icon-file-download"
+                                styleClass="spaced"
+                                href="#{meta.attachmentUrl(inboxView.attachment.id)}"/>
+                        <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
+                                         styleClass="pink-btn v-spaced"
+                                         onerror="jsoftware95.updateFailed()"
+                                         actionListener="#{inboxView.deleteAttachment}">
+                            <p:confirm message="#{messages.confirmDelete}"/>
+                        </p:commandButton>
+                    </span>
+                </h:panelGroup>
+            </h:form>
+            <f:facet name="footer">
+                <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
+                                 actionListener="#{inboxView.sendGroupMessage}"
+                                 widgetVar="widget_send_group_msg_button"
+                                 onstart="PF('widget_send_group_msg_button').disable()"
+                                 onerror="jsoftware95.updateFailed()"
+                                 oncomplete="PF('widget_send_group_msg_button').enable()"
+                                 form="group_msg_form"
+                                 process="@this group_msg_form" update="group_msg_form file_form"/>
+                <p:commandButton value="#{messages.cancel}" type="button"
+                                 onclick="PF('group_msg_dialog').hide()" icon="fa fa-remove"/>
+            </f:facet>
+        </p:dialog>
     </ui:define>
 
     <ui:define name="content">
@@ -58,6 +140,16 @@
             <h:panelGroup id="messages" layout="block" styleClass="card">
                 <h1>#{messages.clientsMessages}</h1>
                 <!--suppress ELValidationInJSP -->
+                <p:toolbar id="actionbar" styleClass="scrollable-toolbar">
+                    <f:facet name="left">
+                        <p:commandButton type="button"
+                                         value="#{messages.sendGlobalMessage}" icon="ui-icon-chat-bubble"
+                                         onclick="PF('global_msg_dialog').show()"/>
+                        <p:commandButton type="button"
+                                         value="#{messages.sendGroupMessage}" icon="ui-icon-message"
+                                         onclick="PF('group_msg_dialog').show()"/>
+                    </f:facet>
+                </p:toolbar>
                 <p:dataTable id="acc_container" widgetVar="main_sheet_widget" var="message"
                              value="#{inboxView.messages}"
                              draggableColumns="true" resizableColumns="true" emptyMessage="#{messages.noChatToShow}"
@@ -83,7 +175,7 @@
                     </p:column>
 
                     <p:column headerText="#{messages.content}" sortBy="#{message.content}" styleClass="align-center">
-                        <h:outputText value="#{message.content}"/>
+                        <h:outputText value="#{message.content}" escape="false"/>
                     </p:column>
 
                     <p:column headerText="#{messages.sender}" sortBy="#{message.senderName}"
@@ -104,10 +196,6 @@
                             <f:param name="sender" value="#{inboxView.currentMessage.senderName}"/>
                         </p:button>
 
-                        <p:commandButton type="button" accesskey="g"
-                                         value="#{messages.sendGlobalMessage}" icon="ui-icon-message"
-                                         onclick="PF('global_msg_dialog').show()"/>
-
                         <p:commandButton id="delete_button" value="#{messages.delete}" icon="ui-icon-delete"
                                          onerror="jsoftware95.updateFailed()"
                                          disabled="#{empty inboxView.currentMessage}"
@@ -118,7 +206,7 @@
                                   href="#{meta.safeUrl(inboxView.currentMessage.attachment.urlAsAttachment)}"/>
                     </f:facet>
                     <f:facet name="right">
-                        <div class="dark-input">
+                        <div class="dark-input spaced">
                             <div class="ui-inputgroup">
                                 <div class="ui-inputgroup-addon">
                                     <i class="topbar-icon ui-icon fa fa-filter"/>
@@ -143,5 +231,14 @@
                 </p:panel>
             </h:panelGroup>
         </h:form>
+        <h:outputScript>
+            // <![CDATA[
+            $(document).keypress(function (event) {
+                if (event.which === 13) {
+                    event.preventDefault();
+                }
+            })
+            // ]]>
+        </h:outputScript>
     </ui:define>
 </ui:composition>

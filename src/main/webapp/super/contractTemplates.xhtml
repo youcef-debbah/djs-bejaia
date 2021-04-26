@@ -232,7 +232,7 @@
                                         update="@form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent templateEditForm:templateEditDialogContent"/>
                             </p:selectOneMenu>
                             <h:outputFormat rendered="#{not empty templateView.currentTemplateID}"
-                                            value="#{messages.usedBy}" styleClass="inline-block">
+                                            value="#{messages.usedBy}" styleClass="inline-block slightly-spaced">
                                 <f:param value="#{templateView.usageCountOfCurrentTemplate}"/>
                             </h:outputFormat>
                         </f:facet>

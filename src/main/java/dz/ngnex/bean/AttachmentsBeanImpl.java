@@ -73,7 +73,7 @@ public class AttachmentsBeanImpl implements AttachmentsBean {
   }
 
   private boolean isNameUnique(String fileName) {
-    return em.createQuery("SELECT f.uploadTime from AttachmentInfoEntity f where f.name = :name", Long.class)
+    return em.createQuery("SELECT count(f.id) from AttachmentInfoEntity f where f.name = :name", Long.class)
         .setParameter("name", fileName)
         .getSingleResult() == 0;
   }

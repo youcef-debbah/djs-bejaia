@@ -45,7 +45,7 @@
             </p:dialog>
             <p:toolbar id="seasonMenu">
                 <f:facet name="left">
-                    <h:outputText styleClass="inline-block" value="#{messages.currentSeason}"/>
+                    <h:outputText styleClass="inline-block spaced" value="#{messages.currentSeason}"/>
                     <p:selectOneMenu value="#{seasonView.currentSeasonID}" styleClass="spaced" style="min-width: 150px">
                         <f:selectItems value="#{seasonView.seasons}" var="season"
                                        itemValue="#{season.id}" itemLabel="#{season.name}"/>

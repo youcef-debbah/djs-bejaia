@@ -52,7 +52,7 @@ public class MessagingView implements Serializable {
   private BasicPrincipalEntity entity;
 
   @EJB
-  AttachmentsBean attachmentsBean;
+  private AttachmentsBean attachmentsBean;
 
   @Inject
   CurrentPrincipal currentPrincipal;
@@ -136,8 +136,8 @@ public class MessagingView implements Serializable {
         String receiver = entity.getName();
         messagesBean.sendAdminMessage(currentPrincipal.getName(), localeManager.formatTextAsHtml(content), receiver, attachment);
         resetInput();
-        fetchMessages();
         adminMessageNotifications.send("refresh", receiver);
+        fetchMessages();
       } catch (Exception e) {
         meta.handleException(e);
       }

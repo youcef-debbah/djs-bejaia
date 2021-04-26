@@ -28,7 +28,8 @@
                                     </h:panelGroup>
                                     <ui:fragment rendered="#{not empty messagingView.conversation}">
                                         <ul>
-                                            <ui:repeat value="#{messagingView.conversation}" var="message" varStatus="status">
+                                            <ui:repeat value="#{messagingView.conversation}" var="message"
+                                                       varStatus="status">
                                                 <ui:fragment rendered="#{status.first}">
                                                     <li class="clearfix">
                                                         <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
@@ -72,7 +73,8 @@
                                                                         value="#{meta.asDate(message.stamp)}"/>
                                                         </span>
                                                     </li>
-                                                    <ui:fragment rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
+                                                    <ui:fragment
+                                                            rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
                                                         <li class="clearfix">
                                                             <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
                                                         </li>
@@ -91,7 +93,8 @@
                                                                         value="#{meta.asDate(message.stamp)}"/>
                                                         </span>
                                                     </li>
-                                                    <ui:fragment rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
+                                                    <ui:fragment
+                                                            rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
                                                         <li class="clearfix">
                                                             <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
                                                         </li>
@@ -106,7 +109,7 @@
                         </h:form>
                     </div>
                     <div class="ui-g-12">
-                        <div class="card">
+                        <div class="card last">
                             <h:form id="main_form">
                                 <p:focus for="content"/>
                                 <div class="ui-g">
@@ -117,7 +120,7 @@
                                                          placeholder="#{messages.writeMessage}"/>
                                     </div>
                                 </div>
-                                <div class="center-inputs" style="width: calc(100% - 32px)">
+                                <div class="align-center">
                                     <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
                                                      actionListener="#{messagingView.sendAdminMessage()}"
                                                      onerror="jsoftware95.updateFailed()" process="main_form"
@@ -125,30 +128,34 @@
                                                      update="main_form output file_form"/>
                                 </div>
                             </h:form>
-                            <div class="center-inputs">
+                            <div class="align-center">
                                 <h:form id="file_form" enctype="multipart/form-data">
-                                    <h:panelGroup rendered="#{not empty messagingView.attachment}" layout="block">
+                                    <p:fileUpload styleClass="no-preview top-spaced hidden-overflow"
+                                                  fileUploadListener="#{messagingView.handleAttachment}"
+                                                  process="@form" update="@form" skinSimple="true"
+                                                  auto="true" multiple="false" sequential="true"
+                                                  sizeLimit="#{uploadedImagesView.maxFileSize}"
+                                                  invalidSizeMessage="#{messages.fileTooBig}"
+                                                  label="#{empty messagingView.attachment? messages.attachFile : messages.replaceFile}"
+                                                  uploadLabel="#{messages.upload}" cancelLabel="#{messages.cancel}"
+                                    />
+                                    <h:panelGroup rendered="#{not empty messagingView.attachment}"
+                                                  layout="block">
                                         <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
                                         <h:outputText value="#{messagingView.attachment.name}"/>
-                                        <p:button icon="ui-icon-file-download" styleClass="spaced"
-                                                  href="#{meta.attachmentUrl(messagingView.attachment.id)}"/>
-                                        <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
-                                                         styleClass="pink-btn v-spaced"
-                                                         onerror="jsoftware95.updateFailed()"
-                                                         actionListener="#{messagingView.deleteAttachment}">
-                                            <p:confirm message="#{messages.confirmDelete}"/>
-                                        </p:commandButton>
+                                        <span class="inline-block slightly-spaced">
+                                            <p:button
+                                                    icon="ui-icon-file-download"
+                                                    styleClass="spaced"
+                                                    href="#{meta.attachmentUrl(messagingView.attachment.id)}"/>
+                                            <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
+                                                             styleClass="pink-btn v-spaced"
+                                                             onerror="jsoftware95.updateFailed()"
+                                                             actionListener="#{messagingView.deleteAttachment}">
+                                                <p:confirm message="#{messages.confirmDelete}"/>
+                                            </p:commandButton>
+                                        </span>
                                     </h:panelGroup>
-                                    <p:fileUpload
-                                            skinSimple="true" style="width: calc(100% - 32px)"
-                                            fileUploadListener="#{messagingView.handleAttachment}"
-                                            process="@form" update="@form"
-                                            auto="true" multiple="false" sequential="true"
-                                            sizeLimit="#{uploadedImagesView.maxFileSize}"
-                                            invalidSizeMessage="#{messages.fileTooBig}"
-                                            label="#{messages.attachFile}" uploadLabel="#{messages.upload}"
-                                            cancelLabel="#{messages.cancel}"
-                                    />
                                 </h:form>
                             </div>
                         </div>
