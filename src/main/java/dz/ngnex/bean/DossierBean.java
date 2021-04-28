@@ -30,7 +30,7 @@ public interface DossierBean {
 
   FilesStatistics getStatistics(String uploader);
 
-  void updateDossierState(String username);
+  void updateDossierState(String username, long now);
 
   void clear();
 }

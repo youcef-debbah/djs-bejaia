@@ -23,6 +23,7 @@ import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.DossierServlet;
 import dz.ngnex.control.Meta;
 import dz.ngnex.entity.BasicAssociationEntity;
+import dz.ngnex.entity.Constrains;
 import dz.ngnex.entity.DossierInfoEntity;
 import dz.ngnex.util.Messages;
 import dz.ngnex.util.ViewModel;
@@ -98,6 +99,10 @@ public class ProfileView implements Serializable {
       association.setLastUpdater(currentPrincipal.getName());
       this.currentAssociation = principalBean.updateAssociationInfo(association);
     }
+  }
+
+  public String getEmailRegex() {
+    return Constrains.EMAIL_REGEX;
   }
 
   public String getCurrentDossierUrl() {

@@ -438,6 +438,22 @@
                                     </div>
                                 </div>
                                 <div class="ui-g-12 ui-md-4">
+                                    <!-- email -->
+                                    <div>
+                                        <p:outputLabel id="emailLabel" for="email"
+                                                       value="#{messages.email}"/>
+                                        <div class="ui-inputgroup">
+                                            <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-envelope"/></span>
+                                            <span class="md-inputfield md-inputfield-fill">
+                                    <p:inputText id="email" value="#{profile.currentAssociation.email}"
+                                                 disabled="#{empty profile.currentAssociation}">
+                                        <f:validateRegex pattern="#{profile.emailRegex}"/>
+                                    </p:inputText>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ui-g-12 ui-md-4">
                                     <!-- compte -->
                                     <div>
                                         <p:outputLabel id="compteLabel" for="compte" value="#{messages.compte}"/>
@@ -466,7 +482,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="ui-g-12 ui-md-8">
+                                <div class="ui-g-12 ui-md-4">
                                     <!-- banque -->
                                     <div>
                                         <p:outputLabel id="banqueLabel" for="banque" value="#{messages.banque}"/>

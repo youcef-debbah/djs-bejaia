@@ -63,6 +63,7 @@ public final class Contract {
     ADRESSE("adresse"),
     AGREMENT("agrement"),
     BANQUE("banque"),
+    EMAIL("email"),
     AGENCE("agence"),
     COMPTE("compte"),
     DESCRIPTION("description"),
@@ -172,6 +173,7 @@ public final class Contract {
         .replace(ADRESSE.getRawName(), association.getAdresse())
         .replace(AGREMENT.getRawName(), association.getAgrement())
         .replace(BANQUE.getRawName(), association.getBanque())
+        .replace(EMAIL.getRawName(), association.getEmail())
         .replace(AGENCE.getRawName(), association.getAgence())
         .replace(COMPTE.getRawName(), association.getCompte())
         .replace(DESCRIPTION.getRawName(), association.getDescription())

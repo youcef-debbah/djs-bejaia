@@ -77,7 +77,7 @@ public class DossierBeanImpl implements DossierBean {
     DossierInfoEntity info = getInfo(fileID);
     if (info != null) {
       em.remove(info);
-      updateDossierState(info.getUploader());
+      updateDossierState(info.getUploader(), System.currentTimeMillis());
     }
   }
 
@@ -105,11 +105,12 @@ public class DossierBeanImpl implements DossierBean {
         uploader,
         file.getContents());
 
-    fileEntity.setUploadTime(System.currentTimeMillis());
+    long now = System.currentTimeMillis();
+    fileEntity.setUploadTime(now);
     fileEntity.setSize((int) file.getSize());
 
     em.persist(fileEntity);
-    updateDossierState(uploader);
+    updateDossierState(uploader, now);
     return fileEntity;
   }
 
@@ -142,14 +143,16 @@ public class DossierBeanImpl implements DossierBean {
   }
 
   @Override
-  public void updateDossierState(String username) {
+  public void updateDossierState(String username, long now) {
     if (username != null) {
-      int updatedSoFar = em.createQuery("update SportAssociationEntity s set s.uploadedFilesCount = (select count(f.id) from DossierInfoEntity f where f.uploader = :username) where s.name = :username")
+      int updatedSoFar = em.createQuery("update SportAssociationEntity s set s.lastUpdate = :updateTime, s.uploadedFilesCount = (select count(f.id) from DossierInfoEntity f where f.uploader = :username) where s.name = :username")
+          .setParameter("updateTime", now)
           .setParameter("username", username)
           .executeUpdate();
 
       if (updatedSoFar == 0)
-        em.createQuery("update YouthAssociationEntity s set s.uploadedFilesCount = (select count(f.id) from DossierInfoEntity f where f.uploader = :username) where s.name = :username")
+        em.createQuery("update YouthAssociationEntity s set s.lastUpdate = :updateTime, s.uploadedFilesCount = (select count(f.id) from DossierInfoEntity f where f.uploader = :username) where s.name = :username")
+            .setParameter("updateTime", now)
             .setParameter("username", username)
             .executeUpdate();
     }

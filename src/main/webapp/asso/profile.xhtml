@@ -121,11 +121,11 @@
                     <div class="ui-g ui-fluid">
                         <!-- agrement -->
                         <div class="ui-g-12 ui-md-7">
-<!--                            <p:messages id="agrementMsgs" styleClass="need-validation ui-g-12 ui-g-nopad" for="agrement"-->
-<!--                                        showIcon="false"-->
-<!--                                        closable="true">-->
-<!--                                <p:effect event="load" type="bounce"/>-->
-<!--                            </p:messages>-->
+                            <!--                            <p:messages id="agrementMsgs" styleClass="need-validation ui-g-12 ui-g-nopad" for="agrement"-->
+                            <!--                                        showIcon="false"-->
+                            <!--                                        closable="true">-->
+                            <!--                                <p:effect event="load" type="bounce"/>-->
+                            <!--                            </p:messages>-->
                             <p:outputLabel id="agrementLabel" for="agrement" styleClass="ui-g-12 no-v-pad"
                                            value="#{messages.agrement}" title="#{messages.agrementHelp}"/>
                             <div class="ui-g-12 no-h-pad">
@@ -143,11 +143,11 @@
 
                         <!-- compte -->
                         <div class="ui-g-12 ui-md-5">
-<!--                            <p:messages id="compteMsgs" styleClass="need-validation ui-g-12 ui-g-nopad" for="compte"-->
-<!--                                        showIcon="false"-->
-<!--                                        closable="true">-->
-<!--                                <p:effect event="load" type="bounce"/>-->
-<!--                            </p:messages>-->
+                            <!--                            <p:messages id="compteMsgs" styleClass="need-validation ui-g-12 ui-g-nopad" for="compte"-->
+                            <!--                                        showIcon="false"-->
+                            <!--                                        closable="true">-->
+                            <!--                                <p:effect event="load" type="bounce"/>-->
+                            <!--                            </p:messages>-->
                             <p:outputLabel id="compteLabel" for="compte" styleClass="ui-g-12 no-v-pad"
                                            value="#{messages.compte}" title="#{messages.compteHelp}"/>
                             <div class="ui-g-12 no-h-pad">
@@ -163,10 +163,10 @@
 
                         <!-- president -->
                         <div class="ui-g-12 ui-md-7">
-<!--                            <p:messages id="presidentMsgs" styleClass="need-validation ui-g-nopad" for="president"-->
-<!--                                        showIcon="false" closable="true">-->
-<!--                                <p:effect event="load" type="bounce"/>-->
-<!--                            </p:messages>-->
+                            <!--                            <p:messages id="presidentMsgs" styleClass="need-validation ui-g-nopad" for="president"-->
+                            <!--                                        showIcon="false" closable="true">-->
+                            <!--                                <p:effect event="load" type="bounce"/>-->
+                            <!--                            </p:messages>-->
                             <p:outputLabel id="presidentLabel" for="president" styleClass="ui-g-12 no-v-pad"
                                            value="#{messages.president}" title="#{messages.presidentHelp}"/>
                             <div class="ui-g-12 no-h-pad">
@@ -183,10 +183,10 @@
 
                         <!-- phone -->
                         <div class="ui-g-6 ui-md-5">
-<!--                            <p:messages styleClass="need-validation ui-g-nopad" for="phone" showIcon="false"-->
-<!--                                        closable="true">-->
-<!--                                <p:effect event="load" type="bounce"/>-->
-<!--                            </p:messages>-->
+                            <!--                            <p:messages styleClass="need-validation ui-g-nopad" for="phone" showIcon="false"-->
+                            <!--                                        closable="true">-->
+                            <!--                                <p:effect event="load" type="bounce"/>-->
+                            <!--                            </p:messages>-->
                             <p:outputLabel for="phone" styleClass="ui-g-12 no-v-pad"
                                            value="#{messages.phoneNumber}" title="#{messages.phoneNumberHelp}"/>
                             <div class="ui-g-12 no-h-pad">
@@ -202,12 +202,12 @@
                         </div>
 
                         <!-- adresse -->
-                        <div class="ui-g-12">
-<!--                            <p:messages id="adresseMsgs" styleClass="need-validation ui-g-nopad" for="adresse"-->
-<!--                                        showIcon="false"-->
-<!--                                        closable="true">-->
-<!--                                <p:effect event="load" type="bounce"/>-->
-<!--                            </p:messages>-->
+                        <div class="ui-g-12 ui-md-7">
+                            <!--                            <p:messages id="adresseMsgs" styleClass="need-validation ui-g-nopad" for="adresse"-->
+                            <!--                                        showIcon="false"-->
+                            <!--                                        closable="true">-->
+                            <!--                                <p:effect event="load" type="bounce"/>-->
+                            <!--                            </p:messages>-->
                             <p:outputLabel id="adresseLabel" for="adresse" styleClass="ui-g-12 no-v-pad"
                                            value="#{messages.adresse}" title="#{messages.adresseHelp}"/>
                             <div class="ui-g-12 no-h-pad">
@@ -222,13 +222,31 @@
                             </div>
                         </div>
 
+                        <!-- email -->
+                        <div class="ui-g-12 ui-md-5">
+                            <p:outputLabel id="emailLabel" for="email" styleClass="ui-g-12 no-v-pad"
+                                           value="#{messages.email}" title="#{messages.emailHelp}"/>
+                            <div class="ui-g-12 no-h-pad">
+                                <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                    <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-envelope"/></span>
+                                    <span class="md-inputfield md-inputfield-fill">
+                            <p:inputText id="email" value="#{singleUserView.currentAccount.email}"
+                                         styleClass="need-validation" type="email"
+                                         title="#{messages.emailHelp}" required="true">
+                                <f:validateRegex pattern="#{profile.emailRegex}"/>
+                            </p:inputText>
+                            </span>
+                                </h:panelGroup>
+                            </div>
+                        </div>
+
                         <!-- banque -->
                         <div class="ui-g-12 ui-md-7">
-<!--                            <p:messages id="banqueMsgs" styleClass="need-validation ui-g-nopad" for="banque"-->
-<!--                                        showIcon="false"-->
-<!--                                        closable="true">-->
-<!--                                <p:effect event="load" type="bounce"/>-->
-<!--                            </p:messages>-->
+                            <!--                            <p:messages id="banqueMsgs" styleClass="need-validation ui-g-nopad" for="banque"-->
+                            <!--                                        showIcon="false"-->
+                            <!--                                        closable="true">-->
+                            <!--                                <p:effect event="load" type="bounce"/>-->
+                            <!--                            </p:messages>-->
                             <p:outputLabel id="banqueLabel" for="banque" styleClass="ui-g-12 no-v-pad"
                                            value="#{messages.banque}" title="#{messages.banqueHelp}"/>
                             <div class="ui-g-12 no-h-pad">
@@ -248,10 +266,10 @@
 
                         <!-- agence -->
                         <div class="ui-g-12 ui-md-5">
-<!--                            <p:messages styleClass="need-validation ui-g-nopad" for="agence"-->
-<!--                                        showIcon="false" closable="true">-->
-<!--                                <p:effect event="load" type="bounce"/>-->
-<!--                            </p:messages>-->
+                            <!--                            <p:messages styleClass="need-validation ui-g-nopad" for="agence"-->
+                            <!--                                        showIcon="false" closable="true">-->
+                            <!--                                <p:effect event="load" type="bounce"/>-->
+                            <!--                            </p:messages>-->
                             <p:outputLabel for="adresse" styleClass="ui-g-12 no-v-pad"
                                            value="#{messages.agence}" title="#{messages.agenceHelp}"/>
                             <div class="ui-g-12 no-h-pad">

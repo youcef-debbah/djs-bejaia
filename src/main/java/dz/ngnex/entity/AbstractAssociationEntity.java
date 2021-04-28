@@ -25,8 +25,8 @@ public abstract class AbstractAssociationEntity extends BasicPrincipalEntity {
   private String phone = "";
   private String compte = "";
   private String banque = "";
-  private String agence = "";
   private String email = "";
+  private String agence = "";
   private Long lastUpdate;
   private String lastUpdater;
 
@@ -133,16 +133,6 @@ public abstract class AbstractAssociationEntity extends BasicPrincipalEntity {
     this.banque = banque;
   }
 
-  @Size(max = Constrains.MAX_PHRASE_LENGTH)
-  @Column(length = Constrains.MAX_PHRASE_LENGTH)
-  public String getAgence() {
-    return agence;
-  }
-
-  public void setAgence(String agence) {
-    this.agence = agence;
-  }
-
   @Size(max = Constrains.MAX_EMAIL_LENGTH)
   @Column(length = Constrains.MAX_EMAIL_LENGTH)
   public String getEmail() {
@@ -151,6 +141,16 @@ public abstract class AbstractAssociationEntity extends BasicPrincipalEntity {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  @Size(max = Constrains.MAX_PHRASE_LENGTH)
+  @Column(length = Constrains.MAX_PHRASE_LENGTH)
+  public String getAgence() {
+    return agence;
+  }
+
+  public void setAgence(String agence) {
+    this.agence = agence;
   }
 
   @Transient
