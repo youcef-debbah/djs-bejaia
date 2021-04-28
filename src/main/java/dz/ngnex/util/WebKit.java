@@ -17,6 +17,7 @@
 
 package dz.ngnex.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -165,11 +166,11 @@ public final class WebKit {
   }
 
   public static void redirectToHome() {
-    redirect("/djs", "/landing.xhtml", null);
+    redirect(null, "/landing.xhtml", null);
   }
 
   public static void redirectToLogin() {
-    redirect("/djs", "/login.xhtml", null);
+    redirect(null, "/login.xhtml", null);
   }
 
   public static void redirect(@Nullable String context, @Nullable String viewId, @Nullable Map<String, String[]> parameters) {
@@ -213,5 +214,11 @@ public final class WebKit {
     } catch (ServletException e) {
       log.warn("logout failed for principal named: " + name, e);
     }
+  }
+
+  public static String requireNotBlank(String value) {
+    if (StringUtils.isBlank(value))
+      throw new IllegalArgumentException("illegal blank argument: '" + value + "'");
+    return value;
   }
 }

@@ -8,16 +8,13 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.Transient;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public interface DatabaseEntity extends Serializable, Comparable<DatabaseEntity> {
 
   static void requireID(DatabaseEntity... entities) {
     for (DatabaseEntity entity : entities)
-      requireID();
+      requireID(entity);
   }
 
   static <T extends DatabaseEntity> T requireID(T entity) {

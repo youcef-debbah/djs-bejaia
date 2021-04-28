@@ -4976,7 +4976,6 @@ body .md-inputfield .ui-message.ui-message-error .ui-message-error-icon {
 body .md-inputfield.md-inputfield-fill input, body .md-inputfield.md-inputfield-fill .ui-selectonemenu {
   background-color: #e7e9f6;
   padding: 5px 8px;
-  height: 2em;
 }
 body .md-inputfield.md-inputfield-fill textarea {
   background-color: #e7e9f6;

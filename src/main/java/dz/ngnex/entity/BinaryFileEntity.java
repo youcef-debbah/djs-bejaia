@@ -71,7 +71,7 @@ public abstract class BinaryFileEntity implements DatabaseEntity {
 
   public void setId(Integer id) {
     this.id = id;
-    }
+  }
 
   @Version
   public Integer getVersion() {
@@ -80,7 +80,7 @@ public abstract class BinaryFileEntity implements DatabaseEntity {
 
   public void setVersion(Integer version) {
     this.version = version;
-    }
+  }
 
   @NotNull
   @Size(max = Constrains.MAX_FILENAME_LENGTH)
@@ -91,7 +91,7 @@ public abstract class BinaryFileEntity implements DatabaseEntity {
 
   public void setContentType(String contentType) {
     this.contentType = contentType;
-    }
+  }
 
   @NotNull
   @Column(nullable = false)
@@ -102,7 +102,7 @@ public abstract class BinaryFileEntity implements DatabaseEntity {
   public void setUploadTime(Long uploadTime) {
     this.uploadTime = uploadTime;
     this.uploadTimeAsDate = new Date(uploadTime);
-    }
+  }
 
   @NotNull
   @Size(max = Constrains.MAX_IDENTIFIER_SIZE)
@@ -111,9 +111,17 @@ public abstract class BinaryFileEntity implements DatabaseEntity {
     return name;
   }
 
+  @Transient
+  public String getShortName() {
+    if (name != null && name.length() > 45)
+      return name.substring(0, 44) + '\u2026';
+    else
+      return name;
+  }
+
   public void setName(String name) {
     this.name = name;
-    }
+  }
 
   @NotNull
   @Size(max = Constrains.MAX_IDENTIFIER_SIZE)
@@ -124,7 +132,7 @@ public abstract class BinaryFileEntity implements DatabaseEntity {
 
   public void setUploader(String uploader) {
     this.uploader = uploader;
-    }
+  }
 
   @NotNull
   @Column(nullable = false)
@@ -135,7 +143,7 @@ public abstract class BinaryFileEntity implements DatabaseEntity {
   public void setSize(Integer size) {
     this.size = size;
     this.formattedSize = FilesStatistics.format(size);
-    }
+  }
 
   @Transient
   public Date getUploadTimeAsDate() {

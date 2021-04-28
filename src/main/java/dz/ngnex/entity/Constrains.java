@@ -6,6 +6,7 @@ public final class Constrains {
   public static final int Min_IDENTIFIER_SIZE = 2;
   public static final int MAX_IDENTIFIER_SIZE = 80;
   public static final int MAX_PHONE_NUMBER_SIZE = 20;
+  public static final int MAX_EMAIL_LENGTH = 250;
   public static final int MAX_PHRASE_LENGTH = 250;
   public static final int MAX_TEXT_LENGTH = 32_000;
   public static final int MAX_URL_LENGTH = 2000;

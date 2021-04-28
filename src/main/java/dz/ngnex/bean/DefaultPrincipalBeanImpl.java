@@ -44,7 +44,7 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
 
   @Override
   public List<BasicAssociationEntity> getAllAssociations() {
-    return em.createQuery("select a from BasicAssociationEntity a", BasicAssociationEntity.class)
+    return em.createQuery("select a from BasicAssociationEntity a order by a.lastUpdate desc", BasicAssociationEntity.class)
         .getResultList();
   }
 
@@ -62,13 +62,13 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
 
   @Override
   public List<BasicAssociationEntity> getAllSportAssociations() {
-    return em.createQuery("select a from SportAssociationEntity a", BasicAssociationEntity.class)
+    return em.createQuery("select a from SportAssociationEntity a order by a.lastUpdate desc", BasicAssociationEntity.class)
         .getResultList();
   }
 
   @Override
   public List<BasicAssociationEntity> getAllYouthAssociations() {
-    return em.createQuery("select a from YouthAssociationEntity a", BasicAssociationEntity.class)
+    return em.createQuery("select a from YouthAssociationEntity a order by a.lastUpdate desc ", BasicAssociationEntity.class)
         .getResultList();
   }
 
@@ -174,24 +174,26 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
 
   @Override
   public SportAssociationEntity createSportAssociation(String name, String password, String description,
-                                                       Integer demandID) throws IntegrityException {
+                                                       Integer demandID, String user) throws IntegrityException {
     Check.argNotNull(name, password, description);
     ensurePrincipalNameNotUsed(name);
     SportAssociationEntity association = new SportAssociationEntity(name, password, description);
-    return persistAssociation(demandID, association);
+    return persistAssociation(demandID, association, user);
   }
 
   @Override
   public YouthAssociationEntity createYouthAssociation(String name, String password, String description,
-                                                       Integer demandID) throws IntegrityException {
+                                                       Integer demandID, String user) throws IntegrityException {
     Check.argNotNull(name, password, description);
     ensurePrincipalNameNotUsed(name);
     YouthAssociationEntity association = new YouthAssociationEntity(name, password, description);
-    return persistAssociation(demandID, association);
+    return persistAssociation(demandID, association, user);
   }
 
-  private <T extends BasicAssociationEntity> T persistAssociation(Integer demandID, T association) {
+  private <T extends BasicAssociationEntity> T persistAssociation(Integer demandID, T association, String user) {
     association.setCreationDate(getDateOfToday());
+    association.setLastUpdate(System.currentTimeMillis());
+    association.setLastUpdater(user);
 
     if (demandID != null) {
       AccountDemandEntity demand = em.find(AccountDemandEntity.class, demandID);

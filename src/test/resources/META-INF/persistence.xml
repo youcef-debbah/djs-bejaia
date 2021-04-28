@@ -49,6 +49,7 @@
         <class>dz.ngnex.entity.BinaryFileEntity</class>
         <class>dz.ngnex.entity.BasicMessageEntity</class>
         <class>dz.ngnex.entity.MessageEntity</class>
+        <class>dz.ngnex.entity.GuestMessageEntity</class>
         <class>dz.ngnex.entity.AdminMessageEntity</class>
         <class>dz.ngnex.entity.StatisticsEntity</class>
         <class>dz.ngnex.entity.ArticleEntity</class>

@@ -45,6 +45,7 @@ import dz.ngnex.util.Messages;
 import dz.ngnex.util.ResourcesProvider;
 import dz.ngnex.util.InjectableByTests;
 import dz.ngnex.util.WebKit;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
 import javax.enterprise.context.RequestScoped;
@@ -243,7 +244,7 @@ public class Meta {
   }
 
   public String safeUrl(String url) {
-    if (url == null || url.trim().isEmpty())
+    if (StringUtils.isBlank(url))
       return "#";
     else
       return url;

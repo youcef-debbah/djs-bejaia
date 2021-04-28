@@ -114,23 +114,31 @@
                                 <p:focus for="content"/>
                                 <div class="ui-g">
                                     <div class="ui-g-12 ui-fluid">
-                                        <p:messages for="content" showIcon="false" closable="true"/>
+                                        <!--                                        <p:messages for="content" showIcon="false" closable="true"/>-->
                                         <p:inputTextarea id="content" value="#{messagingView.content}"
+                                                         widgetVar="inputWidget"
                                                          requiredMessage="#{messages.messageCannotBeEmpty}"
                                                          placeholder="#{messages.writeMessage}"/>
                                     </div>
                                 </div>
                                 <div class="align-center">
-                                    <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
+
+                                    <p:commandButton icon="ui-icon-send" value="#{messages.send}"
+                                                     widgetVar="sendButtonWidget"
+                                                     onstart=""
                                                      actionListener="#{messagingView.sendAdminMessage()}"
                                                      onerror="jsoftware95.updateFailed()" process="main_form"
                                                      oncomplete="jsoftware95.scrollToBottom('output:chatbox')"
                                                      update="main_form output file_form"/>
                                 </div>
+                                <p:hotkey bind="alt+return" handler="jsoftware95.clickOnInput('sendButtonWidget','inputWidget')"/>
+                                <script type="text/javascript">
+                                    $(function() {PF('inputWidget').getJQ().bind('keydown', 'alt+return', function(){jsoftware95.clickOnInput('sendButtonWidget','inputWidget');return false;});});
+                                </script>
                             </h:form>
                             <div class="align-center">
-                                <h:form id="file_form" enctype="multipart/form-data">
-                                    <p:fileUpload styleClass="no-preview top-spaced hidden-overflow"
+                                <h:form id="file_form" enctype="multipart/form-data" styleClass="hidden-overflow">
+                                    <p:fileUpload styleClass="no-preview top-spaced"
                                                   fileUploadListener="#{messagingView.handleAttachment}"
                                                   process="@form" update="@form" skinSimple="true"
                                                   auto="true" multiple="false" sequential="true"
@@ -142,7 +150,7 @@
                                     <h:panelGroup rendered="#{not empty messagingView.attachment}"
                                                   layout="block">
                                         <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
-                                        <h:outputText value="#{messagingView.attachment.name}"/>
+                                        <h:outputText value="#{messagingView.attachment.shortName}"/>
                                         <span class="inline-block slightly-spaced">
                                             <p:button
                                                     icon="ui-icon-file-download"

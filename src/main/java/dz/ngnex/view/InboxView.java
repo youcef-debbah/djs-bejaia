@@ -5,12 +5,11 @@ import dz.ngnex.bean.MessagesBean;
 import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.LocaleManager;
 import dz.ngnex.control.Meta;
-import dz.ngnex.entity.AttachmentContentEntity;
-import dz.ngnex.entity.MessageEntity;
-import dz.ngnex.entity.MessageState;
+import dz.ngnex.entity.*;
 import dz.ngnex.util.ViewModel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.FileUploadEvent;
 
@@ -20,7 +19,9 @@ import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @ViewModel
 public class InboxView implements Serializable {
@@ -39,9 +40,9 @@ public class InboxView implements Serializable {
   @Push
   private PushContext adminMessageNotifications;
 
-  private List<MessageEntity> messages;
+  private List<ClientMessageEntity> messages;
 
-  private MessageEntity currentMessage;
+  private ClientMessageEntity selectedMessage;
 
   @Inject
   private LocaleManager localeManager;
@@ -68,7 +69,7 @@ public class InboxView implements Serializable {
 
   public void refreshMessages() {
     try {
-      messages = messagesBean.getAllUnReadMessagesReceivedBy(currentPrincipal.getService());
+      messages = messagesBean.getInboxMessagesReceivedBy(currentPrincipal.getService());
     } catch (Exception e) {
       meta.handleException(e);
     }
@@ -83,32 +84,66 @@ public class InboxView implements Serializable {
     }
   }
 
-  public List<MessageEntity> getMessages() {
+  public List<ClientMessageEntity> getMessages() {
     return messages;
   }
 
-  public MessageEntity getCurrentMessage() {
-    return currentMessage;
+  public ClientMessageEntity getSelectedMessage() {
+    return selectedMessage;
   }
 
-  public void setCurrentMessage(MessageEntity currentMessage) {
-    this.currentMessage = currentMessage;
+  public String getGuestEmail() {
+    if (selectedMessage instanceof GuestMessageEntity)
+      return ((GuestMessageEntity) selectedMessage).getEmail();
+    else
+      return null;
   }
 
-  public void markAsSeen() {
-    if (currentMessage != null && currentMessage.getState() != MessageState.READ)
+  public String getGuestPhone() {
+    if (selectedMessage instanceof GuestMessageEntity)
+      return ((GuestMessageEntity) selectedMessage).getPhone();
+    else
+      return null;
+  }
+
+  public String getGuestName() {
+    if (selectedMessage instanceof GuestMessageEntity)
+      return ((GuestMessageEntity) selectedMessage).getGuestName();
+    else
+      return null;
+  }
+
+  public void setSelectedMessage(ClientMessageEntity selectedMessage) {
+    this.selectedMessage = selectedMessage;
+    if (DatabaseEntity.getID(selectedMessage) != null) {
+      markAsRead(selectedMessage);
+      AttachmentInfoEntity attachment = selectedMessage.getAttachment();
+      if (DatabaseEntity.getID(attachment) != null && !Hibernate.isInitialized(attachment))
+        selectedMessage.setAttachment(messagesBean.getAttachment(attachment.getId()));
+    }
+  }
+
+  public void markAsRead(ClientMessageEntity selectedMessage) {
+    if (selectedMessage.getState() != MessageState.READ)
       try {
-        messagesBean.markMessageAsRead(currentMessage.getId());
+        if (this.selectedMessage.isFromGuest())
+          messagesBean.markGuestMessageAsRead(this.selectedMessage.getId());
+        else
+          messagesBean.markMessageAsRead(this.selectedMessage.getId());
       } catch (Exception e) {
         meta.handleException(e);
       }
   }
 
   public void deleteCurrentMessage() {
-    if (currentMessage != null) {
+    if (DatabaseEntity.getID(selectedMessage) != null) {
       try {
-        messagesBean.deleteMessage(currentMessage.getId());
-        currentMessage = null;
+        if (selectedMessage.isFromGuest())
+          messagesBean.deleteGuestMessage(selectedMessage.getId());
+        else
+          messagesBean.deleteMessage(selectedMessage.getId());
+
+        selectedMessage = null;
         refreshMessages();
       } catch (Exception e) {
         meta.handleException(e);

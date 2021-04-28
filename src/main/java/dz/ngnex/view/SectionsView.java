@@ -1,6 +1,7 @@
 package dz.ngnex.view;
 
 import dz.ngnex.bean.*;
+import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.Meta;
 import dz.ngnex.entity.*;
 import dz.ngnex.util.Messages;
@@ -67,6 +68,9 @@ public class SectionsView implements Serializable {
   private Messages messages;
   private List<TemplateInfo> contractTemplates;
 
+  @Inject
+  private CurrentPrincipal currentPrincipal;
+
   @PostConstruct
   private void init() {
     initCurrentSeason();
@@ -131,7 +135,9 @@ public class SectionsView implements Serializable {
 
     if (newAssociation != null)
       currentAssociation = principalBean.findSelectedAssociation(newAssociation.getReference());
-    else
+    else if (currentPrincipal.isAssociation())
+      currentAssociation = principalBean.findSelectedAssociation(currentPrincipal.getAssociationReference());
+      else
       currentAssociation = null;
   }
 

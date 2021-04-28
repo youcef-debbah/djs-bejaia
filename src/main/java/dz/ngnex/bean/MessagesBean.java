@@ -1,9 +1,6 @@
 package dz.ngnex.bean;
 
-import dz.ngnex.entity.AttachmentContentEntity;
-import dz.ngnex.entity.MessageEntity;
-import dz.ngnex.entity.Service;
-import dz.ngnex.entity.Snippet;
+import dz.ngnex.entity.*;
 import dz.ngnex.view.ReceiverItem;
 
 import javax.ejb.Local;
@@ -25,9 +22,15 @@ public interface MessagesBean {
 
   void sendMessage(Service destination, String title, String content, String senderName, AttachmentContentEntity attachment) throws IntegrityException;
 
+  void sendMessage(GuestMessageEntity messageDraft, AttachmentContentEntity attachment);
+
   void markMessageAsRead(int id);
+  void markGuestMessageAsRead(int id);
+
+  AttachmentInfoEntity getAttachment(Integer id);
 
   void deleteMessage(int id);
+  void deleteGuestMessage(int id);
 
   void deleteAdminMessage(int id);
 
@@ -35,7 +38,7 @@ public interface MessagesBean {
 
   Long countUnreadMessagesReceivedBy(Service destination);
 
-  List<MessageEntity> getAllUnReadMessagesReceivedBy(Service destination);
+  List<ClientMessageEntity> getInboxMessagesReceivedBy(Service destination);
 
   List<ReceiverItem> getAllReceivers(Service service);
 

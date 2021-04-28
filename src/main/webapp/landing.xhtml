@@ -16,6 +16,7 @@
         <script type="text/javascript">
             $(function () {
                 $('#menu-button').on('click', function (e) {
+                    e.preventDefault();
                     var menu = $('#menu');
                     if (menu.hasClass('lmenu-active')) {
                         menu.addClass('fadeOutUp');
@@ -26,7 +27,6 @@
                     } else {
                         menu.addClass('lmenu-active fadeInDown');
                     }
-                    e.preventDefault();
                 });
             });
         </script>
@@ -40,9 +40,9 @@
                     <div class="header-top clearfix">
                         <span class="logo"/>
 
-                        <!--                        <a id="menu-button" href="#">-->
-                        <!--                            <span class="fa fa-bars"/>-->
-                        <!--                        </a>-->
+                        <a id="menu-button" href="#">
+                            <span class="fa fa-bars"/>
+                        </a>
 
                         <ul id="menu" class="animated">
                             <li><p:link outcome="homePage">#{messages.homePage}</p:link></li>
@@ -57,7 +57,9 @@
                                 <li><p:commandLink action="#{meta.logout}" onerror="jsoftware95.updateFailed()"
                                 >#{messages.singOut}</p:commandLink></li>
                             </ui:fragment>
-                            <li><p:link outcome="aboutUs" value="#{messages.aboutUs}"/></li>
+                            <ui:fragment rendered="#{currentPrincipal.loggedOut}">
+                                <li><p:link outcome="chatGuest" value="#{messages.contractUs}"/></li>
+                            </ui:fragment>
                             <ui:fragment rendered="#{not localeManager.isLanguageEquals('en')}">
                                 <li><p:commandLink onerror="jsoftware95.updateFailed()"
                                                    actionListener="#{localeManager.changeLang('en')}">English</p:commandLink>

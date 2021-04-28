@@ -7,6 +7,7 @@ import java.util.Objects;
 @Table(name = "attachment_file")
 public class AttachmentContentEntity extends BinaryFileEntity implements BinaryContent {
   private static final long serialVersionUID = 6408776657783546462L;
+  public static String GUEST = "_guest";
 
   private byte[] contents;
 

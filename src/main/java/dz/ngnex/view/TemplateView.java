@@ -18,10 +18,7 @@ import javax.ejb.EJB;
 import javax.inject.Inject;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @ViewModel
 public class TemplateView implements Serializable {
@@ -388,7 +385,10 @@ public class TemplateView implements Serializable {
         currentProperty.setDefaultValue(propertyDefaultValue);
         currentProperty.setDefaultHeader(propertyDefaultHeader);
         currentProperty.setPrototype(propertyPrototype);
-        contractBean.updateProperty(currentProperty);
+        PropertyEntity updatedProperty = contractBean.updateProperty(currentProperty);
+        properties.remove(currentProperty);
+        properties.add(updatedProperty);
+        Collections.sort(properties);
         meta.dataUpdatedSuccessfully();
       } catch (Exception e) {
         meta.handleException(e);
@@ -403,7 +403,10 @@ public class TemplateView implements Serializable {
         currentActivity.setHeader(activityHeader);
         currentActivity.setSectionPrototype(activitySectionPrototype);
         currentActivity.setMinVentilationCount(activityMinVentilation);
-        contractBean.updateActivity(currentActivity);
+        ActivityEntity updatedActivity = contractBean.updateActivity(currentActivity);
+        activities.remove(currentActivity);
+        activities.add(updatedActivity);
+        Collections.sort(activities);
         meta.dataUpdatedSuccessfully();
       } catch (Exception e) {
         meta.handleException(e);

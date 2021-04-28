@@ -58,10 +58,10 @@ public interface PrincipalBean {
   AdminEntity createAdmin(String name, String password, String role)
       throws IntegrityException;
 
-  SportAssociationEntity createSportAssociation(String name, String password, String description, Integer demand)
+  SportAssociationEntity createSportAssociation(String name, String password, String description, Integer demand, String user)
       throws IntegrityException;
 
-  YouthAssociationEntity createYouthAssociation(String name, String password, String description, Integer demandID)
+  YouthAssociationEntity createYouthAssociation(String name, String password, String description, Integer demandID, String user)
       throws IntegrityException;
 
   void deleteAdmin(Integer adminID);

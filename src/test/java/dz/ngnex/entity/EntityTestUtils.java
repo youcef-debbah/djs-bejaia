@@ -38,7 +38,7 @@ public final class EntityTestUtils {
 
   public static SportAssociationEntity createSportAssociation(String name, Integer demandID, PrincipalBean principalBean) {
     try {
-      return principalBean.createSportAssociation(name, "test_password", "test_desc", demandID);
+      return principalBean.createSportAssociation(name, "test_password", "test_desc", demandID, null);
     } catch (IntegrityException e) {
       throw new RuntimeException("could not create sport association", e);
     }
@@ -58,7 +58,7 @@ public final class EntityTestUtils {
 
   public static YouthAssociationEntity createYouthAssociation(String name, Integer demandID, PrincipalBean principalBean) {
     try {
-      return principalBean.createYouthAssociation(name, "test_password", "test_desc", demandID);
+      return principalBean.createYouthAssociation(name, "test_password", "test_desc", demandID, null);
     } catch (IntegrityException e) {
       throw new RuntimeException("could not create youth association", e);
     }

@@ -99,15 +99,15 @@ public class PrincipalBeanTest extends DatabaseTest {
   @Test(expected = IntegrityException.class)
   public void creatingSportAssoWithDuplicatedNameShouldFail() throws IntegrityException {
     String name = "duplicated_sport_asso_name";
-    principalBean.createSportAssociation(name, "test_password0", "test_desc0", null);
-    principalBean.createSportAssociation(name, "test_password1", "test_desc1", null);
+    principalBean.createSportAssociation(name, "test_password0", "test_desc0", null, null);
+    principalBean.createSportAssociation(name, "test_password1", "test_desc1", null, null);
   }
 
   @Test(expected = IntegrityException.class)
   public void creatingYouthAssoWithDuplicatedNameShouldFail() throws IntegrityException {
     String name = "duplicated_youth_asso_name";
-    principalBean.createYouthAssociation(name, "test_password0", "test_desc0", null);
-    principalBean.createYouthAssociation(name, "test_password1", "test_desc1", null);
+    principalBean.createYouthAssociation(name, "test_password0", "test_desc0", null, null);
+    principalBean.createYouthAssociation(name, "test_password1", "test_desc1", null, null);
   }
 
   @Test

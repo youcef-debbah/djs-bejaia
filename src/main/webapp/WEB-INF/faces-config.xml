@@ -77,10 +77,14 @@
             <to-view-id>/asso/chatUser.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
-
         <navigation-case>
             <from-outcome>chatAdmin</from-outcome>
             <to-view-id>/admin/chatAdmin.xhtml</to-view-id>
+            <redirect/>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>chatGuest</from-outcome>
+            <to-view-id>/chatGuest.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
         <navigation-case>

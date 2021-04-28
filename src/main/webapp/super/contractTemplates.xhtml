@@ -204,8 +204,7 @@
                     <h1>#{messages.contractModleForSeason} #{templateView.currentSeasonName}</h1>
                     <p:toolbar>
                         <f:facet name="left">
-                            <p:commandButton accesskey="s"
-                                             onerror="jsoftware95.updateFailed()"
+                            <p:commandButton onerror="jsoftware95.updateFailed()"
                                              icon="ui-icon-save" process="template-panel" update="template-panel"
                                              disabled="#{empty templateView.currentTemplate}"
                                              actionListener="#{templateView.saveCurrentTemplate}"/>
@@ -224,7 +223,7 @@
                                              actionListener="#{templateView.deleteCurrentTemplate}"/>
 
                             <p:selectOneMenu id="current-template" value="#{templateView.currentTemplateID}"
-                                             styleClass="spaced" style="min-width: 200px">
+                                             styleClass="spaced middled" style="min-width: 200px">
                                 <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
                                 <f:selectItems value="#{templateView.templates}" var="template"
                                                itemLabel="#{template.name}" itemValue="#{template.id}"/>

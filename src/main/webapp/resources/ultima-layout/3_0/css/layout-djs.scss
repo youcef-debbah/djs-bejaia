@@ -61,6 +61,10 @@ $warningColor: #ffc8007d;
 
 html body {
 
+  .ui-no-border {
+    border: none;
+  }
+
   .ckEditor-container textarea {
     visibility: hidden;
     width: 100%;
@@ -90,7 +94,11 @@ html body {
   .ui-inputgroup {
     height: auto;
 
-    .md-inputfield.md-inputfield-fill .ui-inputfield, .md-inputfield.md-inputfield-fill .ui-selectonemenu {
+    .md-inputfield > *, .md-inputfield > * > input {
+      height: 100%;
+    }
+
+    .ui-inputgroup-addon {
       height: 100%;
     }
 
@@ -828,4 +836,9 @@ h1.small-top {
 .ui-fileupload-preview canvas {
   width: 80px;
   height: auto;
+}
+
+.ui-columntoggler {
+  width: auto !important;
+  height: auto !important;
 }

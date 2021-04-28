@@ -119,26 +119,29 @@
                                 <div class="ui-g">
                                     <div class="ui-g-12 ui-fluid">
                                         <p:messages for="title" showIcon="false" closable="true"/>
-                                        <p:inputText id="title" placeholder="#{messages.title}"
+                                        <p:inputText id="title" placeholder="#{messages.subjectOptional}"
+                                                     widgetVar="titleInputWidget"
                                                      value="#{messagingView.title}"/>
                                     </div>
 
                                     <div class="ui-g-12 ui-fluid">
-                                        <p:messages for="content" showIcon="false" closable="true"/>
+<!--                                        <p:messages for="content" showIcon="false" closable="true"/>-->
                                         <p:inputTextarea id="content" value="#{messagingView.content}"
+                                                         widgetVar="inputWidget"
                                                          requiredMessage="#{messages.messageCannotBeEmpty}"
                                                          placeholder="#{messages.writeMessage}"/>
                                     </div>
                                 </div>
                                 <div class="align-center" style="width: calc(100% - 32px)">
-                                    <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
+                                    <p:commandButton icon="ui-icon-send" value="#{messages.send}"
+                                                     widgetVar="sendButtonWidget"
                                                      actionListener="#{messagingView.sendMessage()}"
                                                      onerror="jsoftware95.updateFailed()" process="main_form"
                                                      oncomplete="jsoftware95.scrollToBottom('output:chatbox')"
                                                      update="main_form output file_form"/>
                                     #{messages.to}
                                     <p:selectOneMenu value="#{messagingView.service}"
-                                                     required="true" requiredMessage="sdfsd"
+                                                     required="true" requiredMessage="#{messages.inputRequired}"
                                                      styleClass="spaced">
                                         <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
                                         <!--suppress ELValidationInJSP -->
@@ -149,12 +152,19 @@
                                     </p:selectOneMenu>
                                 </div>
                                 <p:messages for="destination" showIcon="false" closable="true"/>
+                                <p:hotkey bind="alt+return" handler="jsoftware95.clickOnInput('sendButtonWidget','inputWidget')"/>
+                                <script type="text/javascript">
+                                    $(function() {
+                                        PF('inputWidget').getJQ().bind('keydown', 'alt+return', function(){jsoftware95.clickOnInput('sendButtonWidget','inputWidget');return false;});
+                                        PF('titleInputWidget').getJQ().bind('keydown', 'alt+return', function(){jsoftware95.clickOnInput('sendButtonWidget','inputWidget');return false;});
+                                    });
+                                </script>
                             </h:form>
                             <div class="align-center">
-                                <h:form id="file_form" enctype="multipart/form-data">
-                                    <p:fileUpload styleClass="no-preview top-spaced hidden-overflow" skinSimple="true"
+                                <h:form id="file_form" enctype="multipart/form-data hidden-overflow">
+                                    <p:fileUpload styleClass="no-preview top-spaced"
                                                   fileUploadListener="#{messagingView.handleAttachment}"
-                                                  process="@form" update="@form"
+                                                  process="@form" update="@form" skinSimple="true"
                                                   auto="true" multiple="false" sequential="true"
                                                   sizeLimit="#{uploadedImagesView.maxFileSize}"
                                                   invalidSizeMessage="#{messages.fileTooBig}"
@@ -163,7 +173,7 @@
                                     />
                                     <h:panelGroup rendered="#{not empty messagingView.attachment}" layout="block">
                                         <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
-                                        <h:outputText value="#{messagingView.attachment.name}"/>
+                                        <h:outputText value="#{messagingView.attachment.shortName}"/>
                                         <span class="inline-block slightly-spaced">
                                         <p:button icon="ui-icon-file-download" styleClass="spaced"
                                                   href="#{meta.attachmentUrl(messagingView.attachment.id)}"/>

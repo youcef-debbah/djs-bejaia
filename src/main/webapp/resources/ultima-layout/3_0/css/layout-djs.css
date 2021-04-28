@@ -3349,6 +3349,9 @@ body.layout-compact .ui-slider.ui-slider-horizontal .ui-slider-handle {
   border: none;
 }
 
+html body .ui-no-border {
+  border: none;
+}
 html body .ckEditor-container textarea {
   visibility: hidden;
   width: 100%;
@@ -3372,7 +3375,10 @@ html body .ui-datatable-scrollable-body {
 html body .ui-inputgroup {
   height: auto;
 }
-html body .ui-inputgroup .md-inputfield.md-inputfield-fill .ui-inputfield, html body .ui-inputgroup .md-inputfield.md-inputfield-fill .ui-selectonemenu {
+html body .ui-inputgroup .md-inputfield > *, html body .ui-inputgroup .md-inputfield > * > input {
+  height: 100%;
+}
+html body .ui-inputgroup .ui-inputgroup-addon {
   height: 100%;
 }
 html body .ui-inputgroup .md-inputfield.md-inputfield-fill .ui-inputtext {
@@ -4048,5 +4054,10 @@ h1.small-top {
 .ui-fileupload-preview canvas {
   width: 80px;
   height: auto;
+}
+
+.ui-columntoggler {
+  width: auto !important;
+  height: auto !important;
 }
 

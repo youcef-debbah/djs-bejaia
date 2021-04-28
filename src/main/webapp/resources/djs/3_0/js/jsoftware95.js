@@ -24,6 +24,13 @@ jsoftware95.click = function (widget) {
         jq.click();
 }
 
+jsoftware95.clickOnInput = function (widget, inputWidget) {
+    let jq = PF(widget).getJQ();
+    let input = PF(inputWidget).getJQ().val();
+    if (!jq.hasClass('ui-state-disabled') && input != null && input.length > 0)
+        jq.click();
+}
+
 jsoftware95.altImage = function (imageElement, altImage) {
     imageElement.onerror = "";
     if (imageElement.src !== altImage)

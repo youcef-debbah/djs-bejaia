@@ -1,0 +1,130 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/template.xhtml">
+    <ui:param name="title" value="#{messages.messaging}"/>
+    <ui:define name="content">
+        <div class="ui-g dashboard">
+            <div class="ui-g-12 ui-md-2"></div>
+            <div class="ui-g-12 ui-md-8">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card last">
+                            <h:form id="main_form">
+                                <p:focus for="content"/>
+                                <h1>#{messages.yourInfo}</h1>
+                                <div class="ui-g">
+                                    <!-- name -->
+                                    <div class="ui-g-12 ui-md-12 ui-fluid">
+                                        <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon">
+                                            <span class="ui-icon fa fa-user"/></span>
+                                            <span class="md-inputfield">
+                                            <p:inputText id="name" value="#{guestMessagingView.draft.guestName}"
+                                                         styleClass="need-validation"
+                                                         placeholder="#{messages.yourFullName}" required="true"/>
+                                        </span>
+                                        </h:panelGroup>
+                                    </div>
+
+                                    <!-- phone -->
+                                    <div class="ui-g-12 ui-md-6 ui-fluid">
+                                        <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon">
+                                            <span class="ui-icon fa fa-phone"/></span>
+                                            <span class="md-inputfield">
+                                            <p:inputMask id="phone" value="#{guestMessagingView.draft.phone}"
+                                                         widgetVar="phoneWidget" placeholder="06 96 XX XX XX"
+                                                         styleClass="need-validation" mask="09 99 99 99 99"
+                                                         onfocus="this.setSelectionRange(0,20)"
+                                                         title="#{messages.phoneNumberHelp}" required="true"/>
+                                        </span>
+                                        </h:panelGroup>
+                                    </div>
+
+                                    <!-- email -->
+                                    <div class="ui-g-12 ui-md-6 ui-fluid">
+                                        <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon">
+                                            <span class="ui-icon fa fa-envelope"/></span>
+                                            <span class="md-inputfield">
+                                            <p:inputText id="email" value="#{guestMessagingView.draft.email}"
+                                                         styleClass="need-validation" type="email"
+                                                         placeholder="#{messages.emailSyntax}"
+                                                         title="#{messages.emailHelp}" required="true">
+                                                <f:validateRegex pattern="#{guestMessagingView.emailRegex}" />
+                                            </p:inputText>
+                                        </span>
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                                <h1>#{messages.yourMessage}</h1>
+                                <div class="ui-g">
+                                    <div class="ui-g-6 ui-fluid">
+                                        <p:inputText id="title" placeholder="#{messages.subjectOptional}"
+                                                     value="#{guestMessagingView.draft.title}"/>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-fluid">
+                                        <!--                                        <p:messages for="content" showIcon="false" closable="true"/>-->
+                                        <p:inputTextarea id="content" value="#{guestMessagingView.draft.content}"
+                                                         requiredMessage="#{messages.messageCannotBeEmpty}"
+                                                         placeholder="#{messages.writeMessage}" required="true"/>
+                                    </div>
+                                </div>
+                                <div class="align-center" style="width: calc(100% - 32px)">
+                                    <p:commandButton icon="ui-icon-send" value="#{messages.send}"
+                                                     actionListener="#{guestMessagingView.sendMessage()}"
+                                                     onerror="jsoftware95.updateFailed()" process="main_form"
+                                                     update="main_form file_form"/>
+                                    #{messages.to}
+                                    <p:selectOneMenu value="#{guestMessagingView.draft.destination}"
+                                                     required="true" requiredMessage="#{messages.inputRequired}"
+                                                     styleClass="spaced">
+                                        <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
+                                        <!--suppress ELValidationInJSP -->
+                                        <f:selectItems id="destination"
+                                                       value="#{guestMessagingView.possibleDestinations}"
+                                                       var="item"
+                                                       itemLabel="#{messages[item]}"/>
+                                    </p:selectOneMenu>
+                                </div>
+                                <p:messages for="destination" showIcon="false" closable="true"/>
+                            </h:form>
+                            <div class="align-center">
+                                <h:form id="file_form" enctype="multipart/form-data" styleClass="hidden-overflow">
+                                    <p:fileUpload styleClass="no-preview top-spaced" skinSimple="true"
+                                                  fileUploadListener="#{guestMessagingView.handleAttachment}"
+                                                  process="@form" update="@form"
+                                                  auto="true" multiple="false" sequential="true"
+                                                  sizeLimit="#{uploadedImagesView.maxFileSize}"
+                                                  invalidSizeMessage="#{messages.fileTooBig}"
+                                                  label="#{empty guestMessagingView.attachment? messages.attachFile : messages.replaceFile}"
+                                                  uploadLabel="#{messages.upload}" cancelLabel="#{messages.cancel}"
+                                    />
+                                    <h:panelGroup rendered="#{not empty guestMessagingView.attachment}" layout="block">
+                                        <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
+                                        <h:outputText value="#{guestMessagingView.attachment.shortName}"/>
+                                        <span class="inline-block slightly-spaced">
+                                        <p:button icon="ui-icon-file-download" styleClass="spaced"
+                                                  href="#{meta.attachmentUrl(guestMessagingView.attachment.id)}"/>
+                                        <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
+                                                         styleClass="pink-btn v-spaced"
+                                                         onerror="jsoftware95.updateFailed()"
+                                                         actionListener="#{guestMessagingView.deleteAttachment}">
+                                            <p:confirm message="#{messages.confirmDelete}"/>
+                                        </p:commandButton>
+                                        </span>
+                                    </h:panelGroup>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-2"></div>
+        </div>
+    </ui:define>
+</ui:composition>

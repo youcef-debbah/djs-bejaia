@@ -22,9 +22,9 @@
             }
 
             function setThumbnailsAndHide(event, thumbnails) {
+                event.preventDefault();
                 PF('thumbnailsWidget').getJQ().val(thumbnails);
                 PF('thumbnailsPickerWidget').hide();
-                event.preventDefault();
                 return false;
             }
 

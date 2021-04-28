@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
         )
     }
 )
-public abstract class BasicMessageEntity implements DatabaseEntity {
+public abstract class BasicMessageEntity implements ChronologicalDatabaseEntity {
   private static final long serialVersionUID = 6909094408074960759L;
   public static final int MAX_CONTENT_LENGTH = 32_000;
   public static final String GLOBAL = "global";
@@ -58,7 +58,7 @@ public abstract class BasicMessageEntity implements DatabaseEntity {
 
   public void setId(Integer id) {
     this.id = id;
-    }
+  }
 
   @Version
   public Integer getVersion() {
@@ -67,7 +67,7 @@ public abstract class BasicMessageEntity implements DatabaseEntity {
 
   public void setVersion(Integer version) {
     this.version = version;
-    }
+  }
 
   @Column(columnDefinition = "TEXT", nullable = false, length = MAX_CONTENT_LENGTH)
   public String getContent() {
@@ -77,7 +77,7 @@ public abstract class BasicMessageEntity implements DatabaseEntity {
 
   public void setContent(String content) {
     this.content = content;
-    }
+  }
 
   @NotNull
   @Column(nullable = false)
@@ -85,9 +85,20 @@ public abstract class BasicMessageEntity implements DatabaseEntity {
     return epoch;
   }
 
+  @Override
+  @Transient
+  public Long getPriority() {
+    if (state == null)
+      return null;
+    else if (state == MessageState.READ)
+      return 0L;
+    else
+      return 1L;
+  }
+
   public void setEpoch(Long epoch) {
     this.epoch = epoch;
-    }
+  }
 
   @NotNull
   @Enumerated
@@ -98,7 +109,7 @@ public abstract class BasicMessageEntity implements DatabaseEntity {
 
   public void setState(MessageState state) {
     this.state = state;
-    }
+  }
 
   @NotNull
   @Column(nullable = false)
@@ -108,7 +119,7 @@ public abstract class BasicMessageEntity implements DatabaseEntity {
 
   public void setRepresentation(Integer representation) {
     this.representation = representation;
-    }
+  }
 
   @Transient
   public abstract String getSnippetSourceName();

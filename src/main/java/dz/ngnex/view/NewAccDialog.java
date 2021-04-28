@@ -154,10 +154,10 @@ public class NewAccDialog implements Serializable {
           AdminEntity newAdmin = manager.createAdmin(getNewUsername(), getNewPassword(), newAccountType.getSecurityRole());
           adminsView.refresh(newAdmin);
         } else if (newAccountType == AccessType.SPORT_ASSOCIATION) {
-          SportAssociationEntity newAsso = manager.createSportAssociation(getNewUsername(), getNewPassword(), getNewDescription(), demandID);
+          SportAssociationEntity newAsso = manager.createSportAssociation(getNewUsername(), getNewPassword(), getNewDescription(), demandID, currentPrincipal.getName());
           refreshEvent.fire(new RefreshAccountEvent(newAsso));
         } else if (newAccountType == AccessType.YOUTH_ASSOCIATION) {
-          YouthAssociationEntity newAsso = manager.createYouthAssociation(getNewUsername(), getNewPassword(), getNewDescription(), demandID);
+          YouthAssociationEntity newAsso = manager.createYouthAssociation(getNewUsername(), getNewPassword(), getNewDescription(), demandID, currentPrincipal.getName());
           refreshEvent.fire(new RefreshAccountEvent(newAsso));
         } else {
           throw new IntegrityException("unexpected new account type: " + newAccountType, "accessDenied");

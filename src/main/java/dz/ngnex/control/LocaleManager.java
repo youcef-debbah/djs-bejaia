@@ -60,10 +60,10 @@ public class LocaleManager implements Serializable {
   public static final TimeZone ADMIN_TIME_ZONE = TimeZone.getTimeZone(ADMIN_ZONE);
   private static final LocalDate FIRST_DAY = LocalDate.of(2019, 7, 15);
 
-  private static final String LOCAL_DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm:ss";
+  private static final String LOCAL_DATE_TIME_FORMAT = "HH:mm:ss dd/MM/yyyy";
   private static final String LOCAL_DATE_FORMAT = "dd/MM/yyyy";
   private static final String LOCAL_TIME_FORMAT = "HH:mm:ss";
-  private static final String FULL_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+  private static final String FULL_DATE_TIME_FORMAT = "HH:mm:ss.SSS yyyy-MM-dd";
 
   private static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT);
   private static final DateTimeFormatter LOCAL_DATE_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_DATE_FORMAT);

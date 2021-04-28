@@ -35,7 +35,7 @@
                 </h:panelGroup>
 
                 <f:facet name="footer">
-                    <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
+                    <p:commandButton icon="ui-icon-send" value="#{messages.send}"
                                      actionListener="#{globalMessagingView.sendGlobalMessage}"
                                      widgetVar="widget_send_global_msg_button"
                                      onstart="PF('widget_send_global_msg_button').disable()"
@@ -54,8 +54,15 @@
                 <h:panelGroup id="groupDialogContent" styleClass="ui-g ui-fluid" layout="block">
                     <p:focus context="groupDialogContent"/>
                     <div class="ui-g-12 compact">
+                        <p:messages for="receiversInput" showIcon="false" closable="true">
+                            <p:effect event="load" type="bounce"/>
+                        </p:messages>
+                    </div>
+                    <div class="ui-g-12 compact">
                         <!--@elvariable id="receiver" type="dz.ngnex.view.ReceiverItem"-->
                         <p:autoComplete id="receiversInput" multiple="true"
+                                        required="true"
+                                        requiredMessage="#{messages.inputRequired}"
                                         placeholder="#{messages.toReceiver}"
                                         value="#{inboxView.selectedReceivers}"
                                         completeMethod="#{inboxView.completeReceiver}"
@@ -82,13 +89,13 @@
                     </div>
                     <div class="ui-g-12">
                         <p:inputTextarea id="groupContent" value="#{inboxView.groupMessageContent}"
-                                         requiredMessage="#{messages.messageCannotBeEmpty}"
+                                         requiredMessage="#{messages.messageCannotBeEmpty}" required="true"
                                          placeholder="#{messages.writeMessage}"/>
                     </div>
                 </h:panelGroup>
             </h:form>
-            <h:form id="file_form" enctype="multipart/form-data" styleClass="align-center full-width">
-                <p:fileUpload styleClass="no-preview top-spaced hidden-overflow" skinSimple="true"
+            <h:form id="file_form" enctype="multipart/form-data" styleClass="align-center full-width overflow-hidden">
+                <p:fileUpload styleClass="no-preview top-spaced" skinSimple="true"
                               fileUploadListener="#{inboxView.handleAttachment}"
                               process="file_form" update="file_form"
                               uploadIcon="ui-icon-attach-file"
@@ -101,7 +108,7 @@
                 <h:panelGroup rendered="#{not empty inboxView.attachment}"
                               layout="block">
                     <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
-                    <h:outputText value="#{inboxView.attachment.name}"/>
+                    <h:outputText value="#{inboxView.attachment.shortName}"/>
                     <span class="inline-block slightly-spaced">
                         <p:button
                                 icon="ui-icon-file-download"
@@ -117,7 +124,7 @@
                 </h:panelGroup>
             </h:form>
             <f:facet name="footer">
-                <p:commandButton icon="ui-icon-send" value="#{messages.send}" accesskey="s"
+                <p:commandButton icon="ui-icon-send" value="#{messages.send}"
                                  actionListener="#{inboxView.sendGroupMessage}"
                                  widgetVar="widget_send_group_msg_button"
                                  onstart="PF('widget_send_group_msg_button').disable()"
@@ -149,61 +156,71 @@
                                          value="#{messages.sendGroupMessage}" icon="ui-icon-message"
                                          onclick="PF('group_msg_dialog').show()"/>
                     </f:facet>
+                    <f:facet name="right">
+                        <p:commandButton id="accountsColumnsToggler" type="button" value="#{messages.tableColumns}"
+                                         icon="ui-icon-view-column"/>
+                        <p:columnToggler datasource="acc_container" trigger="accountsColumnsToggler"/>
+                    </f:facet>
                 </p:toolbar>
                 <p:dataTable id="acc_container" widgetVar="main_sheet_widget" var="message"
                              value="#{inboxView.messages}"
                              draggableColumns="true" resizableColumns="true" emptyMessage="#{messages.noChatToShow}"
-                             selectionMode="single" selection="#{inboxView.currentMessage}"
-                             rowKey="#{message.id}" styleClass="compact-data"
+                             selectionMode="single" selection="#{inboxView.selectedMessage}"
+                             rowKey="#{message.key}" styleClass="compact-data"
                              scrollable="true" scrollHeight="400">
 
-                    <p:ajax event="rowSelect" listener="#{inboxView.markAsSeen}"
-                            update="spreadsheet_form:toolbar spreadsheet_form:messagePanel"
+                    <p:ajax event="rowSelect"
+                            update="spreadsheet_form:toolbar spreadsheet_form:messageInfo"
                             onerror="jsoftware95.updateFailed()"
                     />
 
                     <p:column headerText="#{messages.date}" sortBy="#{message.epoch}"
-                              styleClass="align-center">
-                        <h:panelGroup rendered="#{message.state == 'NOT_READ_YET'}"
-                                      style="float:left;"
-                                      styleClass="middled material-icons ui-icon-fiber-new new-tag"/>
+                              styleClass="align-center" style="width: 150px">
                         <h:outputText value="#{localeManager.formatAsLocalDateTime(message.epoch)}"/>
                     </p:column>
 
-                    <p:column headerText="#{messages.title}" sortBy="#{message.title}" styleClass="align-center">
-                        <h:outputText value="#{message.title}"/>
-                    </p:column>
-
-                    <p:column headerText="#{messages.content}" sortBy="#{message.content}" styleClass="align-center">
-                        <h:outputText value="#{message.content}" escape="false"/>
-                    </p:column>
-
                     <p:column headerText="#{messages.sender}" sortBy="#{message.senderName}"
-                              styleClass="align-center">
-                        <h:outputText value="#{message.senderName}"/>
+                              styleClass="align-center" style="width: 75px">
+                        <h:outputText value="#{message.fromGuest? messages.GUEST : message.senderName}"/>
                     </p:column>
 
                     <p:column headerText="#{messages.destination}" sortBy="#{message.destination}"
+                              toggleable="true" style="width: 150px" visible="false"
                               styleClass="align-center" rendered="#{currentPrincipal.superAdmin}">
                         <h:outputText value="#{messages[message.destination]}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.subject}" sortBy="#{message.title}"
+                              style="width: 105px;">
+                        <h:outputText value="#{message.title}"/>
+                    </p:column>
+
+                    <p:column headerText="#{messages.content}" sortBy="#{message.content}">
+                        <h:panelGroup rendered="#{message.state ne 'READ'}"
+                                      style="float:left;"
+                                      styleClass="middled material-icons ui-icon-fiber-new new-tag"/>
+                        <h:panelGroup rendered="#{not empty message.attachment}"
+                                      style="float:left;"
+                                      styleClass="middled material-icons ui-icon-attachment new-tag"/>
+                        <h:outputText value="#{message.content}" escape="false"/>
                     </p:column>
                 </p:dataTable>
 
                 <p:toolbar id="toolbar" styleClass="scrollable-toolbar">
                     <f:facet name="left">
-                        <p:button disabled="#{empty inboxView.currentMessage.senderName}" outcome="chatAdmin"
+                        <p:button disabled="#{empty inboxView.selectedMessage.senderName}" outcome="chatAdmin"
                                   value="#{messages.chatWithSender}" icon="ui-icon-forum">
-                            <f:param name="sender" value="#{inboxView.currentMessage.senderName}"/>
+                            <f:param name="sender" value="#{inboxView.selectedMessage.senderName}"/>
                         </p:button>
 
                         <p:commandButton id="delete_button" value="#{messages.delete}" icon="ui-icon-delete"
                                          onerror="jsoftware95.updateFailed()"
-                                         disabled="#{empty inboxView.currentMessage}"
+                                         disabled="#{empty inboxView.selectedMessage}"
                                          update="@form" action="#{inboxView.deleteCurrentMessage}"/>
 
                         <p:button value="#{messages.downloadAttachment}" icon="ui-icon-attachment"
-                                  disabled="#{empty inboxView.currentMessage.attachment}"
-                                  href="#{meta.safeUrl(inboxView.currentMessage.attachment.urlAsAttachment)}"/>
+                                  disabled="#{empty inboxView.selectedMessage.attachment}"
+                                  href="#{meta.safeUrl(inboxView.selectedMessage.attachment.urlAsAttachment)}"/>
                     </f:facet>
                     <f:facet name="right">
                         <div class="dark-input spaced">
@@ -219,16 +236,46 @@
                         </div>
                     </f:facet>
                 </p:toolbar>
-                <h1>#{messages.selectedMessage}</h1>
-                <p:panel header="#{inboxView.currentMessage.title}"
-                         id="messagePanel" layout="block" styleClass="card">
-                    <ui:fragment rendered="#{not empty inboxView.currentMessage}">
-                        <h:outputText value="#{inboxView.currentMessage.content}" escape="false"/>
+                <h:panelGroup id="messageInfo" layout="block">
+                    <ui:fragment rendered="#{not empty inboxView.selectedMessage}">
+                        <ui:fragment rendered="#{inboxView.selectedMessage.fromGuest}">
+                            <h1>#{messages.senderInfo}</h1>
+                            <p:panel
+                                    header="#{messages.name}: #{inboxView.guestName}"
+                                    layout="block" styleClass="ui-no-border">
+                                <div class="ui-g">
+                                    <!-- phone -->
+                                    <div class="ui-g-12 ui-md-6 ui-fluid">
+                                        <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon">
+                                            <span class="ui-icon fa fa-phone"/></span>
+                                            <span class="md-inputfield">
+                                            <p:inputMask value="#{inboxView.guestPhone}"
+                                                         mask="09 99 99 99 99" readonly="true"/>
+                                        </span>
+                                        </h:panelGroup>
+                                    </div>
+                                    <!-- email -->
+                                    <div class="ui-g-12 ui-md-6 ui-fluid">
+                                        <h:panelGroup styleClass="ui-inputgroup" layout="block">
+                                        <span class="ui-inputgroup-addon">
+                                            <span class="ui-icon fa fa-envelope"/></span>
+                                            <span class="md-inputfield">
+                                            <p:inputText value="#{inboxView.guestEmail}"
+                                                         type="email" readonly="true"/>
+                                        </span>
+                                        </h:panelGroup>
+                                    </div>
+                                </div>
+                            </p:panel>
+                        </ui:fragment>
+                        <h1>#{messages.selectedMessage}</h1>
+                        <p:panel header="#{messages.subject}: #{inboxView.selectedMessage.title}"
+                                 layout="block" styleClass="ui-no-border">
+                            <h:outputText value="#{inboxView.selectedMessage.content}" escape="false"/>
+                        </p:panel>
                     </ui:fragment>
-                    <ui:fragment rendered="#{empty inboxView.currentMessage}">
-                        #{messages.noMessageSelected}
-                    </ui:fragment>
-                </p:panel>
+                </h:panelGroup>
             </h:panelGroup>
         </h:form>
         <h:outputScript>

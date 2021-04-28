@@ -13,6 +13,7 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +21,7 @@ import java.util.Objects;
 @TestWithTransaction
 public class MessagesBeanImpl implements MessagesBean {
 
+  public static final int INBOX_SIZE = 100;
   @Inject
   private Logger log;
 
@@ -92,6 +94,17 @@ public class MessagesBeanImpl implements MessagesBean {
     updateMessageState(senderName);
   }
 
+  @Override
+  public void sendMessage(GuestMessageEntity messageDraft, AttachmentContentEntity attachment) {
+    GuestMessageEntity message = new GuestMessageEntity(messageDraft);
+
+    if (attachment != null)
+      message.setAttachment(em.getReference(AttachmentInfoEntity.class, attachment.getId()));
+
+    message.setEpoch(System.currentTimeMillis());
+    em.persist(message);
+  }
+
   private <T extends BasicMessageEntity> void setupSnippetRepresentation(Class<T> messageType, T newMessage, String username) {
     Objects.requireNonNull(messageType);
     Objects.requireNonNull(newMessage);
@@ -123,12 +136,33 @@ public class MessagesBeanImpl implements MessagesBean {
   }
 
   @Override
+  public void markGuestMessageAsRead(int id) {
+    GuestMessageEntity message = em.find(GuestMessageEntity.class, id);
+    if (message != null)
+      message.setState(MessageState.READ);
+  }
+
+  @Override
+  public AttachmentInfoEntity getAttachment(Integer attachmentID) {
+    return em.createQuery("select a from AttachmentInfoEntity a where a.id = :id", AttachmentInfoEntity.class)
+        .setParameter("id", attachmentID)
+        .getSingleResult();
+  }
+
+  @Override
   public void deleteMessage(int id) {
     MessageEntity messageEntity = em.find(MessageEntity.class, id);
     if (messageEntity != null) {
       em.remove(messageEntity);
       updateMessageState(messageEntity.getSenderName());
     }
+  }
+
+  @Override
+  public void deleteGuestMessage(int id) {
+    GuestMessageEntity messageEntity = em.find(GuestMessageEntity.class, id);
+    if (messageEntity != null)
+      em.remove(messageEntity);
   }
 
   @Override
@@ -148,25 +182,41 @@ public class MessagesBeanImpl implements MessagesBean {
 
   @Override
   public Long countUnreadMessagesReceivedBy(Service destination) {
+    return countUnreadMessages(destination, MessageEntity.class)
+        + countUnreadMessages(destination, GuestMessageEntity.class);
+  }
+
+  private Long countUnreadMessages(Service destination, Class<? extends ClientMessageEntity> messageType) {
+    String entityName = messageType.getSimpleName();
     if (destination == null)
-      return em.createQuery("select count(msg.id) from MessageEntity msg where msg.state = :state", Long.class)
+      return em.createQuery("select count(msg.id) from " + entityName + " msg where msg.state = :state", Long.class)
           .setParameter("state", MessageState.NOT_READ_YET)
           .getSingleResult();
     else
-      return em.createQuery("select count(msg.id) from MessageEntity msg where msg.destination = :destination and msg.state = :state", Long.class)
+      return em.createQuery("select count(msg.id) from " + entityName + " msg where msg.destination = :destination and msg.state = :state", Long.class)
           .setParameter("destination", destination)
           .setParameter("state", MessageState.NOT_READ_YET)
           .getSingleResult();
   }
 
   @Override
-  public List<MessageEntity> getAllUnReadMessagesReceivedBy(Service destination) {
-    if (destination == null)
-      return em.createQuery("select msg from MessageEntity msg order by msg.state, msg.epoch desc", MessageEntity.class)
-          .setMaxResults(100)
+  public List<ClientMessageEntity> getInboxMessagesReceivedBy(Service destination) {
+    List<ClientMessageEntity> usersMessges = getMessages(destination, MessageEntity.class, INBOX_SIZE);
+    List<ClientMessageEntity> guestsMessges = getMessages(destination, GuestMessageEntity.class, Math.max(INBOX_SIZE - usersMessges.size(), 0));
+    return ChronologicalDatabaseEntity.mergeOrdered(usersMessges, guestsMessges);
+  }
+
+  private List<ClientMessageEntity> getMessages(Service destination, Class<? extends ClientMessageEntity> messageType, int maxResults) {
+    if (maxResults < 1)
+      return Collections.emptyList();
+
+    String entityName = messageType.getSimpleName();
+    if (destination == null) {
+      return em.createQuery("select msg from " + entityName + " msg order by msg.state, msg.epoch desc", ClientMessageEntity.class)
+          .setMaxResults(maxResults)
           .getResultList();
-    else
-      return em.createQuery("select msg from MessageEntity msg where msg.destination = :destination order by msg.state, msg.epoch desc", MessageEntity.class)
+    } else
+      return em.createQuery("select msg from " + entityName + " msg where msg.destination = :destination order by msg.state, msg.epoch desc", ClientMessageEntity.class)
           .setParameter("destination", destination)
           .setMaxResults(100)
           .getResultList();

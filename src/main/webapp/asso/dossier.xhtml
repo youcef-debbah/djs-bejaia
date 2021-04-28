@@ -11,10 +11,10 @@
             <div class="ui-g-12">
                 <div class="card">
                     <h1>#{messages.uploadNewFiles}</h1>
-                    <h:form enctype="multipart/form-data">
+                    <h:form enctype="multipart/form-data" styleClass="hidden-overflow">
                         <p:fileUpload
                                 fileUploadListener="#{dossierView.handleFileUpload}" update=":files_list"
-                                auto="true" multiple="true" sequential="true" styleClass="hidden-overflow"
+                                auto="true" multiple="true" sequential="true"
                                 sizeLimit="#{dossierView.maxFileSize}"
                                 invalidSizeMessage="#{messages.fileTooBig}"
                                 label="#{messages.choose}" uploadLabel="#{messages.upload}"
