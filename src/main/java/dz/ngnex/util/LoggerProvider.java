@@ -32,4 +32,8 @@ public final class LoggerProvider {
     public Logger getLogger(final InjectionPoint injectionPoint) {
         return LogManager.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
     }
+
+    public static Logger getLogger(Class<?> type) {
+        return LogManager.getLogger(type.getName());
+    }
 }

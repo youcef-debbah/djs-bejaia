@@ -1,7 +1,9 @@
 package dz.ngnex.control;
 
 import dz.ngnex.util.InjectableByTests;
+import dz.ngnex.util.LoggerProvider;
 import dz.ngnex.util.WebKit;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -19,6 +21,8 @@ import java.util.Map;
 public class NavigationHistory implements Serializable {
   private static final long serialVersionUID = -1289123030838064939L;
 
+  private final Logger log = LoggerProvider.getLogger(NavigationHistory.class);
+
   private final List<String> EMPTY_HISTORY = Arrays.asList("", "", "", "");
   private final ArrayDeque<String> urlHistory = new ArrayDeque<>(EMPTY_HISTORY.size());
 
@@ -35,7 +39,7 @@ public class NavigationHistory implements Serializable {
       urlHistory.pollLast();
       urlHistory.offerFirst(WebKit.getURL(path, null, parameterValues, StandardCharsets.UTF_8));
     } catch (Exception e) {
-      System.out.println("could not save last for '" + path + "' with params " + parameterValues);
+      log.error("could not save last for '" + path + "' with params " + parameterValues, e);
     }
   }
 

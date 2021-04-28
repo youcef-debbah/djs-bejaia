@@ -118,7 +118,6 @@ public class FacesFilter implements Filter {
   }
 
   private void addCacheHeaders(HttpServletResponse response) {
-    System.out.println("production");
     response.setHeader(CACHE_CONTROL, "max-age=" + CACHE_SECONDS + ", public");
     response.setHeader(PRAGMA, null);
     response.setDateHeader(EXPIRES, getCacheExpireTime());
@@ -131,7 +130,6 @@ public class FacesFilter implements Filter {
   }
 
   private void addNoCacheHeaders(HttpServletResponse response) {
-    System.out.println("development");
     response.setHeader(CACHE_CONTROL, "no-cache, no-store, must-revalidate");
     response.setHeader(PRAGMA, "no-cache");
     response.setDateHeader(EXPIRES, 0);
