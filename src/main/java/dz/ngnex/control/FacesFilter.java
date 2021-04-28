@@ -30,8 +30,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class FacesFilter implements Filter {
+
+  public static final String PROJECT_STAGE_INIT_PARAM = "javax.faces.PROJECT_STAGE";
+  public static final String PRODUCTION = "Production";
+  public static final String DEVELOPMENT = "Development";
+  public static final String CACHE_CONTROL = "Cache-Control";
+  public static final String PRAGMA = "Pragma";
+  public static final String EXPIRES = "Expires";
+  private static final int CACHE_SECONDS = (int) TimeUnit.DAYS.toSeconds(7);
 
   private static Logger log = LogManager.getLogger(FacesFilter.class);
 
@@ -52,8 +62,13 @@ public class FacesFilter implements Filter {
       if (!req.getRequestURI().startsWith(req.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER)) {
         // count this visitor
         countVisitor(req, res);
-        // set no cache headers
-        noCache(res);
+
+        String projectState = req.getServletContext().getInitParameter(PROJECT_STAGE_INIT_PARAM);
+        if (PRODUCTION.equalsIgnoreCase(projectState))
+          addCacheHeaders(res);
+
+        if (DEVELOPMENT.equalsIgnoreCase(projectState))
+          addNoCacheHeaders(res);
       }
     }
 
@@ -102,13 +117,24 @@ public class FacesFilter implements Filter {
     }
   }
 
-  private void noCache(HttpServletResponse response) {
-    // HTTP 1.1
-    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-    // HTTP 1.0
-    response.setHeader("Pragma", "no-cache");
-    // Proxies
-    response.setDateHeader("Expires", 0);
+  private void addCacheHeaders(HttpServletResponse response) {
+    System.out.println("production");
+    response.setHeader(CACHE_CONTROL, "max-age=" + CACHE_SECONDS + ", public");
+    response.setHeader(PRAGMA, null);
+    response.setDateHeader(EXPIRES, getCacheExpireTime());
+  }
+
+  private long getCacheExpireTime() {
+    Calendar calendar = Calendar.getInstance(LocaleManager.ADMIN_TIME_ZONE);
+    calendar.add(Calendar.SECOND, CACHE_SECONDS);
+    return calendar.getTimeInMillis();
+  }
+
+  private void addNoCacheHeaders(HttpServletResponse response) {
+    System.out.println("development");
+    response.setHeader(CACHE_CONTROL, "no-cache, no-store, must-revalidate");
+    response.setHeader(PRAGMA, "no-cache");
+    response.setDateHeader(EXPIRES, 0);
   }
 
   @Override

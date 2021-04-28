@@ -11,6 +11,8 @@ val warFileName = "ROOT.war"
 val deploymentDir = layout.projectDirectory.dir("target")
 val testDatabaseLogDir = "h2"
 
+val activeProfiles = System.getenv("SERVER_PROFILES_ACTIVE")
+
 val intTest = "intTest"
 val intTestSourceSet = sourceSets.register(intTest) {
     compileClasspath += sourceSets.main.get().output
@@ -18,6 +20,8 @@ val intTestSourceSet = sourceSets.register(intTest) {
 }
 
 val intTestImplementation by lazy { intTestSourceSet.get().implementationConfigurationName }
+
+println("$name config with active profiles: $activeProfiles")
 
 configurations.configureEach {
     if (this.name.startsWith(intTest)) {
@@ -107,8 +111,9 @@ configurations.configureEach {
             if (requested.group == "log4j" && requested.name == "log4j")
                 useVersion("1.2.17")
             else if (requested.group == "com.sun.istack"
-                    && requested.name == "istack-commons-runtime"
-                    && requested.version?.startsWith("1.") == true)
+                && requested.name == "istack-commons-runtime"
+                && requested.version?.startsWith("1.") == true
+            )
                 useVersion("1.0")
         }
     }
@@ -120,11 +125,11 @@ configurations.configureEach {
 //}
 
 fun passClasspathAsSystemProperty(test: Test) {
-    val files : Set<File> = test.classpath.files
+    val files: Set<File> = test.classpath.files
     val classpathFiles: String = files
-            .filter { it.isFile }
-            .map { it.absolutePath }
-            .reduce { path1, path2 -> path1 + File.pathSeparatorChar + path2 }
+        .filter { it.isFile }
+        .map { it.absolutePath }
+        .reduce { path1, path2 -> path1 + File.pathSeparatorChar + path2 }
 
     test.systemProperty("intTest.testWar.classpath", classpathFiles)
 }
@@ -139,9 +144,15 @@ tasks {
         destinationDirectory.set(deploymentDir)
         archiveFileName.set(warFileName)
 
+        if (activeProfiles == null)
+            this.filesMatching("**/web.xml") {
+                filter { line ->
+                    if (line.contains("@removeLine", true)) "" else line
+                }
+            }
     }
 
-    val cleanTestLog by registering( Delete::class) {
+    val cleanTestLog by registering(Delete::class) {
         delete(testDatabaseLogDir)
     }
 
@@ -155,7 +166,7 @@ tasks {
         delete("out", deploymentDir)
     }
 
-    val parseTestLog by registering( H2LogParser::class) {
+    val parseTestLog by registering(H2LogParser::class) {
         description = "extract SQL statements from H2 database log"
         from(testDatabaseLogDir)
         into(testDatabaseLogDir)
@@ -175,3 +186,23 @@ tasks {
         useTestNG()
     }
 }
+
+class Benchmark : TaskExecutionListener {
+    private var startTime: Long? = null
+
+    override fun beforeExecute(task: Task) {
+        startTime = System.nanoTime()
+    }
+
+    override fun afterExecute(task: Task, state: TaskState) {
+        val t0 = startTime
+        if (t0 != null) {
+            val duration = System.nanoTime() - t0
+            startTime = null
+            if (state.didWork)
+                println("Task " + task.name + " took: " + TimeUnit.NANOSECONDS.toSeconds(duration) + " seconds")
+        }
+    }
+}
+
+gradle.taskGraph.addTaskExecutionListener(Benchmark())
