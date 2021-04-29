@@ -17,12 +17,11 @@
 
 package dz.ngnex.view;
 
-import dz.ngnex.bean.Hints;
 import dz.ngnex.bean.PrincipalBean;
 import dz.ngnex.control.CurrentPrincipal;
-import dz.ngnex.control.Meta;
 import dz.ngnex.control.NavigationHistory;
 import dz.ngnex.entity.AccessType;
+import dz.ngnex.util.Config;
 import dz.ngnex.util.Messages;
 import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
@@ -85,12 +84,14 @@ public class LoginView implements Serializable {
     try {
       HttpServletRequest request = WebKit.getFacesRequest();
 
+      System.out.println("@@@ before login principal name: " + currentPrincipal.getName());
       request.login(getUsername(), getPassword());
       Principal principal = request.getUserPrincipal();
       String principalName = principal.getName();
       Objects.requireNonNull(principalName);
       currentPrincipal.refreshState(principal, request);
       log.info("succeeded to authenticate user: " + principalName);
+      System.out.println("@@@ after login principal name: " + currentPrincipal.getName());
 
       String welcomeBack = MessageFormat.format(messages.getString("welcomeBack"), principalName);
       context.addMessage(GLOBAL_MSG, new FacesMessage(messages.getString("userConnected"), welcomeBack));
@@ -99,21 +100,27 @@ public class LoginView implements Serializable {
         return nextOutcome;
 
       AccessType principalType = CurrentPrincipal.getPrincipalType(request);
+      System.out.println("@@@ later principal name: " + currentPrincipal.getName());
       if (principalType.isAdmin()) {
         if (lastUrl != null && lastUrl.contains("/admin/")) {
           WebKit.redirect(lastUrl);
           return null;
-        } else
-          return "adminHome";
+        } else {
+          WebKit.redirect(Config.ADMIN_CHAT_PAGE);
+          return null;
+        }
       } else if (principalType.isAssociation()) {
         if (lastUrl != null && lastUrl.contains("/asso/")) {
           WebKit.redirect(lastUrl);
           return null;
+        } else {
+          WebKit.redirect(Config.ASSO_HOME);
+          return null;
         }
-        return "userHome";
       }
 
-      return "homePage";
+      WebKit.redirect(Config.HOME_PAGE);
+      return null;
     } catch (Exception e) {
       log.info("failed to authenticate user '" + getUsername() + "' (password '" + getPassword() + "')", e);
       context.addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.getString("loginFailed"),

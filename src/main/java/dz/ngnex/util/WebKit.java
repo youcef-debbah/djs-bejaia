@@ -25,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.context.PartialViewContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
@@ -195,16 +193,18 @@ public final class WebKit {
       log.info("logout for principal named: " + name);
     }
 
-    HttpServletResponse response = getResponse();
-    Cookie jsessionid = new Cookie("JSESSIONID", "");
-    jsessionid.setMaxAge(0);
-    response.addCookie(jsessionid);
-
     try {
       request.logout();
     } catch (ServletException e) {
       log.warn("logout failed for principal named: " + name, e);
     }
+  }
+
+  public static void removeSessionID() {
+    HttpServletResponse response = getResponse();
+    Cookie jsessionid = new Cookie("JSESSIONID", "");
+    jsessionid.setMaxAge(0);
+    response.addCookie(jsessionid);
   }
 
   public static String requireNotBlank(String value) {
