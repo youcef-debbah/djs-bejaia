@@ -41,10 +41,7 @@ package dz.ngnex.control;
 
 import dz.ngnex.bean.IntegrityException;
 import dz.ngnex.security.ReadAccess;
-import dz.ngnex.util.Messages;
-import dz.ngnex.util.ResourcesProvider;
-import dz.ngnex.util.InjectableByTests;
-import dz.ngnex.util.WebKit;
+import dz.ngnex.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 
@@ -64,6 +61,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import static dz.ngnex.util.Config.GLOBAL_MSG;
+
 @Named
 @RequestScoped
 @InjectableByTests
@@ -79,7 +78,7 @@ public class Meta {
 
   public void pageNotFound() {
     try {
-      FacesContext.getCurrentInstance().getExternalContext().dispatch("/error/404.xhtml");
+      FacesContext.getCurrentInstance().getExternalContext().dispatch(Config.ERROR_404_PAGE);
     } catch (IOException e) {
       handleException(e);
     }
@@ -109,7 +108,7 @@ public class Meta {
         Messages msgs = ResourcesProvider.getMessagesBundle();
         FacesMessage message = new FacesMessage(msgs.get("userDisconnected"),
             msgs.get("seeYouAgain"));
-        context.addMessage("global", message);
+        context.addMessage(GLOBAL_MSG, message);
         context.getExternalContext().getFlash().setKeepMessages(true);
       }
 
@@ -134,7 +133,7 @@ public class Meta {
 
     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, msgs.get("invalidInput"),
         detail);
-    context.addMessage("global", message);
+    context.addMessage(GLOBAL_MSG, message);
     log.debug(e);
   }
 
@@ -152,43 +151,43 @@ public class Meta {
     FacesContext context = FacesContext.getCurrentInstance();
     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, msgs.get("concurrentUpdate"),
         msgs.get("concurrentUpdateDetails"));
-    context.addMessage("global", message);
+    context.addMessage(GLOBAL_MSG, message);
   }
 
   public void addGlobalError(String summary, String detail) {
     log.error(summary + " -> " + detail);
     Messages messages = ResourcesProvider.getMessagesBundle();
-    FacesContext.getCurrentInstance().addMessage("global", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+    FacesContext.getCurrentInstance().addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_ERROR,
         messages.get(summary), messages.get(detail)));
   }
 
   public void workDoneSuccessfully(String msg) {
     Messages messages = ResourcesProvider.getMessagesBundle();
-    FacesContext.getCurrentInstance().addMessage("global", new FacesMessage(FacesMessage.SEVERITY_INFO,
+    FacesContext.getCurrentInstance().addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_INFO,
         messages.get(msg), messages.get("successfully")));
   }
 
   public void dataUpdatedSuccessfully() {
     Messages messages = ResourcesProvider.getMessagesBundle();
-    FacesContext.getCurrentInstance().addMessage("global", new FacesMessage(FacesMessage.SEVERITY_INFO,
+    FacesContext.getCurrentInstance().addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_INFO,
         messages.get("dataUpdated"), messages.get("successfully")));
   }
 
   public void dataUpdated(String detail) {
     Messages messages = ResourcesProvider.getMessagesBundle();
-    FacesContext.getCurrentInstance().addMessage("global", new FacesMessage(FacesMessage.SEVERITY_INFO,
+    FacesContext.getCurrentInstance().addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_INFO,
         messages.get("dataUpdated"), messages.get(detail)));
   }
 
   public void addGlobalMessage(String summary, String detail) {
     Messages messages = ResourcesProvider.getMessagesBundle();
-    FacesContext.getCurrentInstance().addMessage("global", new FacesMessage(FacesMessage.SEVERITY_INFO,
+    FacesContext.getCurrentInstance().addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_INFO,
         messages.get(summary), messages.get(detail)));
   }
 
   public void addGlobalLog(String detail) {
     Messages messages = ResourcesProvider.getMessagesBundle();
-    FacesContext.getCurrentInstance().addMessage("global", new FacesMessage(FacesMessage.SEVERITY_INFO,
+    FacesContext.getCurrentInstance().addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_INFO,
         "Log", detail));
   }
 
@@ -202,7 +201,7 @@ public class Meta {
     FacesContext context = FacesContext.getCurrentInstance();
     FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, msgs.get("internErrorTitle"),
         msgs.get("internError"));
-    context.addMessage("global", message);
+    context.addMessage(GLOBAL_MSG, message);
   }
 
   public <T> void broadcastOverViewScop(Class<T> type, Consumer<T> consumer) {

@@ -49,7 +49,6 @@
 
     <lifecycle>
         <phase-listener>dz.ngnex.control.GlobalNotificationsListener</phase-listener>
-        <phase-listener>dz.ngnex.control.NavigationListener</phase-listener>
     </lifecycle>
 
     <navigation-rule>

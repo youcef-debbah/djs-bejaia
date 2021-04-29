@@ -3,6 +3,7 @@ package dz.ngnex.view;
 import dz.ngnex.bean.AccountDemandBean;
 import dz.ngnex.control.Meta;
 import dz.ngnex.entity.AccountDemandEntity;
+import dz.ngnex.util.Config;
 import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
 
@@ -27,7 +28,7 @@ public class AccountDemandView implements Serializable {
       accountDemandBean.send(demand);
       meta.addGlobalMessage("demandSent", "weWillCallYouSoon");
       meta.keepMessages();
-      WebKit.redirectToHome();
+      WebKit.redirect(Config.HOME_PAGE);
     } catch (Exception e) {
       meta.handleException(e);
     }

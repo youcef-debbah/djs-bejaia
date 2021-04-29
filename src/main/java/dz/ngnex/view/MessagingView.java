@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static dz.ngnex.util.Config.GLOBAL_MSG;
+
 @ViewModel
 public class MessagingView implements Serializable {
 
@@ -124,7 +126,7 @@ public class MessagingView implements Serializable {
       messagesBean.sendMessage(service, title, localeManager.formatTextAsHtml(content), entity.getName(), attachment);
       resetInput();
       fetchMessages();
-      messageNotifications.send("refresh", Arrays.asList(service.name(), "global"));
+      messageNotifications.send("refresh", Arrays.asList(service.name(), GLOBAL_MSG));
     } catch (Exception e) {
       meta.handleException(e);
     }

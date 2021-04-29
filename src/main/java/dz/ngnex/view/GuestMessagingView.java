@@ -7,6 +7,7 @@ import dz.ngnex.entity.AttachmentContentEntity;
 import dz.ngnex.entity.Constrains;
 import dz.ngnex.entity.GuestMessageEntity;
 import dz.ngnex.entity.Service;
+import dz.ngnex.util.Config;
 import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
 import org.intellij.lang.annotations.Language;
@@ -76,11 +77,11 @@ public class GuestMessagingView implements Serializable {
     try {
       GuestMessageEntity messageDraft = getDraft();
       messagesBean.sendMessage(messageDraft, attachment);
-      messageNotifications.send("refresh", Arrays.asList(messageDraft.getDestination().name(), "global"));
+      messageNotifications.send("refresh", Arrays.asList(messageDraft.getDestination().name(), Config.GLOBAL_MSG));
       this.draft = null;
       meta.workDoneSuccessfully("messageSent");
       meta.keepMessages();
-      WebKit.redirectToHome();
+      WebKit.redirect(Config.HOME_PAGE);
     } catch (RuntimeException e) {
       meta.handleException(e);
     }

@@ -6,6 +6,7 @@ import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.Meta;
 import dz.ngnex.control.PrincipalState;
 import dz.ngnex.entity.*;
+import dz.ngnex.util.Config;
 import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
 
@@ -106,7 +107,7 @@ public class ArticleView implements Serializable {
 
   public void addComment() {
     if (currentPrincipal.isGuest())
-      WebKit.redirectToLogin();
+      WebKit.redirect(Config.HOME_PAGE);
     else
       try {
         Integer articleID = getArticle().getId();

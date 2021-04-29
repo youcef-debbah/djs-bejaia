@@ -36,6 +36,9 @@
         messages.updateFailed = '#{messages.updateFailed}';
         messages.invalidInput = '#{messages.invalidInput}';
         messages.recheckSubmittedValues = '#{messages.recheckSubmittedValues}';
+
+        let url = encodeURIComponent(window.location.href)
+        document.cookie = "last-url-visited=" + url;
         // ]]>
     </script>
 </ui:composition>

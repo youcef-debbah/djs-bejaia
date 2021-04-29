@@ -64,6 +64,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
 
+import static dz.ngnex.util.Config.GLOBAL_MSG;
+
 /**
  * @author youcef debbah
  */
@@ -199,7 +201,7 @@ public class CommandBoard implements Serializable {
 
     if (fromDate.isAfter(toDate)) {
       FacesContext context = FacesContext.getCurrentInstance();
-      context.addMessage("global", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+      context.addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_ERROR,
           messages.get("invalidInterval"), messages.get("fromMustBeBeforeTO")));
     }
 

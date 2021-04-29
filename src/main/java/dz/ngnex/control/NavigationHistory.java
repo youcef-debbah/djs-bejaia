@@ -5,41 +5,51 @@ import dz.ngnex.util.LoggerProvider;
 import dz.ngnex.util.WebKit;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.ExternalContext;
-import javax.faces.event.PhaseEvent;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.Deque;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 @SessionScoped
 @InjectableByTests
 public class NavigationHistory implements Serializable {
+
+  public static final String LAST_URL_VISITED = "last-url-visited";
+
   private static final long serialVersionUID = -1289123030838064939L;
-
   private final Logger log = LoggerProvider.getLogger(NavigationHistory.class);
+  private static final int MAX_ENTRIES = 4;
 
-  private final List<String> EMPTY_HISTORY = Arrays.asList("", "", "", "");
-  private final ArrayDeque<String> urlHistory = new ArrayDeque<>(EMPTY_HISTORY.size());
+  private final Deque<String> urlHistory;
 
-  @PostConstruct
-  private void init() {
-    urlHistory.addAll(EMPTY_HISTORY);
+  public NavigationHistory() {
+    Deque<String> history = new ConcurrentLinkedDeque<>();
+    for (int i = 0; i < MAX_ENTRIES; i++) {
+      history.add("");
+    }
+    this.urlHistory = history;
   }
 
-  public void refresh(PhaseEvent event) {
-    ExternalContext context = event.getFacesContext().getExternalContext();
-    String path = context.getRequestServletPath();
-    Map<String, String[]> parameterValues = context.getRequestParameterValuesMap();
+  public static String getRelativeUrl(HttpServletRequest request) {
+    String url = request.getServletPath();
+    String query = request.getQueryString();
+    if (query != null)
+      url += "?" + query;
+    return url;
+  }
+
+  public void refresh(HttpServletRequest req, HttpServletResponse res) {
+    String url = getRelativeUrl(req);
     try {
-      urlHistory.pollLast();
-      urlHistory.offerFirst(WebKit.getURL(path, null, parameterValues, StandardCharsets.UTF_8));
+      if (WebKit.isDeepUrl(url) && !Objects.equals(url, urlHistory.peekFirst())) {
+        urlHistory.pollLast();
+        urlHistory.offerFirst(url);
+      }
     } catch (Exception e) {
-      log.error("could not save last for '" + path + "' with params " + parameterValues, e);
+      log.error("could not save url: '" + url, e);
     }
   }
 
@@ -49,6 +59,6 @@ public class NavigationHistory implements Serializable {
 
   @Override
   public String toString() {
-    return "NavigationHistory" + Arrays.toString(urlHistory.toArray());
+    return "NavigationHistory:\n" + String.join("\n", urlHistory);
   }
 }

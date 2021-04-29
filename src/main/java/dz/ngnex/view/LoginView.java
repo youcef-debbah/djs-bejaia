@@ -17,26 +17,23 @@
 
 package dz.ngnex.view;
 
+import dz.ngnex.bean.Hints;
 import dz.ngnex.bean.PrincipalBean;
 import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.Meta;
 import dz.ngnex.control.NavigationHistory;
 import dz.ngnex.entity.AccessType;
 import dz.ngnex.util.Messages;
+import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.application.FacesMessage;
-import javax.faces.application.NavigationCase;
-import javax.faces.application.NavigationHandler;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -44,24 +41,20 @@ import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.Objects;
 
+import static dz.ngnex.util.Config.GLOBAL_MSG;
+
 /**
  * @author youcef debbah
  */
-@Named
-@RequestScoped
+@ViewModel
 public class LoginView implements Serializable {
   private static final long serialVersionUID = -1791839482568436535L;
   private static final Logger log = LogManager.getLogger(LoginView.class);
 
-  public static String LOGIN_VIEW_ID = "/login.xhtml";
-  public static final String NEXT_OUTCOME_PARAM = "next";
-  public static final String REDIRECT_QUERY_PARAM = "query";
+  public static final String NEXT_OUTCOME = "outcome";
 
   @EJB
   private PrincipalBean principalBean;
-
-  @Inject
-  private NavigationHistory navigationHistory;
 
   @Inject
   private Messages messages;
@@ -74,58 +67,13 @@ public class LoginView implements Serializable {
   @Inject
   private CurrentPrincipal currentPrincipal;
 
-  @Inject
-  private Meta meta;
-
-  @Inject
-  private ViewSetting viewSetting;
+  private String nextOutcome;
+  private String lastUrl;
 
   @PostConstruct
   private void init() {
-    HttpServletRequest request = WebKit.getFacesRequest();
-    String nextOutcome = request.getParameter(NEXT_OUTCOME_PARAM);
-    if (currentPrincipal.isGuest() && nextOutcome != null && !nextOutcome.isEmpty()) {
-      viewSetting.setNextOutcome(nextOutcome);
-      viewSetting.setRedirectQuery(request.getParameter(REDIRECT_QUERY_PARAM));
-      Principal principal = request.getUserPrincipal();
-      if (principal != null)
-        tryRedirectToNex();
-    }
-  }
-
-  private boolean tryRedirectToNex() {
-    String nextOutcome = viewSetting.getNextOutcome();
-    if (nextOutcome != null)
-      try {
-        FacesContext context = FacesContext.getCurrentInstance();
-        NavigationHandler navigationHandler = context.getApplication().getNavigationHandler();
-        String url = getViewID(context, navigationHandler, nextOutcome);
-        if (url == null)
-          url = nextOutcome;
-
-        String query = viewSetting.getRedirectQuery();
-        if (query != null && !query.isEmpty())
-          url += "?faces-redirect=true&" + query;
-
-        navigationHandler.handleNavigation(context, null, url);
-        return true;
-      } catch (Exception e) {
-        meta.handleException(e);
-      }
-
-    return false;
-  }
-
-  private String getViewID(FacesContext context, NavigationHandler navigationHandler, String nextOutcome) {
-    if (navigationHandler instanceof ConfigurableNavigationHandler) {
-      ConfigurableNavigationHandler configurableNavigationHandler = (ConfigurableNavigationHandler) context.getApplication().getNavigationHandler();
-      NavigationCase navigationCase = configurableNavigationHandler.getNavigationCase(context, null, nextOutcome);
-      if (navigationCase != null) {
-        return navigationCase.getToViewId(context);
-      }
-    }
-
-    return null;
+    nextOutcome = WebKit.getRequestParam(NEXT_OUTCOME);
+    lastUrl = WebKit.getCookie(NavigationHistory.LAST_URL_VISITED);
   }
 
   public String login() {
@@ -145,21 +93,30 @@ public class LoginView implements Serializable {
       log.info("succeeded to authenticate user: " + principalName);
 
       String welcomeBack = MessageFormat.format(messages.getString("welcomeBack"), principalName);
-      context.addMessage("global", new FacesMessage(messages.getString("userConnected"), welcomeBack));
+      context.addMessage(GLOBAL_MSG, new FacesMessage(messages.getString("userConnected"), welcomeBack));
 
-      if (tryRedirectToNex())
-        return null;
+      if (nextOutcome != null)
+        return nextOutcome;
 
       AccessType principalType = CurrentPrincipal.getPrincipalType(request);
-      if (principalType.isAdmin())
-        return "adminHome";
-      else if (principalType.isAssociation())
+      if (principalType.isAdmin()) {
+        if (lastUrl != null && lastUrl.contains("/admin/")) {
+          WebKit.redirect(lastUrl);
+          return null;
+        } else
+          return "adminHome";
+      } else if (principalType.isAssociation()) {
+        if (lastUrl != null && lastUrl.contains("/asso/")) {
+          WebKit.redirect(lastUrl);
+          return null;
+        }
         return "userHome";
+      }
 
       return "homePage";
     } catch (Exception e) {
       log.info("failed to authenticate user '" + getUsername() + "' (password '" + getPassword() + "')", e);
-      context.addMessage("global", new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.getString("loginFailed"),
+      context.addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.getString("loginFailed"),
           messages.getString("loginFailedDetail")));
       return null;
     }

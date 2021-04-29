@@ -1,5 +1,7 @@
 package dz.ngnex.entity;
 
+import dz.ngnex.util.Config;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -33,7 +35,7 @@ import javax.validation.constraints.NotNull;
 public abstract class BasicMessageEntity implements ChronologicalDatabaseEntity {
   private static final long serialVersionUID = 6909094408074960759L;
   public static final int MAX_CONTENT_LENGTH = 32_000;
-  public static final String GLOBAL = "global";
+  public static final String GLOBAL = Config.GLOBAL_MSG;
 
   protected Integer id;
 

@@ -17,8 +17,8 @@
 
 package dz.ngnex.control;
 
+import dz.ngnex.util.Config;
 import dz.ngnex.util.WebKit;
-import dz.ngnex.view.LoginView;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.primefaces.PrimeFaces;
@@ -28,10 +28,10 @@ import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -83,11 +83,12 @@ public class ViewExpiredExceptionHandler extends ExceptionHandlerWrapper {
   private void handleViewExpiredException(ViewExpiredException vee) {
     if (vee != null) {
       log.warn("handling view expired exception for: " + vee.getViewId(), vee);
+      String url = WebKit.getCookie(NavigationHistory.LAST_URL_VISITED);
       WebKit.logout();
-
-      Map<String, String[]> parameters = new HashMap<>();
-      parameters.put(LoginView.NEXT_OUTCOME_PARAM, new String[]{vee.getViewId()});
-      WebKit.redirect(LoginView.LOGIN_VIEW_ID, parameters);
+      if (url != null)
+        WebKit.redirect(url);
+      else
+        WebKit.redirect(Config.HOME_PAGE);
     }
   }
 }

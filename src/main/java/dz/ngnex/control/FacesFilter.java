@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 
 import javax.ejb.EJB;
 import javax.faces.application.ResourceHandler;
+import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -51,6 +52,9 @@ public class FacesFilter implements Filter {
   @EJB
   private StatisticManager statisticManager;
 
+  @Inject
+  private NavigationHistory navigationHistory;
+
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
@@ -69,6 +73,9 @@ public class FacesFilter implements Filter {
 
         if (DEVELOPMENT.equalsIgnoreCase(projectState))
           addNoCacheHeaders(res);
+
+        if (req.getHeader("X-Requested-With") == null && req.getHeader("Faces-Request") == null)
+          navigationHistory.refresh(req, res);
       }
     }
 

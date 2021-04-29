@@ -33,6 +33,8 @@ import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
 
+import static dz.ngnex.util.Config.GLOBAL_MSG;
+
 @ViewModel
 public class AdminsView implements Serializable {
   private static final long serialVersionUID = -567649281187666643L;
@@ -75,7 +77,7 @@ public class AdminsView implements Serializable {
   public void saveChanges() {
     try {
       adminProfileView.saveChanges();
-      FacesContext.getCurrentInstance().addMessage("global",
+      FacesContext.getCurrentInstance().addMessage(GLOBAL_MSG,
           new FacesMessage(messages.getString("dataUpdated"), messages.getString("changesSaved")));
       admins = fetchAdmins();
       adminProfileView.refresh();

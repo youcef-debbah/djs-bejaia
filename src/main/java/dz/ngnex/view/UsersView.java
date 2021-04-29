@@ -43,6 +43,7 @@ import dz.ngnex.bean.PrincipalBean;
 import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.Meta;
 import dz.ngnex.entity.*;
+import dz.ngnex.util.Config;
 import dz.ngnex.util.Messages;
 import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
@@ -54,7 +55,6 @@ import javax.ejb.EJB;
 import javax.enterprise.event.Observes;
 import javax.enterprise.event.Reception;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
@@ -312,9 +312,8 @@ public class UsersView implements Serializable {
 
   public void chatWithCurrentAssociation() {
     BasicAssociationEntity currentAccount = getCurrentAccount();
-    if (currentAccount != null) {
-      WebKit.redirect("/admin/chatAdmin.xhtml", Collections.singletonMap("id", new String[]{String.valueOf(currentAccount.getId())}));
-    }
+    if (currentAccount != null)
+      WebKit.redirect(Config.ADMIN_CHAT_PAGE + "?id=" + currentAccount.getId());
   }
 
   @Override

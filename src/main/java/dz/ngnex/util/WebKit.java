@@ -25,12 +25,14 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.context.PartialViewContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -92,48 +94,51 @@ public final class WebKit {
     return userPrincipal != null ? userPrincipal.getName() : null;
   }
 
-  @NotNull
-  public static String getURL(@NotNull String contextPath,
-                              @Nullable String path,
-                              @Nullable Map<String, String[]> parameters, Charset encoding) throws UnsupportedEncodingException {
-    if (parameters == null || parameters.isEmpty())
-      return buildURL(contextPath, path, Collections.emptyList());
-    else {
-      List<String> params = new ArrayList<>(parameters.size());
-      for (Map.Entry<String, String[]> param : parameters.entrySet()) {
-        String[] values = param.getValue();
-        if (values != null && values.length > 0) {
-          String key = param.getKey();
-          StringBuilder paramWithValues = new StringBuilder(key + "=" + URLEncoder.encode(values[0], encoding.name()));
-          for (int i = 1; i < values.length; i++)
-            paramWithValues.append('&').append(key).append('=').append(URLEncoder.encode(values[i], encoding.name()));
-          params.add(paramWithValues.toString());
-        }
-      }
-      return buildURL(contextPath, path, params);
-    }
-  }
+//  @NotNull
+//  public static String getURL(@NotNull String contextPath,
+//                              @Nullable String path,
+//                              @Nullable Map<String, String[]> parameters, Charset encoding) throws UnsupportedEncodingException {
+//    if (parameters == null || parameters.isEmpty())
+//      return buildURL(contextPath, path, Collections.emptyList());
+//    else {
+//      List<String> params = new ArrayList<>(parameters.size());
+//      for (Map.Entry<String, String[]> param : parameters.entrySet()) {
+//        String[] values = param.getValue();
+//        if (values != null && values.length > 0) {
+//          String key = param.getKey();
+//          StringBuilder paramWithValues = new StringBuilder(key + "=" + URLEncoder.encode(values[0], encoding.name()));
+//          for (int i = 1; i < values.length; i++)
+//            paramWithValues.append('&').append(key).append('=').append(URLEncoder.encode(values[i], encoding.name()));
+//          params.add(paramWithValues.toString());
+//        }
+//      }
+//      return buildURL(contextPath, path, params);
+//    }
+//  }
 
-  @NotNull
-  private static String buildURL(@NotNull String contextPath,
-                                 @Nullable String path,
-                                 @Nullable List<String> parameters) {
-    StringBuilder url = new StringBuilder(Objects.requireNonNull(contextPath));
-
-    if (path != null)
-      url.append(path);
-
-    if (parameters != null && !parameters.isEmpty()) {
-      url.append("?");
-      url.append(parameters.get(0));
-      for (int i = 1; i < parameters.size(); i++) {
-        url.append("&");
-        url.append(parameters.get(i));
-      }
-    }
-
-    return url.toString();
-  }
+//  @NotNull
+//  private static String buildURL(@NotNull String contextPath,
+//                                 @Nullable String path,
+//                                 @Nullable List<String> parameters) {
+//    StringBuilder url = new StringBuilder(Objects.requireNonNull(contextPath));
+//
+//    if (path != null) {
+//      if (!contextPath.endsWith("/") && !path.startsWith("/"))
+//        url.append("/");
+//      url.append(path);
+//    }
+//
+//    if (parameters != null && !parameters.isEmpty()) {
+//      url.append("?");
+//      url.append(parameters.get(0));
+//      for (int i = 1; i < parameters.size(); i++) {
+//        url.append("&");
+//        url.append(parameters.get(i));
+//      }
+//    }
+//
+//    return url.toString();
+//  }
 
   @Nullable
   public static String getRequestParam(@NotNull final String name) {
@@ -165,35 +170,21 @@ public final class WebKit {
     }
   }
 
-  public static void redirectToHome() {
-    redirect(null, "/landing.xhtml", null);
-  }
+//  public static void redirect(@Nullable String viewId, @Nullable Map<String, String[]> parameters) {
+//    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+//    try {
+//      String url = getURL("", viewId, parameters, CONTENT_ENCODING);
+//      log.info("redirecting to: " + url);
+//      getResponse().sendRedirect(url);
+//    } catch (IOException | RuntimeException e) {
+//      log.error("failed to redirect to: " + viewId + " parameters: " + parameters, e);
+//    }
+//  }
 
-  public static void redirectToLogin() {
-    redirect(null, "/login.xhtml", null);
-  }
-
-  public static void redirect(@Nullable String context, @Nullable String viewId, @Nullable Map<String, String[]> parameters) {
-    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-    try {
-      String url = getURL(context != null ? context : externalContext.getRequestContextPath(), viewId, parameters, CONTENT_ENCODING);
-      log.info("redirect to: " + url);
-      externalContext.redirect(url);
-    } catch (final IOException e) {
-      log.error("failed to redirect to: " + viewId, e);
-    }
-  }
-
-  public static void redirect(@Nullable String viewId, @Nullable Map<String, String[]> parameters) {
-    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-    try {
-      String url = getURL(externalContext.getRequestContextPath(), viewId, parameters, CONTENT_ENCODING);
-      log.info("redirect to: " + url);
-      externalContext.redirect(url);
-    } catch (final IOException e) {
-      log.error("failed to redirect to: " + viewId, e);
-    }
-  }
+//  public static String getServerUrl() {
+//    HttpServletRequest request = getFacesRequest();
+//    return request.getScheme() + "://" + request.getServerName() + ':' + request.getServerPort();
+//  }
 
   public static void logout() {
     HttpServletRequest request = getFacesRequest();
@@ -220,5 +211,49 @@ public final class WebKit {
     if (StringUtils.isBlank(value))
       throw new IllegalArgumentException("illegal blank argument: '" + value + "'");
     return value;
+  }
+
+  public synchronized static String getFromSession(String key) {
+    Object value = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(key);
+    if (value instanceof String)
+      return (String) value;
+    else
+      return null;
+  }
+
+  public synchronized static void putToSession(String key, String value) {
+    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(key, value);
+  }
+
+  public static void redirect(String url) {
+    try {
+      log.info("webkit redirecting to: " + url);
+      FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+    } catch (IOException e) {
+      log.error("could not redirect to: " + url);
+    }
+  }
+
+  public static boolean isAjaxRequest() {
+    return FacesContext.getCurrentInstance().getPartialViewContext().isAjaxRequest();
+  }
+
+  public static boolean isDeepUrl(String url) {
+    return !StringUtils.isBlank(url) && !url.equals("/") && !url.equals("null");
+  }
+
+  public static String getCookie(String key) {
+    Object cookie = FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get(Objects.requireNonNull(key));
+    return cookie instanceof Cookie ? decode(((Cookie) cookie).getValue()) : null;
+  }
+
+  private static String decode(String value) {
+    if (value != null)
+      try {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+      } catch (UnsupportedEncodingException e) {
+        log.error("could not decode value: " + value, e);
+      }
+    return null;
   }
 }

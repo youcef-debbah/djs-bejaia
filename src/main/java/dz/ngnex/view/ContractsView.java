@@ -5,6 +5,7 @@ import dz.ngnex.bean.PrincipalBean;
 import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.Meta;
 import dz.ngnex.entity.*;
+import dz.ngnex.util.Config;
 import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
 
@@ -53,7 +54,7 @@ public class ContractsView implements Serializable {
     refresh();
 
     if (association == null)
-      WebKit.redirectToHome();
+      WebKit.redirect(Config.HOME_PAGE);
   }
 
   public void refresh() {
