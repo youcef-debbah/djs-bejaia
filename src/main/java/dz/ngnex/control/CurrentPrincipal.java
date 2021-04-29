@@ -9,7 +9,9 @@ import dz.ngnex.security.ReadableResource;
 import dz.ngnex.security.WritableResource;
 import dz.ngnex.security.WriteAccess;
 import dz.ngnex.util.InjectableByTests;
+import dz.ngnex.util.LoggerProvider;
 import dz.ngnex.util.WebKit;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.primefaces.model.UploadedFile;
@@ -29,6 +31,8 @@ import java.util.Objects;
 public class CurrentPrincipal implements Serializable {
   private static final long serialVersionUID = 401407644891967961L;
 
+  private final Logger log = LoggerProvider.getLogger(CurrentPrincipal.class);
+
   @EJB
   PrincipalBean principalBean;
 
@@ -47,6 +51,7 @@ public class CurrentPrincipal implements Serializable {
   @PostConstruct
   private void init() {
     refreshState();
+    log.info("#loggin - current principal initialized: " + getName());
   }
 
   public void refreshState() {

@@ -83,13 +83,13 @@ public class LoginView implements Serializable {
     FacesContext context = FacesContext.getCurrentInstance();
     try {
       HttpServletRequest request = WebKit.getFacesRequest();
-      System.out.println("trying to authenticate: " + currentUser(request) + " as: " + getUsername());
+      System.out.println("#loggin - trying to authenticate: " + currentUser(request) + " as: " + getUsername());
       request.login(getUsername(), getPassword());
       Principal principal = request.getUserPrincipal();
       String principalName = principal.getName();
       Objects.requireNonNull(principalName);
       currentPrincipal.refreshState(principal, request);
-      log.info("succeeded to authenticate: " + currentUser(request));
+      log.info("#loggin - succeeded to authenticate: " + currentUser(request));
 
       String welcomeBack = MessageFormat.format(messages.getString("welcomeBack"), principalName);
       context.addMessage(GLOBAL_MSG, new FacesMessage(messages.getString("userConnected"), welcomeBack));
@@ -113,7 +113,7 @@ public class LoginView implements Serializable {
 
       return null;
     } catch (Exception e) {
-      log.info("failed to authenticate: '" + getUsername(), e);
+      log.info("#loggin - failed to authenticate: '" + getUsername(), e);
       context.addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.getString("loginFailed"),
           messages.getString("loginFailedDetail")));
       return null;
