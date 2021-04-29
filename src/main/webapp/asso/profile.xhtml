@@ -93,7 +93,7 @@
                                           value="#{messages.download} #{usersView.currentContract.contractTemplate.name}"
                                           icon="fa fa-file-pdf-o"
                                           styleClass="need-validation"
-                                          outcome="downloadContract"
+                                          href="/contract"
                                           disabled="#{not sectionsView.canDownloadContract or not usersView.currentContract.contractTemplate.canBeDownloadedAt(localeManager.currentEpoch)}">
                                     <f:param name="account" value="#{sectionsView.currentAssociation.id}"/>
                                     <f:param name="contract" value="#{sectionsView.currentContract.id}"/>

@@ -142,11 +142,6 @@
             <redirect/>
         </navigation-case>
         <navigation-case>
-            <from-outcome>downloadContract</from-outcome>
-            <to-view-id>/contract/</to-view-id>
-            <redirect/>
-        </navigation-case>
-        <navigation-case>
             <from-outcome>forbidden</from-outcome>
             <to-view-id>/error/access.xhtml</to-view-id>
             <redirect/>
