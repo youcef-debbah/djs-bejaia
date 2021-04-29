@@ -56,6 +56,11 @@
     </context-param>
 
     <context-param>
+        <param-name>dz.jsoftware95.BuildEpoch</param-name>
+        <param-value>@buildEpoch</param-value>
+    </context-param>
+
+    <context-param>
         <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
         <param-value>server</param-value>
     </context-param>

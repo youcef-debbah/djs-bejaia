@@ -1,3 +1,5 @@
+val buildEpoch = System.currentTimeMillis()
+
 plugins {
     war
     id("com.github.ben-manes.versions") version "0.38.0"
@@ -143,13 +145,12 @@ tasks {
     this.war {
         destinationDirectory.set(deploymentDir)
         archiveFileName.set(warFileName)
-
-        if (activeProfiles == null)
-            this.filesMatching("**/web.xml") {
-                filter { line ->
-                    if (line.contains("@removeLine", true)) "" else line
-                }
+        this.filesMatching("**/web.xml") {
+            filter { line ->
+                val result = line.replace("@buildEpoch", buildEpoch.toString())
+                if (activeProfiles == null && result.contains("@removeLine", true)) "" else result
             }
+        }
     }
 
     val cleanTestLog by registering(Delete::class) {
