@@ -106,7 +106,7 @@ public class LoginView implements Serializable {
           WebKit.redirect(lastUrl);
           return null;
         } else {
-          WebKit.redirect(Config.ADMIN_CHAT_PAGE);
+          WebKit.redirect(Config.ADMIN_HOME);
           return null;
         }
       } else if (principalType.isAssociation()) {
