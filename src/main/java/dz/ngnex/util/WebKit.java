@@ -92,52 +92,6 @@ public final class WebKit {
     return userPrincipal != null ? userPrincipal.getName() : null;
   }
 
-//  @NotNull
-//  public static String getURL(@NotNull String contextPath,
-//                              @Nullable String path,
-//                              @Nullable Map<String, String[]> parameters, Charset encoding) throws UnsupportedEncodingException {
-//    if (parameters == null || parameters.isEmpty())
-//      return buildURL(contextPath, path, Collections.emptyList());
-//    else {
-//      List<String> params = new ArrayList<>(parameters.size());
-//      for (Map.Entry<String, String[]> param : parameters.entrySet()) {
-//        String[] values = param.getValue();
-//        if (values != null && values.length > 0) {
-//          String key = param.getKey();
-//          StringBuilder paramWithValues = new StringBuilder(key + "=" + URLEncoder.encode(values[0], encoding.name()));
-//          for (int i = 1; i < values.length; i++)
-//            paramWithValues.append('&').append(key).append('=').append(URLEncoder.encode(values[i], encoding.name()));
-//          params.add(paramWithValues.toString());
-//        }
-//      }
-//      return buildURL(contextPath, path, params);
-//    }
-//  }
-
-//  @NotNull
-//  private static String buildURL(@NotNull String contextPath,
-//                                 @Nullable String path,
-//                                 @Nullable List<String> parameters) {
-//    StringBuilder url = new StringBuilder(Objects.requireNonNull(contextPath));
-//
-//    if (path != null) {
-//      if (!contextPath.endsWith("/") && !path.startsWith("/"))
-//        url.append("/");
-//      url.append(path);
-//    }
-//
-//    if (parameters != null && !parameters.isEmpty()) {
-//      url.append("?");
-//      url.append(parameters.get(0));
-//      for (int i = 1; i < parameters.size(); i++) {
-//        url.append("&");
-//        url.append(parameters.get(i));
-//      }
-//    }
-//
-//    return url.toString();
-//  }
-
   @Nullable
   public static String getRequestParam(@NotNull final String name) {
     Objects.requireNonNull(name);
@@ -167,22 +121,6 @@ public final class WebKit {
       }
     }
   }
-
-//  public static void redirect(@Nullable String viewId, @Nullable Map<String, String[]> parameters) {
-//    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-//    try {
-//      String url = getURL("", viewId, parameters, CONTENT_ENCODING);
-//      log.info("redirecting to: " + url);
-//      getResponse().sendRedirect(url);
-//    } catch (IOException | RuntimeException e) {
-//      log.error("failed to redirect to: " + viewId + " parameters: " + parameters, e);
-//    }
-//  }
-
-//  public static String getServerUrl() {
-//    HttpServletRequest request = getFacesRequest();
-//    return request.getScheme() + "://" + request.getServerName() + ':' + request.getServerPort();
-//  }
 
   public static void logout() {
     HttpServletRequest request = getFacesRequest();

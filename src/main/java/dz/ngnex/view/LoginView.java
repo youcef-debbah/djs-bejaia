@@ -83,15 +83,13 @@ public class LoginView implements Serializable {
     FacesContext context = FacesContext.getCurrentInstance();
     try {
       HttpServletRequest request = WebKit.getFacesRequest();
-
-      System.out.println("@@@ before login principal name: " + currentPrincipal.getName());
+      System.out.println("trying to authenticate: " + currentUser(request) + " as: " + getUsername());
       request.login(getUsername(), getPassword());
       Principal principal = request.getUserPrincipal();
       String principalName = principal.getName();
       Objects.requireNonNull(principalName);
       currentPrincipal.refreshState(principal, request);
-      log.info("succeeded to authenticate user: " + principalName);
-      System.out.println("@@@ after login principal name: " + currentPrincipal.getName());
+      log.info("succeeded to authenticate: " + currentUser(request));
 
       String welcomeBack = MessageFormat.format(messages.getString("welcomeBack"), principalName);
       context.addMessage(GLOBAL_MSG, new FacesMessage(messages.getString("userConnected"), welcomeBack));
@@ -100,33 +98,34 @@ public class LoginView implements Serializable {
         return nextOutcome;
 
       AccessType principalType = CurrentPrincipal.getPrincipalType(request);
-      System.out.println("@@@ later principal name: " + currentPrincipal.getName());
       if (principalType.isAdmin()) {
-        if (lastUrl != null && lastUrl.contains("/admin/")) {
+        if (lastUrl != null && lastUrl.contains("/admin/"))
           WebKit.redirect(lastUrl);
-          return null;
-        } else {
+        else
           WebKit.redirect(Config.ADMIN_HOME);
-          return null;
-        }
       } else if (principalType.isAssociation()) {
-        if (lastUrl != null && lastUrl.contains("/asso/")) {
+        if (lastUrl != null && lastUrl.contains("/asso/"))
           WebKit.redirect(lastUrl);
-          return null;
-        } else {
+        else
           WebKit.redirect(Config.ASSO_HOME);
-          return null;
-        }
-      }
+      } else
+        WebKit.redirect(Config.HOME_PAGE);
 
-      WebKit.redirect(Config.HOME_PAGE);
       return null;
     } catch (Exception e) {
-      log.info("failed to authenticate user '" + getUsername() + "' (password '" + getPassword() + "')", e);
+      log.info("failed to authenticate: '" + getUsername(), e);
       context.addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.getString("loginFailed"),
           messages.getString("loginFailedDetail")));
       return null;
     }
+  }
+
+  private String currentUser(HttpServletRequest request) {
+    Principal userPrincipal = request.getUserPrincipal();
+    if (userPrincipal != null)
+      return "principal: " + userPrincipal.getName() + ", currentPrincipal: " + currentPrincipal.getName();
+    else
+      return "principal: null , currentPrincipal: " + currentPrincipal.getName();
   }
 
   public String getUsername() {

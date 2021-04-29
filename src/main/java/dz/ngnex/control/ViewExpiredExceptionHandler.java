@@ -82,8 +82,10 @@ public class ViewExpiredExceptionHandler extends ExceptionHandlerWrapper {
 
   private void handleViewExpiredException(ViewExpiredException vee) {
     if (vee != null) {
-      log.warn("handling view expired exception for: " + vee.getViewId(), vee);
       String url = WebKit.getCookie(NavigationHistory.LAST_URL_VISITED);
+      log.warn("handling VEE for user: " + WebKit.getPrincipalName()
+          + " on view:" + vee.getViewId()
+          + " with url: " + url, vee);
       WebKit.logout();
       if (url != null)
         WebKit.redirect(url);
