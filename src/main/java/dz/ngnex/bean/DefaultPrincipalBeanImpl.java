@@ -139,8 +139,8 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
 
   @NotNull
   @Override
-  public <T extends BasicPrincipalEntity> T getPrincipal(EntityReference<T> principalReference) throws IntegrityException {
-    return DatabaseEntity.requirePersisted(em.find(principalReference.getType(), principalReference.getId()));
+  public <T extends BasicPrincipalEntity> T getPrincipal(EntityReference<T> principalReference) {
+    return DatabaseEntity.requireID(em.find(principalReference.getType(), principalReference.getId()));
   }
 
   @Override

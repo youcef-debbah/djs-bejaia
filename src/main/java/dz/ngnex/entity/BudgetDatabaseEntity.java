@@ -2,6 +2,7 @@ package dz.ngnex.entity;
 
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public interface BudgetDatabaseEntity extends DatabaseEntity {
 
@@ -27,7 +28,7 @@ public interface BudgetDatabaseEntity extends DatabaseEntity {
     if (targetActivityID != null && budgets != null)
       for (T budget : budgets)
         if (DatabaseEntity.equalsID(budget.getActivity(), targetActivityID)
-            && DatabaseEntity.equalsID(budget.getSection(), targetSectionID))
+            && Objects.equals(DatabaseEntity.getID(budget.getSection()), targetSectionID))
           return budget;
 
     return null;

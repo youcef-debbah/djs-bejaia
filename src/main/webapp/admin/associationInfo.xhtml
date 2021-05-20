@@ -529,7 +529,7 @@
                                 </p:overlayPanel>
                             </h:panelGroup>
                         </p:fieldset>
-                        <p:fieldset id="propeties_input" rendered="#{not empty propertiesView.potentialValues}"
+                        <p:fieldset id="propeties_input" rendered="#{not empty propertiesView.potentialBudgets or not empty propertiesView.potentialValues}"
                                     legend="#{messages.contractProperties}">
                             <h:panelGroup id="dynamicProperties" styleClass="ui-g">
                                 <ui:fragment rendered="#{not empty propertiesView.potentialBudgets}">
@@ -577,7 +577,7 @@
                                     </div>
                                 </ui:repeat>
 
-                                <ui:fragment rendered="#{not empty propertiesView.potentialBudgets}">
+                                <ui:fragment rendered="#{not empty propertiesView.potentialValues}">
                                     <div class="ui-g-12">
                                         <h3 class="bold v-spaced">#{messages.additionalProperties}</h3>
                                     </div>

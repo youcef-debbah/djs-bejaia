@@ -25,12 +25,6 @@ public interface DatabaseEntity extends Serializable, Comparable<DatabaseEntity>
     return entity;
   }
 
-  static <T extends DatabaseEntity> T requirePersisted(T entity) throws IntegrityException { // TODO
-    if (getID(entity) == null)
-      throw new IntegrityException("", "");
-    return entity;
-  }
-
   static Integer getID(DatabaseEntity entity) {
     if (entity == null)
       return null;
