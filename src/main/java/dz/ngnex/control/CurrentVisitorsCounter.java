@@ -24,12 +24,14 @@ public class CurrentVisitorsCounter implements HttpSessionListener {
   // -------------------------------------------------------
   @Override
   public void sessionCreated(HttpSessionEvent se) {
+    System.out.println("@@@ session created");
     int currentVisitorsCount = currentVisitors.incrementAndGet();
     currentVisitorsNotifications.send(currentVisitorsCount);
   }
 
   @Override
   public void sessionDestroyed(HttpSessionEvent se) {
+    System.out.println("@@@ session destroyed");
     int currentVisitorsCount = currentVisitors.decrementAndGet();
     currentVisitorsNotifications.send(currentVisitorsCount);
   }

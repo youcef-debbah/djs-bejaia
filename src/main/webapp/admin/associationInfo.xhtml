@@ -109,31 +109,30 @@
             <h:panelGroup id="accountsPanel" layout="block" styleClass="card">
                 <h1>#{messages.association}: #{usersView.targetAssociation.name} (#{messages.season}: #{sectionsView.currentSeasonName})</h1>
 
-                <p:toolbar id="accounts_dashboard" styleClass="scrollable-toolbar">
+                <p:toolbar id="accounts_dashboard1" styleClass="scrollable-toolbar">
                     <f:facet name="left">
                         <h:panelGroup>
-                            <p:commandButton id="saveButton" widgetVar="saveButtonWidget"
+                            <p:commandButton widgetVar="saveButtonWidget"
                                              value="#{messages.save}"
                                              disabled="#{empty profile.currentAssociation}"
                                              onerror="jsoftware95.updateFailed()"
                                              icon="ui-icon-save" process="spreadsheet_form:accountsPanel" update="@form"
                                              actionListener="#{usersView.saveChanges}"/>
 
-                            <p:commandButton id="delete_button" value="#{messages.delete}" icon="ui-icon-delete"
+                            <p:commandButton value="#{messages.delete}" icon="ui-icon-delete"
                                              onerror="jsoftware95.updateFailed()"
                                              disabled="#{empty profile.currentAssociation}"
                                              process="@this" update="@form" action="#{usersView.deleteCurrentAccount}">
                                 <p:confirm message="#{messages.confirmUserDelete}"/>
                             </p:commandButton>
 
-                            <p:button id="chat_button" disabled="#{empty profile.currentAssociation}"
+                            <p:button disabled="#{empty profile.currentAssociation}"
                                       outcome="chatAdmin"
                                       value="#{messages.chat}" icon="ui-icon-forum" accesskey="c">
                                 <f:param name="sender" value="#{profile.currentAssociation.name}"/>
                             </p:button>
 
-                            <p:button id="preview_button"
-                                      value="#{messages.preview} #{sectionsView.currentContract.contractTemplate.name}"
+                            <p:button value="#{messages.preview} #{sectionsView.currentContract.contractTemplate.name}"
                                       data-title="#{messages.preview}"
                                       target="_blank" accesskey="p"
                                       icon="fa fa-file-pdf-o" href="/contract"
@@ -190,7 +189,7 @@
                                 </ui:fragment>
                             </p:column>
                             <p:ajax event="rowSelect"
-                                    update="spreadsheet_form:accounts_dashboard spreadsheet_form:sub_inputs spreadsheet_form:newContractDialogPanel"/>
+                                    update="spreadsheet_form:accounts_dashboard1 spreadsheet_form:accounts_dashboard2 spreadsheet_form:sub_inputs spreadsheet_form:newContractDialogPanel"/>
                         </p:dataTable>
                         <h:panelGroup id="contracts_toolbar" layout="block" styleClass="ui-g-12 text-Center">
                             <p:commandButton id="newContractButton" type="button"
@@ -680,6 +679,42 @@
                         </p:fieldset>
                     </h:panelGroup>
                 </h:panelGroup>
+
+                <p:toolbar id="accounts_dashboard2" styleClass="scrollable-toolbar">
+                    <f:facet name="left">
+                        <h:panelGroup>
+                            <p:commandButton widgetVar="saveButtonWidget"
+                                             value="#{messages.save}"
+                                             disabled="#{empty profile.currentAssociation}"
+                                             onerror="jsoftware95.updateFailed()"
+                                             icon="ui-icon-save" process="spreadsheet_form:accountsPanel" update="@form"
+                                             actionListener="#{usersView.saveChanges}"/>
+
+                            <p:commandButton value="#{messages.delete}" icon="ui-icon-delete"
+                                             onerror="jsoftware95.updateFailed()"
+                                             disabled="#{empty profile.currentAssociation}"
+                                             process="@this" update="@form" action="#{usersView.deleteCurrentAccount}">
+                                <p:confirm message="#{messages.confirmUserDelete}"/>
+                            </p:commandButton>
+
+                            <p:button disabled="#{empty profile.currentAssociation}"
+                                      outcome="chatAdmin"
+                                      value="#{messages.chat}" icon="ui-icon-forum" accesskey="c">
+                                <f:param name="sender" value="#{profile.currentAssociation.name}"/>
+                            </p:button>
+
+                            <p:button value="#{messages.preview} #{sectionsView.currentContract.contractTemplate.name}"
+                                      data-title="#{messages.preview}"
+                                      target="_blank" accesskey="p"
+                                      icon="fa fa-file-pdf-o" href="/contract"
+                                      disabled="#{empty sectionsView.currentContract}">
+                                <f:param name="preview" value="true"/>
+                                <f:param name="account" value="#{sectionsView.currentAssociation.id}"/>
+                                <f:param name="contract" value="#{sectionsView.currentContract.id}"/>
+                            </p:button>
+                        </h:panelGroup>
+                    </f:facet>
+                </p:toolbar>
 
             </h:panelGroup>
         </h:form>

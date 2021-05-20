@@ -36,11 +36,17 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public final class WebKit {
 
   public static final Charset CONTENT_ENCODING = StandardCharsets.UTF_8;
   private static final Logger log = LogManager.getLogger(WebKit.class);
+
+  public static final int GUEST_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(1);
+  public static final int ADMIN_INACTIVE_INTERVAL = (int) TimeUnit.HOURS.toSeconds(3);
+  public static final int ASSOCIATION_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(1);
+
 
   @Nullable
   public static String getPrincipalName() {
@@ -133,6 +139,7 @@ public final class WebKit {
 
     try {
       request.logout();
+      request.getSession().setMaxInactiveInterval(GUEST_INACTIVE_INTERVAL);
     } catch (ServletException e) {
       log.warn("logout failed for principal named: " + name, e);
     }

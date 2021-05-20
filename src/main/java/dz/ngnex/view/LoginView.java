@@ -99,17 +99,21 @@ public class LoginView implements Serializable {
 
       AccessType principalType = CurrentPrincipal.getPrincipalType(request);
       if (principalType.isAdmin()) {
+        request.getSession().setMaxInactiveInterval(WebKit.ADMIN_INACTIVE_INTERVAL);
         if (lastUrl != null && lastUrl.contains("/admin/"))
           WebKit.redirect(lastUrl);
         else
           WebKit.redirect(Config.ADMIN_HOME);
       } else if (principalType.isAssociation()) {
+        request.getSession().setMaxInactiveInterval(WebKit.ASSOCIATION_INACTIVE_INTERVAL);
         if (lastUrl != null && lastUrl.contains("/asso/"))
           WebKit.redirect(lastUrl);
         else
           WebKit.redirect(Config.ASSO_HOME);
-      } else
+      } else {
+        request.getSession().setMaxInactiveInterval(WebKit.GUEST_INACTIVE_INTERVAL);
         WebKit.redirect(Config.HOME_PAGE);
+      }
 
       return null;
     } catch (Exception e) {
