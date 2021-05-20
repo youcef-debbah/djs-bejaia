@@ -6,6 +6,7 @@ import dz.ngnex.control.Meta;
 import dz.ngnex.entity.*;
 import dz.ngnex.util.Messages;
 import dz.ngnex.util.ViewModel;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.primefaces.PrimeFaces;
 
@@ -17,6 +18,8 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ViewModel
 public class SectionsView implements Serializable {
@@ -52,7 +55,7 @@ public class SectionsView implements Serializable {
 
   @Size(min = Constrains.Min_IDENTIFIER_SIZE, max = Constrains.MAX_IDENTIFIER_SIZE)
   private String newSectionName;
-  private List<EntityReference> availableSectionNames;
+  private List<SectionTemplateReference> availableSectionNames;
 
   private final Map<Integer, List<BudgetEntity>> potentialBudgetsMap = new HashMap<>();
 
@@ -95,7 +98,7 @@ public class SectionsView implements Serializable {
       availableSectionNames = sectionsBean.getAvailableSectionNames();
     } catch (Exception e) {
       meta.handleException(e);
-      availableSectionNames = Collections.emptyList();
+      availableSectionNames = new LinkedList<>();
     }
   }
 
@@ -137,7 +140,7 @@ public class SectionsView implements Serializable {
       currentAssociation = principalBean.findSelectedAssociation(newAssociation.getReference());
     else if (currentPrincipal.isAssociation())
       currentAssociation = principalBean.findSelectedAssociation(currentPrincipal.getAssociationReference());
-      else
+    else
       currentAssociation = null;
   }
 
@@ -380,8 +383,27 @@ public class SectionsView implements Serializable {
       }
   }
 
-  public List<EntityReference> getAvailableSectionNames() {
+  public List<SectionTemplateReference> getAvailableSectionNames() {
     return availableSectionNames;
+  }
+
+  public List<String> suggestSectionNames(String input) {
+    if (input == null || input.isEmpty())
+      return newTemplatesStream().collect(Collectors.toList());
+    else
+      return newTemplatesStream().filter(name -> name.contains(input)).collect(Collectors.toList());
+  }
+
+  @NotNull
+  private Stream<String> newTemplatesStream() {
+    Set<String> sectionNames = getSectionsNames();
+    return availableSectionNames.stream()
+        .map(EntityReference::getName)
+        .filter(name -> !sectionNames.contains(name));
+  }
+
+  private Set<String> getSectionsNames() {
+    return sections.stream().map(SectionEntity::getName).collect(Collectors.toSet());
   }
 
   public Integer getNewContractTemplateID() {
@@ -410,6 +432,11 @@ public class SectionsView implements Serializable {
         initNewSectionInput();
         meta.dataUpdatedSuccessfully();
         PrimeFaces.current().executeScript("PF('new_section_dialog').hide()");
+
+        String addedSectionName = newSection.getName();
+        if (!DatabaseEntity.containsName(addedSectionName, availableSectionNames))
+          availableSectionNames.add(sectionsBean.addTemplate(addedSectionName).getReference());
+
         refreshEvent.fire(new RefreshAccountEvent(currentAssociation.getReference(), getCurrentContractTemplateID(), newSection.getId()));
       } catch (Exception e) {
         meta.handleException(e);

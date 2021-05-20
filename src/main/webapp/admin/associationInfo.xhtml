@@ -9,6 +9,62 @@
 
     <ui:define name="content">
         <h:form id="spreadsheet_form">
+            <ul style="display: none">
+                <li>usersView.currentAccount: #{usersView.currentAccount}</li>
+                <li>sectionsView.currentAssociation: #{sectionsView.currentAssociation}</li>
+                <li>propertiesView.currentAssociation: #{propertiesView.currentAssociation}</li>
+            </ul>
+
+            <h:panelGroup id="newSectionDialogPanel">
+                <p:dialog id="newSectionDialog" widgetVar="new_section_dialog" positionType="fixed"
+                          header="#{messages.newSection}" modal="true" blockScroll="true" width="350">
+
+                    <h:panelGroup id="newSectionDialogContent" styleClass="ui-g ui-fluid" layout="block">
+                        <p:focus context="newSectionDialogContent"/>
+                        <!-- type -->
+                        <div class="ui-g-12 compact">
+                            <p:outputLabel for="section-name" value="Nom de section"/>
+                            <p:messages for="section-name" showIcon="false" closable="true">
+                                <p:effect event="load" type="bounce"/>
+                            </p:messages>
+                        </div>
+                        <div class="ui-g-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon"><span
+                                        class="material-icons ui-icon-mode-edit"/></span>
+                                <span class="md-inputfield md-inputfield-fill">
+                            <p:autoComplete id="section-name" required="true" queryDelay="500"
+                                            value="#{sectionsView.newSectionName}"
+                                            maxlength="80" autocomplete="off"
+                                            completeMethod="#{sectionsView.suggestSectionNames}"
+                                            scrollHeight="250" moreText="..."
+                                            cache="true" cacheTimeout="2147483647" dropdown="true"
+                                            emptyMessage="#{messages.noMatch}"
+                                            resultsMessage="#{messages.suggestionResult}"
+                            />
+                            </span>
+                            </div>
+                        </div>
+
+                    </h:panelGroup>
+
+                    <f:facet name="footer">
+                        <p:commandButton id="addSectionButton" widgetVar="widget_addSectionButton"
+                                         value="#{messages.add}"
+                                         process="newSectionDialogPanel accountsPanel"
+                                         update="newSectionDialogContent accountsPanel"
+                                         icon="fa fa-user-plus"
+                                         onstart="PF('widget_addSectionButton').disable()"
+                                         onerror="jsoftware95.updateFailed()"
+                                         oncomplete="PF('widget_addSectionButton').enable()"
+                                         disabled="#{empty sectionsView.currentAssociation}"
+                                         actionListener="#{sectionsView.addNewSection}"/>
+                        <p:commandButton value="#{messages.cancel}" type="button"
+                                         onclick="PF('new_section_dialog').hide()" icon="fa fa-remove"/>
+                    </f:facet>
+                </p:dialog>
+            </h:panelGroup>
+
             <h:panelGroup id="newContractDialogPanel">
                 <p:dialog id="newContractDialog" widgetVar="new_contract_dialog" positionType="fixed"
                           header="#{messages.newContract}" modal="false" width="350">
@@ -52,56 +108,6 @@
                                          actionListener="#{sectionsView.addContractInstance}"/>
                         <p:commandButton value="#{messages.cancel}" type="button"
                                          onclick="PF('new_contract_dialog').hide()" icon="fa fa-remove"/>
-                    </f:facet>
-                </p:dialog>
-            </h:panelGroup>
-
-            <h:panelGroup id="newSectionDialogPanel">
-                <p:dialog id="newSectionDialog" widgetVar="new_section_dialog" positionType="fixed"
-                          header="#{messages.newSection}" modal="false" width="350">
-
-                    <h:panelGroup id="newSectionDialogContent" styleClass="ui-g ui-fluid" layout="block">
-                        <p:focus context="newSectionDialogContent"/>
-                        <!-- type -->
-                        <div class="ui-g-12 compact">
-                            <p:outputLabel for="section-name" value="Nom de section"/>
-                            <p:messages for="section-name" showIcon="false" closable="true">
-                                <p:effect event="load" type="bounce"/>
-                            </p:messages>
-                        </div>
-                        <div class="ui-g-12">
-                            <div class="ui-inputgroup">
-                                <span class="ui-inputgroup-addon"><span
-                                        class="material-icons ui-icon-mode-edit"/></span>
-                                <span class="md-inputfield md-inputfield-fill">
-                            <p:selectOneMenu id="section-name" required="true" filter="true" filterMatchMode="contains"
-                                             filterPlaceholder="#{messages.filter}"
-                                             value="#{sectionsView.newSectionName}"
-                                             style="min-width: 250px">
-                                <f:selectItem itemLabel="#{messages.nothing}" itemValue=""/>
-                                <f:selectItems value="#{sectionsView.availableSectionNames}"
-                                               var="reference" itemLabel="#{reference.name}"
-                                               itemValue="#{reference.name}"/>
-                            </p:selectOneMenu>
-                            </span>
-                            </div>
-                        </div>
-
-                    </h:panelGroup>
-
-                    <f:facet name="footer">
-                        <p:commandButton id="addSectionButton" widgetVar="widget_addSectionButton"
-                                         value="#{messages.add}"
-                                         process="newSectionDialogPanel accountsPanel"
-                                         update="newSectionDialogContent accountsPanel"
-                                         icon="fa fa-user-plus"
-                                         onstart="PF('widget_addSectionButton').disable()"
-                                         onerror="jsoftware95.updateFailed()"
-                                         oncomplete="PF('widget_addSectionButton').enable()"
-                                         disabled="#{empty sectionsView.currentAssociation}"
-                                         actionListener="#{sectionsView.addNewSection}"/>
-                        <p:commandButton value="#{messages.cancel}" type="button"
-                                         onclick="PF('new_section_dialog').hide()" icon="fa fa-remove"/>
                     </f:facet>
                 </p:dialog>
             </h:panelGroup>
@@ -442,7 +448,8 @@
                                         <p:outputLabel id="emailLabel" for="email"
                                                        value="#{messages.email}"/>
                                         <div class="ui-inputgroup">
-                                            <span class="ui-inputgroup-addon"><span class="ui-icon fa fa-envelope"/></span>
+                                            <span class="ui-inputgroup-addon"><span
+                                                    class="ui-icon fa fa-envelope"/></span>
                                             <span class="md-inputfield md-inputfield-fill">
                                     <p:inputText id="email" value="#{profile.currentAssociation.email}"
                                                  disabled="#{empty profile.currentAssociation}">
@@ -529,7 +536,8 @@
                                 </p:overlayPanel>
                             </h:panelGroup>
                         </p:fieldset>
-                        <p:fieldset id="propeties_input" rendered="#{not empty propertiesView.potentialBudgets or not empty propertiesView.potentialValues}"
+                        <p:fieldset id="propeties_input"
+                                    rendered="#{not empty propertiesView.potentialBudgets or not empty propertiesView.potentialValues}"
                                     legend="#{messages.contractProperties}">
                             <h:panelGroup id="dynamicProperties" styleClass="ui-g">
                                 <ui:fragment rendered="#{not empty propertiesView.potentialBudgets}">

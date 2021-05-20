@@ -28,7 +28,7 @@ public class SectionTemplateEntity implements DatabaseEntity {
 
   public void setId(Integer id) {
     this.id = id;
-    }
+  }
 
   @Version
   public Integer getVersion() {
@@ -37,7 +37,7 @@ public class SectionTemplateEntity implements DatabaseEntity {
 
   public void setVersion(Integer version) {
     this.version = version;
-    }
+  }
 
   @NotNull
   @Column(nullable = false, length = Constrains.MAX_IDENTIFIER_SIZE)
@@ -48,7 +48,12 @@ public class SectionTemplateEntity implements DatabaseEntity {
 
   public void setName(String name) {
     this.name = name;
-    }
+  }
+
+  @Transient
+  public SectionTemplateReference getReference() {
+    return new SectionTemplateReference(getId(), getName());
+  }
 
   @Override
   public final boolean equals(Object other) {

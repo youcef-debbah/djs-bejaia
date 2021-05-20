@@ -53,6 +53,15 @@ public interface DatabaseEntity extends Serializable, Comparable<DatabaseEntity>
       collection.removeAll(entitiesToRemove);
   }
 
+  static boolean containsName(String name, Collection<? extends EntityReference<?>> availableSectionNames) {
+    if (name != null && availableSectionNames != null && !availableSectionNames.isEmpty())
+      for (EntityReference<?> reference : availableSectionNames)
+        if (reference != null && name.equalsIgnoreCase(reference.getName()))
+          return true;
+
+    return false;
+  }
+
   Integer getId();
 
   Integer getVersion();

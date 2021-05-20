@@ -1,8 +1,6 @@
 package dz.ngnex.bean;
 
-import dz.ngnex.entity.BudgetEntity;
-import dz.ngnex.entity.EntityReference;
-import dz.ngnex.entity.SectionEntity;
+import dz.ngnex.entity.*;
 
 import javax.ejb.Local;
 import java.util.List;
@@ -10,9 +8,11 @@ import java.util.Map;
 
 @Local
 public interface SectionsBean {
-  List<EntityReference> getAvailableSectionNames();
+  List<SectionTemplateReference> getAvailableSectionNames();
 
   void delete(int sectionID);
+
+  SectionTemplateEntity addTemplate(String name) throws IntegrityException;
 
   SectionEntity add(Integer assoID, String section) throws IntegrityException;
 

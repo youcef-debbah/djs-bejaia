@@ -4060,3 +4060,14 @@ h1.small-top {
   height: auto !important;
 }
 
+.ui-autocomplete .ui-autocomplete-dropdown {
+  height: 100% !important;
+}
+.ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-primary {
+  margin-top: -12px !important;
+}
+
+.ui-autocomplete-items {
+  width: 265px !important;
+}
+

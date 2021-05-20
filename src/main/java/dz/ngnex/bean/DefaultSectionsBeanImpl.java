@@ -32,9 +32,17 @@ public class DefaultSectionsBeanImpl implements SectionsBean {
   CurrentPrincipal currentPrincipal;
 
   @Override
-  public List<EntityReference> getAvailableSectionNames() {
-    return em.createQuery("select new dz.ngnex.entity.SectionReference(t.id, t.name) from SectionTemplateEntity t order by t.name", EntityReference.class)
+  public List<SectionTemplateReference> getAvailableSectionNames() {
+    return em.createQuery("select new dz.ngnex.entity.SectionTemplateReference(t.id, t.name) from SectionTemplateEntity t order by t.name", SectionTemplateReference.class)
         .getResultList();
+  }
+
+  @Override
+  public SectionTemplateEntity addTemplate(String name) throws IntegrityException {
+    DatabaseEntity.checkIdentifierSyntax(name);
+    SectionTemplateEntity templateEntity = new SectionTemplateEntity(name);
+    em.persist(templateEntity);
+    return templateEntity;
   }
 
   @Override

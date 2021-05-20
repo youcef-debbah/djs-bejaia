@@ -56,7 +56,6 @@ import javax.enterprise.event.Observes;
 import javax.enterprise.event.Reception;
 import javax.inject.Inject;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 /**
