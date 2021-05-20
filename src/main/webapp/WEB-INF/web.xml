@@ -348,9 +348,7 @@
     </mime-mapping>
 
     <session-config>
-        <session-timeout>1</session-timeout><!-- @removeLine
         <session-timeout>10</session-timeout>
-        @removeLine -->
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
