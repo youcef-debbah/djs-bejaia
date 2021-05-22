@@ -322,13 +322,14 @@
                                                 <span class="ui-icon fa fa-money"/>
                                             </span>
                                                     <span class="md-inputfield md-inputfield-fill">
-                                                <p:inputNumber id="sectionActivityBudget"
-                                                               value="#{activityBudget.budget}" styleClass="full-width"
-                                                               onfocus="this.setSelectionRange(0, this.value.length)"
-                                                               symbol=" DA" symbolPosition="suffix"
-                                                               decimalPlaces="2" decimalSeparator=","
-                                                               thousandSeparator="&#160;"
-                                                               disabled="#{empty sectionsView.currentSection or empty sectionsView.currentContract}"/>
+                                                        <p:inputNumber id="sectionActivityBudget"
+                                                                       value="#{activityBudget.budget}"
+                                                                       styleClass="full-width"
+                                                                       onfocus="this.setSelectionRange(0, this.value.length)"
+                                                                       symbol=" DA" symbolPosition="s"
+                                                                       decimalPlaces="2" decimalSeparator=","
+                                                                       thousandSeparator="&#160;"
+                                                                       disabled="#{empty sectionsView.currentSection or empty sectionsView.currentContract}"/>
                                             </span>
                                                 </div>
                                             </div>
@@ -575,7 +576,7 @@
                                                 <p:inputNumber id="globalActivityBudget"
                                                                value="#{globalBudget.budget}" styleClass="full-width"
                                                                onfocus="this.setSelectionRange(0, this.value.length)"
-                                                               symbol=" DA" symbolPosition="suffix"
+                                                               symbol=" DA" symbolPosition="s"
                                                                decimalPlaces="2" decimalSeparator=","
                                                                thousandSeparator="&#160;"
                                                                disabled="#{empty sectionsView.currentContract}"/>
@@ -637,7 +638,7 @@
                                                                value="#{propertyValue.valueAsDecimal}"
                                                                minValue="0" styleClass="need-validation"
                                                                onfocus="this.setSelectionRange(0, this.value.length)"
-                                                               symbol=" DA" symbolPosition="suffix"
+                                                               symbol=" DA" symbolPosition="s"
                                                                decimalPlaces="2" decimalSeparator=","
                                                                thousandSeparator="&#160;"/>
                                             </h:panelGroup>
@@ -662,7 +663,7 @@
                                                             required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ADMIN'}"
                                                             value="#{propertyValue.valueAsDate}"
                                                             styleClass="need-validation">
-                                                    <f:convertDateTime type="date" />
+                                                    <f:convertDateTime type="date"/>
                                                 </p:calendar>
                                             </h:panelGroup>
                                         </ui:fragment>
