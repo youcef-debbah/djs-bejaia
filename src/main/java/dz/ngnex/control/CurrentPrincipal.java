@@ -14,7 +14,7 @@ import dz.ngnex.util.WebKit;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;

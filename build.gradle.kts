@@ -66,9 +66,9 @@ dependencies {
     implementation("org.jetbrains:annotations:17.0.0")
 
     implementation("org.omnifaces:omnifaces:3.11")
-    implementation("org.primefaces:primefaces:7.0")
-    implementation("org.primefaces.extensions:primefaces-extensions:7.0.2")
-    implementation("org.primefaces.extensions:resources-ckeditor:7.0.2")
+    implementation("org.primefaces:primefaces:8.0")
+    implementation("org.primefaces.extensions:primefaces-extensions:8.0.4")
+    implementation("org.primefaces.extensions:resources-ckeditor:8.0.4")
 
     implementation("org.apache.logging.log4j:log4j-api:2.12.1")
     implementation("org.apache.logging.log4j:log4j-core:2.12.1")

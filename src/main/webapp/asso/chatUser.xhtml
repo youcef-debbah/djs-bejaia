@@ -163,7 +163,7 @@
                             <div class="align-center">
                                 <h:form id="file_form" enctype="multipart/form-data hidden-overflow">
                                     <p:fileUpload styleClass="no-preview top-spaced"
-                                                  fileUploadListener="#{messagingView.handleAttachment}"
+                                                  listener="#{messagingView.handleAttachment}"
                                                   process="@form" update="@form" skinSimple="true"
                                                   auto="true" multiple="false" sequential="true"
                                                   sizeLimit="#{uploadedImagesView.maxFileSize}"

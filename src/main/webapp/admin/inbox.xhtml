@@ -96,7 +96,7 @@
             </h:form>
             <h:form id="file_form" enctype="multipart/form-data" styleClass="align-center full-width overflow-hidden">
                 <p:fileUpload styleClass="no-preview top-spaced" skinSimple="true"
-                              fileUploadListener="#{inboxView.handleAttachment}"
+                              listener="#{inboxView.handleAttachment}"
                               process="file_form" update="file_form"
                               uploadIcon="ui-icon-attach-file"
                               auto="true" multiple="false" sequential="true"

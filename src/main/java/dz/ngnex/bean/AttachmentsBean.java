@@ -5,7 +5,7 @@ import dz.ngnex.entity.AttachmentContentEntity;
 import dz.ngnex.entity.AttachmentInfoEntity;
 import dz.ngnex.entity.BinaryContent;
 import dz.ngnex.entity.FilesStatistics;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.file.UploadedFile;
 
 public interface AttachmentsBean {
   int MAX_FILE_SIZE = 15 * 1024 * 1024;

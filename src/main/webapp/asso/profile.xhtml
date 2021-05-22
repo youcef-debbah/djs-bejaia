@@ -344,7 +344,9 @@
                                         <p:calendar id="DATE_input"
                                                     required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ASSOCIATION'}"
                                                     value="#{propertyValue.valueAsDate}"
-                                                    styleClass="need-validation"/>
+                                                    styleClass="need-validation">
+                                            <f:convertDateTime type="date" />
+                                        </p:calendar>
                                     </h:panelGroup>
                                 </ui:fragment>
                             </h:panelGroup>

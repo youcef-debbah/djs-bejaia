@@ -13,7 +13,7 @@
                     <h1>#{messages.uploadNewFiles}</h1>
                     <h:form enctype="multipart/form-data" styleClass="hidden-overflow">
                         <p:fileUpload
-                                fileUploadListener="#{uploadedImagesView.handleFileUpload}" update=":files_list"
+                                listener="#{uploadedImagesView.handleFileUpload}" update=":files_list"
                                 auto="true" multiple="true" sequential="true"
                                 sizeLimit="#{uploadedImagesView.maxFileSize}"
                                 invalidSizeMessage="#{messages.fileTooBig}"

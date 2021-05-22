@@ -72,6 +72,7 @@
                                             showButtonPanel="true" showOtherMonths="true"
                                             selectOtherMonths="true" mindate="#{localeManager.beginningOfTime}"
                                             maxdate="#{localeManager.currentTime}">
+                                    <f:convertDateTime type="date" />
                                     <p:ajax event="dateSelect" process="@this" update="@form"
                                             onerror="jsoftware95.updateFailed()"
                                             listener="#{commandBoard.updateVisitorsModel}"/>
@@ -86,6 +87,7 @@
                                             showButtonPanel="true" showOtherMonths="true"
                                             selectOtherMonths="true" mindate="#{localeManager.beginningOfTime}"
                                             maxdate="#{localeManager.currentTime}">
+                                    <f:convertDateTime type="date" />
                                     <p:ajax event="dateSelect" process="@this" update="@form"
                                             onerror="jsoftware95.updateFailed()"
                                             listener="#{commandBoard.updateVisitorsModel}"/>
