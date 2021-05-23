@@ -6,7 +6,7 @@
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 template="/WEB-INF/templates/template.xhtml">
     <ui:param name="title" value="#{profile.currentAssociation} #{messages.info}"/>
-
+    <ui:param name="bodyClass" value="association-info"/>
     <ui:define name="content">
         <h:form id="spreadsheet_form">
             <ul style="display: none">
@@ -34,12 +34,12 @@
                                         class="material-icons ui-icon-mode-edit"/></span>
                                 <span class="md-inputfield md-inputfield-fill">
                             <p:autoComplete id="section-name" required="true" queryDelay="500"
-                                            value="#{sectionsView.newSectionName}"
+                                            value="#{sectionsView.newSectionName}" styleClass="sectionNameAutoComplete"
                                             maxlength="80" autocomplete="off"
                                             completeMethod="#{sectionsView.suggestSectionNames}"
                                             scrollHeight="250" moreText="..."
-                                            cache="true" cacheTimeout="2147483647" dropdown="true"
-                                            emptyMessage="#{messages.noMatch}"
+                                            cache="true" cacheTimeout="2147483647"
+                                            dropdown="true" emptyMessage="#{messages.noMatch}"
                                             resultsMessage="#{messages.suggestionResult}"
                             />
                             </span>

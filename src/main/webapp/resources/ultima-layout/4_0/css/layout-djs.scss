@@ -237,6 +237,7 @@ html body {
     .ui-fileupload-row div {
       vertical-align: middle;
     }
+
     .ui-fileupload-cancel {
       background-color: $accentColor;
     }
@@ -844,11 +845,22 @@ h1.small-top {
 
 .ui-autocomplete .ui-autocomplete-dropdown {
   height: 100% !important;
+
   .ui-button-icon-primary {
     margin-top: -12px !important;
   }
 }
 
-.ui-autocomplete-items {
-  width: 265px !important;
+.association-info .ui-autocomplete-items {
+  width: 263px !important;
+}
+
+body .ui-selectcheckboxmenu-panel {
+  &.long-search-bar .ui-selectcheckboxmenu-header .ui-selectcheckboxmenu-filter-container {
+    width: calc(100% - 35px);
+  }
+
+  &.no-header-checkbox .ui-widget-header .ui-chkbox {
+    display: none;
+  }
 }

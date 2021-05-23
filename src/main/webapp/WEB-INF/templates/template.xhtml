@@ -53,7 +53,7 @@
         <ui:insert name="head"/>
     </h:head>
 
-    <h:body styleClass="main-body">
+    <h:body styleClass="main-body #{bodyClass}">
         <h:panelGroup id="mainWrapper" styleClass="layout-wrapper menu-layout-static" layout="block">
             <ui:include src="/WEB-INF/templates/topbar.xhtml"/>
             <ui:include src="/WEB-INF/templates/menu.xhtml"/>

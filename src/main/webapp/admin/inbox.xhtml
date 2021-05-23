@@ -60,27 +60,13 @@
                     </div>
                     <div class="ui-g-12 compact">
                         <!--@elvariable id="receiver" type="dz.ngnex.view.ReceiverItem"-->
-                        <p:autoComplete id="receiversInput" multiple="true"
-                                        required="true"
-                                        requiredMessage="#{messages.inputRequired}"
-                                        placeholder="#{messages.toReceiver}"
-                                        value="#{inboxView.selectedReceivers}"
-                                        completeMethod="#{inboxView.completeReceiver}"
-                                        var="receiver" itemLabel="#{receiver.name}" itemValue="#{receiver}"
-                                        converter="ReceiverItemConverter"
-                                        forceSelection="true" scrollHeight="250">
-                            <f:facet name="itemtip">
-                                <div class="inline-block align-center full-width">
-                                    <h:outputText styleClass="bold" value="#{receiver.name}"/>
-                                </div>
-                                <br/>
-                                <i class="ui-icon fa fa-certificate middled"/>
-                                <h:outputText styleClass="middled" value="#{receiver.agrement}"/>
-                                <br/>
-                                <i class="ui-icon fa fa-phone middled"/>
-                                <h:outputText styleClass="middled" value="#{receiver.phone}"/>
-                            </f:facet>
-                        </p:autoComplete>
+                        <p:selectCheckboxMenu id="receiversInput" multiple="true" required="true"
+                                              panelStyleClass="long-search-bar no-header-checkbox"
+                                              requiredMessage="#{messages.inputRequired}"
+                                              label="#{messages.toReceiver}" value="#{inboxView.selectedReceivers}"
+                                              filter="true" filterMatchMode="contains" scrollHeight="250">
+                            <f:selectItems value="#{inboxView.allReceivers}"/>
+                        </p:selectCheckboxMenu>
                     </div>
                     <div class="ui-g-12 compact">
                         <p:messages for="groupContent" showIcon="false" closable="true">

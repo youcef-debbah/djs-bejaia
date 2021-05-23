@@ -19,7 +19,6 @@ import javax.faces.push.Push;
 import javax.faces.push.PushContext;
 import javax.inject.Inject;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -57,9 +56,9 @@ public class InboxView implements Serializable {
 
   private AttachmentContentEntity attachment;
 
-  private List<ReceiverItem> selectedReceivers;
+  private List<String> selectedReceivers;
 
-  private List<ReceiverItem> allReceivers;
+  private List<String> allReceivers;
 
   @PostConstruct
   public void init() {
@@ -162,22 +161,25 @@ public class InboxView implements Serializable {
   public void sendGroupMessage() {
     if (groupMessageContent != null && selectedReceivers != null && !selectedReceivers.isEmpty())
       try {
-        Collection<String> receiversNames = ReceiverItem.getNames(selectedReceivers);
-        messagesBean.sendAdminMessages(currentPrincipal.getName(), localeManager.formatTextAsHtml(groupMessageContent), receiversNames, attachment);
+        messagesBean.sendAdminMessages(currentPrincipal.getName(), localeManager.formatTextAsHtml(groupMessageContent), selectedReceivers, attachment);
         resetGroupMessageInput();
         meta.workDoneSuccessfully("messageSent");
         PrimeFaces.current().executeScript("PF('group_msg_dialog').hide()");
-        adminMessageNotifications.send("refresh", receiversNames);
+        adminMessageNotifications.send("refresh", selectedReceivers);
       } catch (RuntimeException e) {
         meta.handleException(e);
       }
   }
 
-  public List<ReceiverItem> getSelectedReceivers() {
+  public List<String> getAllReceivers() {
+    return allReceivers;
+  }
+
+  public List<String> getSelectedReceivers() {
     return selectedReceivers;
   }
 
-  public void setSelectedReceivers(List<ReceiverItem> selectedReceivers) {
+  public void setSelectedReceivers(List<String> selectedReceivers) {
     this.selectedReceivers = selectedReceivers;
   }
 
@@ -207,9 +209,5 @@ public class InboxView implements Serializable {
   public void deleteAttachment() {
     attachment = null;
     meta.workDoneSuccessfully("fileDeleted");
-  }
-
-  public List<ReceiverItem> completeReceiver(String input) {
-    return ReceiverItem.filter(allReceivers, input);
   }
 }
