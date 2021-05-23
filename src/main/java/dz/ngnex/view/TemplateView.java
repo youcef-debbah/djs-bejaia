@@ -153,11 +153,11 @@ public class TemplateView implements Serializable {
   }
 
   private void initNewActivity() {
-    newActivityName = null;
+    newActivityName = "ventilation de decomposition " + (activities.size() + 1);
   }
 
   private void initNewProperty() {
-    newPropertyName = null;
+    newPropertyName = "decomposition de budget " + (properties.size() + 1);
   }
 
   public ContractTemplateEntity getCurrentTemplate() {
