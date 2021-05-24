@@ -6,7 +6,6 @@ import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.Meta;
 import dz.ngnex.control.PrincipalState;
 import dz.ngnex.entity.*;
-import dz.ngnex.util.Config;
 import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
 
@@ -37,6 +36,9 @@ public class ArticleView implements Serializable {
   @NotNull
   private String newComment;
 
+  @Size(max = Constrains.MAX_IDENTIFIER_SIZE)
+  private String author;
+
   @Inject
   private Meta meta;
 
@@ -62,6 +64,8 @@ public class ArticleView implements Serializable {
 
     comments.clear();
     addComments(articlesBean.getInitialComments(article.getId()));
+
+    author = currentPrincipal.getName();
   }
 
   private void addComments(List<CommentEntity> newComments) {
@@ -101,23 +105,28 @@ public class ArticleView implements Serializable {
     return newComment;
   }
 
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
+  }
+
   public void setNewComment(String newComment) {
     this.newComment = newComment;
   }
 
   public void addComment() {
-    if (currentPrincipal.isGuest())
-      WebKit.redirect(Config.HOME_PAGE);
-    else
-      try {
-        Integer articleID = getArticle().getId();
-        CommentEntity addedComment = articlesBean.addComment(articleID, newComment, currentPrincipal.getName());
-        setCommentThumbnails(addedComment);
-        comments.addFirst(addedComment);
-        newComment = null;
-      } catch (Exception e) {
-        meta.handleException(e);
-      }
+    try {
+      Integer articleID = getArticle().getId();
+      CommentEntity addedComment = articlesBean.addComment(articleID, newComment, author, currentPrincipal.isGuest());
+      setCommentThumbnails(addedComment);
+      comments.addFirst(addedComment);
+      newComment = null;
+    } catch (Exception e) {
+      meta.handleException(e);
+    }
   }
 
   public void removeComment(Integer commentID) {

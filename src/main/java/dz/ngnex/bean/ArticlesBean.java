@@ -20,7 +20,7 @@ public interface ArticlesBean {
 
   void delete(Integer id);
 
-  CommentEntity addComment(Integer articleID, String content, String author);
+  CommentEntity addComment(Integer articleID, String content, String author, boolean isAnonymous);
 
   void deleteComment(Integer commentID);
 

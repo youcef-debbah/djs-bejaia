@@ -16,6 +16,7 @@ import javax.interceptor.InvocationContext;
 import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Stateless
 @TestWithTransaction
@@ -88,12 +89,14 @@ public class ArticlesBeanImpl implements ArticlesBean {
   }
 
   @Override
-  public CommentEntity addComment(Integer articleID, String content, String author) {
+  public CommentEntity addComment(Integer articleID, String content, String author, boolean isAnonymous) {
+    Objects.requireNonNull(author);
     CommentEntity newComment = new CommentEntity();
     newComment.setContent(TemplatedContent.newLinesToBrElements(content));
     newComment.setAuthor(author);
     newComment.setPosted(System.currentTimeMillis());
     newComment.setArticleID(articleID);
+    newComment.setType(isAnonymous ? CommentEntity.Type.ANONYMOUS.ordinal() : CommentEntity.Type.PLAIN.ordinal());
     em.persist(newComment);
     return newComment;
   }

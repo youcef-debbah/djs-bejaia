@@ -723,9 +723,11 @@ body .ui-widget-header .ui-selectonemenu .ui-selectonemenu-trigger .ui-icon {
   border-radius: 50%;
 
   img {
+    position: relative;
+    left: -25%;
+    top: 0;
     width: auto;
     height: 100%;
-    margin-left: -50px;
   }
 }
 
@@ -738,6 +740,9 @@ body .ui-widget-header .ui-selectonemenu .ui-selectonemenu-trigger .ui-icon {
   border-radius: 50%;
 
   img {
+    position: absolute;
+    left: -25%;
+    top: 0;
     width: auto;
     height: 100%;
   }

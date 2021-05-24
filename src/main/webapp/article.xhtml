@@ -26,24 +26,31 @@
                                           layout="block" styleClass="ui-g-12">
                                 #{messages.noComments}
                             </h:panelGroup>
+                            <ui:fragment rendered="#{empty currentPrincipal.name}">
+                                <div class="ui-g-12">
+                                    <p:messages for="guestName" showIcon="false" closable="true"/>
+                                </div>
+                                <div class="ui-g-12 ui-fluid">
+                                    <p:inputText id="guestName" value="#{articleView.author}" required="true"
+                                                 maxlength="80" placeholder="#{messages.yourName}"/>
+                                </div>
+                            </ui:fragment>
                             <div class="ui-g-12">
                                 <p:messages for="newComment" showIcon="false" closable="true"/>
                             </div>
                             <div class="ui-g-12 ui-fluid">
                                 <p:inputTextarea id="newComment" value="#{articleView.newComment}" required="true"
-                                                 placeholder="#{messages.writeComment}"/>
+                                                 maxlength="32000" placeholder="#{messages.writeComment}"/>
                             </div>
                             <div class="ui-g-12 simple-frame">
                                 <h:panelGroup id="sendComment">
                                     <p:commandButton icon="ui-icon-send"
                                                      value="#{messages.sendComment}"
-                                                     disabled="#{currentPrincipal.guest}"
                                                      actionListener="#{articleView.addComment}"
                                                      process="@form" update="@form" onerror="jsoftware95.updateFailed()"
                                     />
                                 </h:panelGroup>
-                                <p:tooltip rendered="#{currentPrincipal.guest}" for="sendComment"
-                                           value="#{messages.youHaveToLogin}" position="bottom"/>
+                                <p:tooltip for="sendComment" value="#{messages.youHaveToLogin}" position="bottom"/>
                             </div>
                             <p:repeat value="#{articleView.comments}" var="comment">
                                 <div class="ui-g-12" style="display: flex;position: relative;">
@@ -55,17 +62,26 @@
                                         <p:confirm message="#{messages.confirmDeleteComment}"/>
                                     </p:commandButton>
                                     <div class="extra-right-margin">
-                                        <pe:letterAvatar rendered="#{empty comment.thumbnails}"
-                                                         width="60" height="60"
-                                                         value="#{comment.author}" rounded="true"/>
-                                        <ui:fragment rendered="#{not empty comment.thumbnails}">
-                                            <div class="round-60">
-                                                <img src="#{comment.thumbnails.url}"
-                                                     alt="#{comment.thumbnails.name}"
+                                        <ui:fragment rendered="#{empty comment.thumbnails}">
+                                            <pe:letterAvatar rendered="#{not comment.anonymous and not empty comment.author}"
+                                                             width="60" height="60" value="#{comment.author}"
+                                                             rounded="true"/>
+                                            <h:panelGroup rendered="#{comment.anonymous or empty comment.author}"
+                                                          styleClass="round-60" layout="block">
+                                                <img src="#{resource['ultima-layout:images/avatar-anonymous-60.png']}"
+                                                     alt="#{messages.guestAvatar}"
                                                      width="60" height="60"
-                                                     onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar.png']}#{'\''})"/>
-                                            </div>
+                                                     onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar-60.png']}#{'\''})"/>
+                                            </h:panelGroup>
                                         </ui:fragment>
+
+                                        <h:panelGroup rendered="#{not empty comment.thumbnails}"
+                                                      styleClass="round-60" layout="block">
+                                            <img src="#{comment.thumbnails.url}"
+                                                 alt="#{comment.thumbnails.name}"
+                                                 width="60" height="60"
+                                                 onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar-60.png']}#{'\''})"/>
+                                        </h:panelGroup>
                                     </div>
                                     <div>
                                         <p><span class="bold extra-right-margin">#{comment.author}</span>
@@ -82,7 +98,6 @@
                                             <h:panelGroup id="likeButton">
                                                 <p:commandButton actionListener="#{articleView.likeComment(comment.id)}"
                                                                  styleClass="empty-btn h-spaced"
-                                                                 disabled="#{currentPrincipal.guest}"
                                                                  icon="ui-icon-thumb-up" process="@this"
                                                                  update="likesCount"/>
                                             </h:panelGroup>
@@ -90,13 +105,12 @@
                                                 <p:commandButton
                                                         actionListener="#{articleView.dislikeComment(comment.id)}"
                                                         styleClass="empty-btn h-spaced"
-                                                        disabled="#{currentPrincipal.guest}"
                                                         icon="ui-icon-thumb-down" process="@this"
                                                         update="likesCount"/>
                                             </h:panelGroup>
-                                            <p:tooltip rendered="#{currentPrincipal.guest}" for="likeButton"
+                                            <p:tooltip for="likeButton"
                                                        value="#{messages.youHaveToLogin}" position="bottom"/>
-                                            <p:tooltip rendered="#{currentPrincipal.guest}" for="dislikeButton"
+                                            <p:tooltip for="dislikeButton"
                                                        value="#{messages.youHaveToLogin}" position="bottom"/>
                                         </p>
                                     </div>

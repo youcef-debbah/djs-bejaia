@@ -16,6 +16,7 @@ public class CommentEntity implements DatabaseEntity {
   private Long lastEdit;
   private Integer likes = 0;
   private Integer articleID;
+  private Integer type;
 
   @Transient
   private FileInfo thumbnails;
@@ -30,7 +31,7 @@ public class CommentEntity implements DatabaseEntity {
 
   public void setId(Integer id) {
     this.id = id;
-    }
+  }
 
   @Version
   public Integer getVersion() {
@@ -39,7 +40,7 @@ public class CommentEntity implements DatabaseEntity {
 
   public void setVersion(Integer version) {
     this.version = version;
-    }
+  }
 
   @Size(max = Constrains.MAX_IDENTIFIER_SIZE)
   @Column(length = Constrains.MAX_IDENTIFIER_SIZE)
@@ -49,7 +50,7 @@ public class CommentEntity implements DatabaseEntity {
 
   public void setAuthor(String author) {
     this.author = author;
-    }
+  }
 
   @NotNull
   @Column(columnDefinition = "TEXT", length = Constrains.MAX_TEXT_LENGTH, nullable = false)
@@ -59,7 +60,7 @@ public class CommentEntity implements DatabaseEntity {
 
   public void setContent(String content) {
     this.content = content;
-    }
+  }
 
   @NotNull
   @Column(nullable = false)
@@ -69,7 +70,7 @@ public class CommentEntity implements DatabaseEntity {
 
   public void setPosted(Long posted) {
     this.posted = posted;
-    }
+  }
 
   public Long getLastEdit() {
     return lastEdit;
@@ -77,7 +78,7 @@ public class CommentEntity implements DatabaseEntity {
 
   public void setLastEdit(Long lastEdit) {
     this.lastEdit = lastEdit;
-    }
+  }
 
   @NotNull
   @Column(nullable = false)
@@ -87,7 +88,7 @@ public class CommentEntity implements DatabaseEntity {
 
   public void setLikes(Integer likes) {
     this.likes = likes;
-    }
+  }
 
   @NotNull
   @Column(name = "article_id", nullable = false)
@@ -99,10 +100,25 @@ public class CommentEntity implements DatabaseEntity {
     this.articleID = articleID;
   }
 
+  @NotNull
+  @Column(nullable = false)
+  public Integer getType() {
+    return type;
+  }
+
+  public void setType(Integer type) {
+    this.type = type;
+  }
+
+  @Transient
+  public boolean isAnonymous() {
+    return type != null && type == Type.ANONYMOUS.ordinal();
+  }
+
   @Transient
   public void setThumbnails(FileInfo thumbnails) {
     this.thumbnails = thumbnails;
-    }
+  }
 
   @Transient
   public FileInfo getThumbnails() {
@@ -135,5 +151,10 @@ public class CommentEntity implements DatabaseEntity {
       return null;
     else
       return -posted;
+  }
+
+  public enum Type {
+    PLAIN,
+    ANONYMOUS,
   }
 }
