@@ -18,11 +18,24 @@ import javax.persistence.Transient;
 public class AvatarInfoEntity extends BinaryFileEntity implements FileInfo {
   private static final long serialVersionUID = 7909145091763030038L;
 
+  private Integer correction;
+
   protected AvatarInfoEntity() {
   }
 
   public AvatarInfoEntity(String contentType, String name, String uploader) {
     super(contentType, name, uploader);
+  }
+
+  public Integer getCorrection() {
+    if (correction == null)
+      return 0;
+    else
+      return correction;
+  }
+
+  public void setCorrection(Integer correction) {
+    this.correction = correction;
   }
 
   @Transient

@@ -19,7 +19,7 @@ public class CommentEntity implements DatabaseEntity {
   private Integer type;
 
   @Transient
-  private FileInfo thumbnails;
+  private AvatarInfoEntity thumbnails;
   private Integer version = 0;
 
   @Id
@@ -116,12 +116,12 @@ public class CommentEntity implements DatabaseEntity {
   }
 
   @Transient
-  public void setThumbnails(FileInfo thumbnails) {
+  public void setThumbnails(AvatarInfoEntity thumbnails) {
     this.thumbnails = thumbnails;
   }
 
   @Transient
-  public FileInfo getThumbnails() {
+  public AvatarInfoEntity getThumbnails() {
     return thumbnails;
   }
 

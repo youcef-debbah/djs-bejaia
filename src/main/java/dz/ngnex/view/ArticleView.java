@@ -51,7 +51,7 @@ public class ArticleView implements Serializable {
   @Inject
   private PrincipalState principalState;
 
-  private Map<String, FileInfo> cache = new HashMap<>();
+  private Map<String, AvatarInfoEntity> cache = new HashMap<>();
 
   @PostConstruct
   private void init() {
@@ -76,7 +76,7 @@ public class ArticleView implements Serializable {
   }
 
   private void setCommentThumbnails(CommentEntity comment) {
-    FileInfo thumbnails = cache.computeIfAbsent(comment.getAuthor(), name -> avatarBean.getInfoByUploader(name));
+    AvatarInfoEntity thumbnails = cache.computeIfAbsent(comment.getAuthor(), name -> avatarBean.getInfoByUploader(name));
     comment.setThumbnails(thumbnails);
   }
 

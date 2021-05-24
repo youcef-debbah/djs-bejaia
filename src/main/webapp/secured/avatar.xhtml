@@ -6,6 +6,17 @@
                 template="/WEB-INF/templates/template.xhtml">
     <ui:param name="title" value="#{messages.uploadAvatar}"/>
     <ui:define name="content">
+        <script>
+            // <![CDATA[
+            updateCorrection = function () {
+                let preview = document.getElementById('preview');
+                let correction = document.getElementById('preview-form:correction');
+                if (preview != null && correction != null)
+                    if (correction.value)
+                        preview.style.left = correction.value + "%"
+            }
+            // ]]>
+        </script>
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card big">
@@ -21,22 +32,34 @@
                         />
                     </h:form>
                     <h1 class="small-top">#{messages.currentAvatar}</h1>
-                    <pe:letterAvatar rendered="#{empty currentPrincipal.avatar}"
-                                     width="200" height="200"
-                                     value="#{currentPrincipal.name}" rounded="true"/>
-                    <h:panelGroup rendered="#{not empty currentPrincipal.avatar}"
-                                  layout="block" styleClass="has-padded-buttons">
-                        <p:commandButton icon="ui-icon-closethick" process="@this" update=":mainWrapper"
-                                         styleClass="fcb pink-btn"
-                                         onerror="jsoftware95.updateFailed()"
-                                         actionListener="#{avatarView.deleteAvatar}">
-                            <p:confirm message="#{messages.confirmDelete}"/>
-                        </p:commandButton>
-                        <div class="round-200">
-                            <img src="#{currentPrincipal.avatar.url}" alt="#{currentPrincipal.avatar.name}"
-                                 onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar.png']}#{'\''})"/>
-                        </div>
-                    </h:panelGroup>
+                    <h:form id="preview-form">
+                        <pe:letterAvatar rendered="#{empty currentPrincipal.avatar}"
+                                         width="200" height="200"
+                                         value="#{currentPrincipal.name}" rounded="true"/>
+                        <h:panelGroup rendered="#{not empty currentPrincipal.avatar}"
+                                      layout="block" styleClass="has-padded-buttons">
+                            <p:commandButton icon="ui-icon-closethick" process="@this" update=":mainWrapper"
+                                             styleClass="fcb pink-btn"
+                                             onerror="jsoftware95.updateFailed()"
+                                             actionListener="#{avatarView.deleteAvatar}">
+                                <p:confirm message="#{messages.confirmDelete}"/>
+                            </p:commandButton>
+                            <div class="round-200">
+                                <img id="preview" src="#{currentPrincipal.avatar.url}"
+                                     alt="#{currentPrincipal.avatar.name}"
+                                     style="left: #{currentPrincipal.avatarCorrection}%"
+                                     onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar.png']}#{'\''})"/>
+                            </div>
+                            <div>
+                                <h:inputHidden id="correction" value="#{avatarView.correction}"/>
+                                <p:slider for="correction" minValue="-50" maxValue="50" step="1"
+                                          onSlide="updateCorrection()">
+                                    <p:ajax event="slideEnd" listener="#{avatarView.updateCorrection}"
+                                            process="@this" update=":mainWrapper"/>
+                                </p:slider>
+                            </div>
+                        </h:panelGroup>
+                    </h:form>
                 </div>
             </div>
         </div>

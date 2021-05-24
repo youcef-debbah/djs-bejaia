@@ -13,6 +13,8 @@ public interface AvatarBean {
 
   BinaryContent getBinaryContent(String filename);
 
+  AvatarInfoEntity updateCorrection(Integer id, Integer correction);
+
   AvatarInfoEntity getInfo(Integer id);
 
   AvatarInfoEntity getInfoByUploader(String name);

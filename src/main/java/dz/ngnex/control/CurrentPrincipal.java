@@ -140,6 +140,18 @@ public class CurrentPrincipal implements Serializable {
     }
   }
 
+  public synchronized Integer getAvatarCorrection() {
+    if (avatar != null)
+      return avatar.getCorrection();
+    else
+      return 0;
+  }
+
+  public synchronized void setAvatarCorrection(Integer correction) {
+    if (avatar != null)
+      avatar = avatarBean.updateCorrection(avatar.getId(), correction);
+  }
+
   public synchronized boolean isSuperAdmin() {
     return isAdmin() && getService() == null;
   }

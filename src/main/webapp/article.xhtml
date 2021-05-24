@@ -62,7 +62,7 @@
                                         <p:confirm message="#{messages.confirmDeleteComment}"/>
                                     </p:commandButton>
                                     <div class="extra-right-margin">
-                                        <ui:fragment rendered="#{empty comment.thumbnails}">
+                                        <ui:fragment rendered="#{comment.anonymous or empty comment.thumbnails}">
                                             <pe:letterAvatar rendered="#{not comment.anonymous and not empty comment.author}"
                                                              width="60" height="60" value="#{comment.author}"
                                                              rounded="true"/>
@@ -75,10 +75,11 @@
                                             </h:panelGroup>
                                         </ui:fragment>
 
-                                        <h:panelGroup rendered="#{not empty comment.thumbnails}"
+                                        <h:panelGroup rendered="#{not comment.anonymous and not empty comment.thumbnails}"
                                                       styleClass="round-60" layout="block">
                                             <img src="#{comment.thumbnails.url}"
                                                  alt="#{comment.thumbnails.name}"
+                                                 style="left: #{comment.thumbnails.correction}%"
                                                  width="60" height="60"
                                                  onerror="jsoftware95.altImage(this,#{'\''}#{resource['ultima-layout:images/avatar-60.png']}#{'\''})"/>
                                         </h:panelGroup>

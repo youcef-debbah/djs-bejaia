@@ -36,8 +36,18 @@ public class AvatarBeanImpl implements AvatarBean {
   }
 
   @Override
+  public AvatarInfoEntity updateCorrection(Integer id, Integer correction) {
+    AvatarInfoEntity avatar = getInfo(id);
+    avatar.setCorrection(correction);
+    return avatar;
+  }
+
+  @Override
   public AvatarInfoEntity getInfo(Integer id) {
-    return em.find(AvatarInfoEntity.class, id);
+    if (id == null)
+      return null;
+    else
+      return em.find(AvatarInfoEntity.class, id);
   }
 
   @Override
