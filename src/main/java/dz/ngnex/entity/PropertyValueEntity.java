@@ -2,6 +2,8 @@ package dz.ngnex.entity;
 
 import dz.ngnex.util.Check;
 import dz.ngnex.util.TemplatedContent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -16,6 +18,7 @@ import java.util.Set;
 @Table(name = "property_value", uniqueConstraints = {@UniqueConstraint(name = "unique_value_for_property_per_contract_instance", columnNames = {"contract_instance", "property"})})
 public class PropertyValueEntity implements DatabaseEntity {
   private static final long serialVersionUID = -3787481429739409216L;
+  private static Logger log = LogManager.getLogger(PropertyValueEntity.class);
 
   private Integer id;
   private PropertyEntity property;
@@ -170,7 +173,12 @@ public class PropertyValueEntity implements DatabaseEntity {
     if (isNullValue())
       return null;
     else
-      return new Date(Long.parseLong(value));
+      try {
+        return new Date(Long.parseLong(value));
+      } catch (RuntimeException e) {
+        log.error("could not parse value as date: " + value, e);
+        return null;
+      }
   }
 
   @Transient
