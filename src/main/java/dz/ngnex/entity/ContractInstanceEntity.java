@@ -13,12 +13,6 @@ import java.util.*;
 @Table(name = "contract_instance", uniqueConstraints = @UniqueConstraint(columnNames = {"association", "contract_template"}, name = "unique_contract_template_per_association"),
     indexes = @Index(columnList = "assignmentDate", name = "index_contract_assignment_date"))
 @NamedEntityGraphs({
-    @NamedEntityGraph(name = "findAssignedContractGraph", includeAllAttributes = true,
-        attributeNodes = @NamedAttributeNode(value = "contractTemplate", subgraph = "contractTemplate"),
-        subgraphs = @NamedSubgraph(name = "contractTemplate", attributeNodes = {
-            @NamedAttributeNode("properties"),
-            @NamedAttributeNode("activities")
-        })),
     @NamedEntityGraph(name = "loadBudgetGraph", includeAllAttributes = true,
         attributeNodes = @NamedAttributeNode(value = "contractTemplate", subgraph = "contractTemplate"),
         subgraphs = @NamedSubgraph(name = "contractTemplate", attributeNodes = {

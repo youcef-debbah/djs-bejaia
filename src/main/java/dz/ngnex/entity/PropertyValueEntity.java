@@ -182,6 +182,14 @@ public class PropertyValueEntity implements DatabaseEntity {
   }
 
   @Transient
+  public void setValueAsDate(Date date) {
+    if (date == null)
+      value = null;
+    else
+      value = String.valueOf(date.getTime());
+  }
+
+  @Transient
   public Long getValueAsLong() {
     if (isNullValue())
       return null;
@@ -208,14 +216,6 @@ public class PropertyValueEntity implements DatabaseEntity {
   @Transient
   public String getValueAsHtml() {
     return TemplatedContent.newLinesToBrElements(getValue());
-  }
-
-  @Transient
-  public void setValueAsDate(Date date) {
-    if (date == null)
-      value = null;
-    else
-      value = String.valueOf(date.getTime());
   }
 
   @Override

@@ -49,7 +49,7 @@
     <context-param>
         <param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
         <param-value>
-            0 <!-- @removeLine
+            -1 <!-- @removeLine
             -1
             @removeLine -->
         </param-value>

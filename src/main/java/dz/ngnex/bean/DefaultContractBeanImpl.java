@@ -510,24 +510,32 @@ public class DefaultContractBeanImpl implements ContractBean {
 
   @Override
   public ContractInstanceEntity findAssignedContract(Integer contractInstanceID) {
-    EntityGraph<?> contractGraph = em.getEntityGraph("findAssignedContractGraph");
-    return em.find(ContractInstanceEntity.class, contractInstanceID, Hints.fetchGraph(contractGraph));
+    ContractInstanceEntity contractInstance = em.find(ContractInstanceEntity.class, contractInstanceID);
+
+    ContractTemplateEntity contractTemplate = contractInstance.getContractTemplate();
+    Hibernate.initialize(contractTemplate);
+    Hibernate.initialize(contractTemplate.getProperties());
+    Hibernate.initialize(contractTemplate.getActivities());
+
+    Hibernate.initialize(contractInstance.getBudgets());
+    Hibernate.initialize(contractInstance.getGlobalBudgets());
+    Hibernate.initialize(contractInstance.getPropertyValues());
+    Hibernate.initialize(contractInstance.getAssociation());
+    return contractInstance;
   }
 
   @Override
   public void updateAchievements(ContractInstanceEntity contract) {
     ContractInstanceEntity entity = em.find(ContractInstanceEntity.class, contract.getId());
-    if (entity != null) {
+    if (entity != null)
       entity.setAchievement(contract.getAchievement());
-    }
   }
 
   @Override
   public void updateAchievementLevel(ContractInstanceEntity contract) {
     ContractInstanceEntity entity = em.find(ContractInstanceEntity.class, contract.getId());
-    if (entity != null) {
+    if (entity != null)
       entity.setAchievementLevel(contract.getAchievementLevel());
-    }
   }
 
   @Override

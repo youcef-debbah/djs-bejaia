@@ -593,7 +593,7 @@
                                 </ui:fragment>
                                 <ui:repeat value="#{propertiesView.potentialValues}"
                                            var="propertyValue">
-                                    <h:panelGroup styleClass="ui-g-12 ui-fluid">
+                                    <h:panelGroup rendered="#{propertyValue.property.type ne 'NOTE'}" styleClass="ui-g-12 ui-fluid">
                                         <p:inplace>
                                             <f:facet name="output">
                                                 <h:outputText
@@ -663,7 +663,6 @@
                                                             required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ADMIN'}"
                                                             value="#{propertyValue.valueAsDate}"
                                                             styleClass="need-validation">
-                                                    <f:convertDateTime type="date"/>
                                                 </p:calendar>
                                             </h:panelGroup>
                                         </ui:fragment>
