@@ -208,7 +208,7 @@ public final class Contract {
           case MONETARY_AMOUNT:
             return localeManager.formatAsDA_HTML(propertyValue.getValueAsDecimal());
           case DATE:
-            return localeManager.formatAsLocalDate(propertyValue.getValueAsLong());
+            return localeManager.formatAsDetailedLocalDate(propertyValue.getValueAsLong());
           default:
             return propertyValue.getValueAsHtml();
         }

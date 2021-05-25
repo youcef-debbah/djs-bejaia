@@ -62,11 +62,13 @@ public class LocaleManager implements Serializable {
 
   private static final String LOCAL_DATE_TIME_FORMAT = "HH:mm:ss dd/MM/yyyy";
   private static final String LOCAL_DATE_FORMAT = "dd/MM/yyyy";
+  private static final String DETAILED_LOCAL_DATE_FORMAT = "dd MMMM yyyy";
   private static final String LOCAL_TIME_FORMAT = "HH:mm:ss";
   private static final String FULL_DATE_TIME_FORMAT = "HH:mm:ss.SSS yyyy-MM-dd";
 
   private static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT);
   private static final DateTimeFormatter LOCAL_DATE_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_DATE_FORMAT);
+  private static final DateTimeFormatter DETAILED_LOCAL_DATE_FORMATTER = DateTimeFormatter.ofPattern(DETAILED_LOCAL_DATE_FORMAT);
   private static final DateTimeFormatter LOCAL_TIME_FORMATTER = DateTimeFormatter.ofPattern(LOCAL_TIME_FORMAT);
 
   private static final ThreadLocal<DecimalFormat> DA_FORMATTERS = ThreadLocal.withInitial(LocaleManager::newDAFormatter);
@@ -149,6 +151,14 @@ public class LocaleManager implements Serializable {
       return messages.get(NO_DATE_KEY);
     else
       return Instant.ofEpochMilli(epoch).atZone(ADMIN_ZONE).format(LOCAL_DATE_FORMATTER);
+  }
+
+  @NotNull
+  public String formatAsDetailedLocalDate(Long epoch) {
+    if (epoch == null)
+      return messages.get(NO_DATE_KEY);
+    else
+      return Instant.ofEpochMilli(epoch).atZone(ADMIN_ZONE).format(DETAILED_LOCAL_DATE_FORMATTER);
   }
 
   @NotNull
