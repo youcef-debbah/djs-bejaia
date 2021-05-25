@@ -368,10 +368,25 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
   public List<ContractInstanceEntity> getAllContracts(EntityReference<? extends BasicAssociationEntity> associationRef) {
     Check.argNotNull(associationRef);
     EntityGraph<?> contractGraph = em.getEntityGraph("loadBudgetGraph");
-    return em.createQuery("select c from ContractInstanceEntity c where c.association.id = :associationID", ContractInstanceEntity.class)
-        .setHint(Hints.FETCH_GRAPH, contractGraph)
+    List<ContractInstanceEntity> contractsList = em.createQuery("select c from ContractInstanceEntity c where c.association.id = :associationID", ContractInstanceEntity.class)
+//        .setHint(Hints.FETCH_GRAPH, contractGraph)
         .setParameter("associationID", associationRef.getId())
         .getResultList();
+
+    for (ContractInstanceEntity contractInstance : contractsList) {
+      Hibernate.initialize(contractInstance.getBudgets());
+      Hibernate.initialize(contractInstance.getGlobalBudgets());
+      Hibernate.initialize(contractInstance.getPropertyValues());
+      initialize(contractInstance.getContractTemplate());
+    }
+    return contractsList;
+  }
+
+  private void initialize(ContractTemplateEntity contractTemplate) {
+    Hibernate.initialize(contractTemplate);
+    Hibernate.initialize(contractTemplate.getSeason());
+    Hibernate.initialize(contractTemplate.getProperties());
+    Hibernate.initialize(contractTemplate.getActivities());
   }
 
   @Override

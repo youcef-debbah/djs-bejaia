@@ -13,12 +13,7 @@ import java.util.*;
 @Table(name = "contract_instance", uniqueConstraints = @UniqueConstraint(columnNames = {"association", "contract_template"}, name = "unique_contract_template_per_association"),
     indexes = @Index(columnList = "assignmentDate", name = "index_contract_assignment_date"))
 @NamedEntityGraphs({
-    @NamedEntityGraph(name = "loadBudgetGraph", includeAllAttributes = true,
-        attributeNodes = @NamedAttributeNode(value = "contractTemplate", subgraph = "contractTemplate"),
-        subgraphs = @NamedSubgraph(name = "contractTemplate", attributeNodes = {
-            @NamedAttributeNode("season"),
-            @NamedAttributeNode("properties")
-        }))
+    @NamedEntityGraph(name = "loadBudgetGraph", attributeNodes = {@NamedAttributeNode("contractTemplate")})
 })
 public class ContractInstanceEntity implements DatabaseEntity {
   private static final long serialVersionUID = 4492591575710011356L;
@@ -57,7 +52,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setId(Integer id) {
     this.id = id;
-    }
+  }
 
   @Version
   public Integer getVersion() {
@@ -66,7 +61,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setVersion(Integer version) {
     this.version = version;
-    }
+  }
 
   @ManyToOne(optional = false, fetch = FetchType.LAZY)
   @JoinColumn(name = "contract_template", foreignKey = @ForeignKey(name = "fk_contract_instance_to_contract_template"))
@@ -76,7 +71,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setContractTemplate(ContractTemplateEntity contractTemplate) {
     this.contractTemplate = contractTemplate;
-    }
+  }
 
   @NotNull
   @Column(nullable = false)
@@ -86,7 +81,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setRetrait(Integer retrait) {
     this.retrait = retrait;
-    }
+  }
 
   public Long getAssignmentDate() {
     return assignmentDate;
@@ -94,7 +89,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setAssignmentDate(Long assignmentDate) {
     this.assignmentDate = assignmentDate;
-    }
+  }
 
   public Long getLastDownload() {
     return lastDownload;
@@ -102,7 +97,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setLastDownload(Long lastDownload) {
     this.lastDownload = lastDownload;
-    }
+  }
 
   public Long getLastUpdate() {
     return lastUpdate;
@@ -110,7 +105,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setLastUpdate(Long lastUpdate) {
     this.lastUpdate = lastUpdate;
-    }
+  }
 
   @NotNull
   @Enumerated
@@ -121,7 +116,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setState(ContractInstanceState state) {
     this.state = state;
-    }
+  }
 
   @OneToMany(mappedBy = "contract")
   public Set<PropertyValueEntity> getPropertyValues() {
@@ -130,7 +125,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setPropertyValues(Set<PropertyValueEntity> propertyValues) {
     this.propertyValues = propertyValues;
-    }
+  }
 
   @OneToMany(mappedBy = "contract")
   public Set<BudgetEntity> getBudgets() {
@@ -139,7 +134,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setBudgets(Set<BudgetEntity> budgets) {
     this.budgets = budgets;
-    }
+  }
 
   @OneToMany(mappedBy = "contract")
   public Set<GlobalBudgetEntity> getGlobalBudgets() {
@@ -148,7 +143,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setGlobalBudgets(Set<GlobalBudgetEntity> globalBudgets) {
     this.globalBudgets = globalBudgets;
-    }
+  }
 
   @Enumerated
   public AchievementLevel getAchievementLevel() {
@@ -157,7 +152,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setAchievementLevel(AchievementLevel achievementLevel) {
     this.achievementLevel = achievementLevel;
-    }
+  }
 
   @Size(max = Constrains.MAX_PHRASE_LENGTH)
   @Column(length = Constrains.MAX_PHRASE_LENGTH)
@@ -167,7 +162,7 @@ public class ContractInstanceEntity implements DatabaseEntity {
 
   public void setAchievement(String achievement) {
     this.achievement = achievement;
-    }
+  }
 
   @Transient
   public boolean getValid() {
