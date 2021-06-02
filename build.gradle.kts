@@ -13,7 +13,7 @@ val warFileName = "ROOT.war"
 val deploymentDir = layout.projectDirectory.dir("target")
 val testDatabaseLogDir = "h2"
 
-val activeProfiles = System.getenv("SPRING_PROFILES_ACTIVE")
+val activeProfiles: String? = System.getenv("SPRING_PROFILES_ACTIVE")
 
 val intTest = "intTest"
 val intTestSourceSet = sourceSets.register(intTest) {
