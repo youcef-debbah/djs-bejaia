@@ -22,7 +22,7 @@
 
 
     <!-- HTTPS configuration -->
-    <!-- @xremoveLine
+    <!-- @removeLine
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>all pages</web-resource-name>
@@ -33,7 +33,7 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
-    @xremoveLine -->
+    @removeLine -->
 
     <!-- application parameters -->
 
