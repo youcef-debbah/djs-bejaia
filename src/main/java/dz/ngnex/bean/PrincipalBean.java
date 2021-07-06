@@ -33,6 +33,8 @@ public interface PrincipalBean {
 
   BasicAssociationEntity getSingleAssociation(Integer id);
 
+  BasicAssociationEntity getSingleAssociation(String id);
+
   List<BasicAssociationEntity> getAllSportAssociations();
 
   List<BasicAssociationEntity> getAllYouthAssociations();

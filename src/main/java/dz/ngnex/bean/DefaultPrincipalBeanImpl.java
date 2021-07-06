@@ -61,6 +61,18 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
   }
 
   @Override
+  public BasicAssociationEntity getSingleAssociation(String name) {
+    if (name == null)
+      return null;
+    else {
+      List<BasicAssociationEntity> result = em.createQuery("select a from BasicAssociationEntity a where a.name = :name", BasicAssociationEntity.class)
+              .setParameter("name", name)
+              .getResultList();
+      return result.isEmpty() ? null : result.get(0);
+    }
+  }
+
+  @Override
   public List<BasicAssociationEntity> getAllSportAssociations() {
     return em.createQuery("select a from SportAssociationEntity a order by a.lastUpdate desc", BasicAssociationEntity.class)
         .getResultList();

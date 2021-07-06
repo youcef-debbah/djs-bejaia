@@ -68,6 +68,7 @@ public class UsersView implements Serializable {
 
     private static final Logger log = LogManager.getLogger(UsersView.class);
     private static final String ASSOCIATION_ID = "asso_id";
+    private static final String ASSOCIATION_NAME = "asso_name";
 
     @EJB
     PrincipalBean principalBean;
@@ -106,6 +107,12 @@ public class UsersView implements Serializable {
 
         Integer currentAssociationID = WebKit.getRequestParamAsInt(ASSOCIATION_ID);
         targetAssociation = principalBean.getSingleAssociation(currentAssociationID);
+
+        if (targetAssociation == null) {
+            String currentAssociationName = WebKit.getRequestParam(ASSOCIATION_NAME);
+            targetAssociation = principalBean.getSingleAssociation(currentAssociationName);
+        }
+
         setCurrentAccount(targetAssociation);
     }
 
