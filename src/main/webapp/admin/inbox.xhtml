@@ -170,7 +170,17 @@
 
                     <p:column headerText="#{messages.sender}" sortBy="#{message.senderName}"
                               styleClass="align-center" style="width: 75px">
-                        <h:outputText value="#{message.fromGuest? messages.GUEST : message.senderName}"/>
+
+                        <ui:fragment rendered="#{message.fromGuest}">
+                            <h:outputText value="#{messages.GUEST}"/>
+                        </ui:fragment>
+
+                        <ui:fragment rendered="#{not message.fromGuest}">
+                            <h:link id="assoLink" styleClass="spaced" outcome="associationInfo">
+                                #{message.senderName}
+                                <f:param name="asso_name" value="#{message.senderName}"/>
+                            </h:link>
+                        </ui:fragment>
                     </p:column>
 
                     <p:column headerText="#{messages.destination}" sortBy="#{message.destination}"
