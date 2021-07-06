@@ -58,7 +58,7 @@ public class InboxView implements Serializable {
 
   private List<String> selectedReceivers;
 
-  private List<String> allReceivers;
+  private List<MenuItem> allReceivers;
 
   @PostConstruct
   public void init() {
@@ -171,7 +171,7 @@ public class InboxView implements Serializable {
       }
   }
 
-  public List<String> getAllReceivers() {
+  public List<MenuItem> getAllReceivers() {
     return allReceivers;
   }
 

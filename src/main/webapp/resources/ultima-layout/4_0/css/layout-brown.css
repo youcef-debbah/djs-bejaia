@@ -3145,7 +3145,7 @@ body.layout-compact .ui-menu .ui-menu-list li.ui-menuitem .ui-menuitem-link .ui-
 }
 body.layout-compact .ui-menu .ui-menu-list .ui-separator {
   height: 1px;
-  background-color: #bdbdbd;
+  background-color: #6877ca;
   width: 100%;
   box-sizing: border-box;
 }
@@ -3306,3 +3306,4 @@ body.layout-compact .ui-slider.ui-slider-horizontal .ui-slider-handle {
 }
 /* Add your customizations of layout here */
 
+/*# sourceMappingURL=layout-brown.css.map */

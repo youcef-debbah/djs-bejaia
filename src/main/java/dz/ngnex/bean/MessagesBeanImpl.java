@@ -3,6 +3,7 @@ package dz.ngnex.bean;
 import dz.ngnex.entity.*;
 import dz.ngnex.util.HtmlCleaner;
 import dz.ngnex.util.TestWithTransaction;
+import dz.ngnex.view.MenuItem;
 import org.apache.logging.log4j.Logger;
 
 import javax.ejb.EJB;
@@ -222,15 +223,15 @@ public class MessagesBeanImpl implements MessagesBean {
   }
 
   @Override
-  public List<String> getAllReceivers(Service destination) {
+  public List<MenuItem> getAllReceivers(Service destination) {
     if (destination == Service.SPORT_SERVICE)
-      return em.createQuery("select asso.name from SportAssociationEntity asso order by asso.lastUpdate, asso.name", String.class)
+      return em.createQuery("select new dz.ngnex.view.MenuItem(asso.name, asso.description) from SportAssociationEntity asso order by asso.lastUpdate, asso.name", MenuItem.class)
           .getResultList();
     else if (destination == Service.YOUTH_SERVICE)
-      return em.createQuery("select asso.name from YouthAssociationEntity asso order by asso.lastUpdate, asso.name", String.class)
+      return em.createQuery("select new dz.ngnex.view.MenuItem(asso.name, asso.description) from YouthAssociationEntity asso order by asso.lastUpdate, asso.name", MenuItem.class)
           .getResultList();
 
-    return em.createQuery("select asso.name from BasicAssociationEntity asso order by asso.lastUpdate, asso.name", String.class)
+    return em.createQuery("select new dz.ngnex.view.MenuItem(asso.name, asso.description) from BasicAssociationEntity asso order by asso.lastUpdate, asso.name", MenuItem.class)
         .getResultList();
   }
 

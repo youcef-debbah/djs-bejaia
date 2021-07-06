@@ -48,8 +48,8 @@
             </p:dialog>
         </h:form>
 
-        <p:dialog widgetVar="group_msg_dialog" positionType="absolute"
-                  header="#{messages.sendGroupMessage}" modal="false" width="400">
+        <p:dialog widgetVar="group_msg_dialog" positionType="absolute" styleClass="slim"
+                  header="#{messages.sendGroupMessage}" modal="false" width="500">
             <h:form id="group_msg_form">
                 <h:panelGroup id="groupDialogContent" styleClass="ui-g ui-fluid" layout="block">
                     <p:focus context="groupDialogContent"/>
@@ -58,14 +58,17 @@
                             <p:effect event="load" type="bounce"/>
                         </p:messages>
                     </div>
-                    <div class="ui-g-12 compact">
+                    <div class="ui-g-12 compact slim">
                         <!--@elvariable id="receiver" type="dz.ngnex.view.ReceiverItem"-->
                         <p:selectCheckboxMenu id="receiversInput" multiple="true" required="true"
-                                              panelStyleClass="long-search-bar no-header-checkbox"
+                                              panelStyleClass="long-search-bar no-header-checkbox width-450"
                                               requiredMessage="#{messages.inputRequired}"
                                               label="#{messages.toReceiver}" value="#{inboxView.selectedReceivers}"
                                               filter="true" filterMatchMode="contains" scrollHeight="250">
-                            <f:selectItems value="#{inboxView.allReceivers}"/>
+                            <!--@elvariable id="item" type="dz.ngnex.view.MenuItem"-->
+                            <f:selectItems value="#{inboxView.allReceivers}" var="item"
+                                           itemValue="#{item.value}" itemLabel="#{item.label}">
+                            </f:selectItems>
                         </p:selectCheckboxMenu>
                     </div>
                     <div class="ui-g-12 compact">
@@ -73,7 +76,7 @@
                             <p:effect event="load" type="bounce"/>
                         </p:messages>
                     </div>
-                    <div class="ui-g-12">
+                    <div class="ui-g-12 slim">
                         <p:inputTextarea id="groupContent" value="#{inboxView.groupMessageContent}"
                                          requiredMessage="#{messages.messageCannotBeEmpty}" required="true"
                                          placeholder="#{messages.writeMessage}"/>

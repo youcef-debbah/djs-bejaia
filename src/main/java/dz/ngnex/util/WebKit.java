@@ -40,165 +40,187 @@ import java.util.concurrent.TimeUnit;
 
 public final class WebKit {
 
-  public static final Charset CONTENT_ENCODING = StandardCharsets.UTF_8;
-  private static final Logger log = LogManager.getLogger(WebKit.class);
+    public static final Charset CONTENT_ENCODING = StandardCharsets.UTF_8;
+    private static final Logger log = LogManager.getLogger(WebKit.class);
 
-  public static final int GUEST_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(10);
-  public static final int ADMIN_INACTIVE_INTERVAL = (int) TimeUnit.HOURS.toSeconds(3);
-  public static final int ASSOCIATION_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(30);
+    public static final int GUEST_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(10);
+    public static final int ADMIN_INACTIVE_INTERVAL = (int) TimeUnit.HOURS.toSeconds(3);
+    public static final int ASSOCIATION_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(30);
 
 
-  @Nullable
-  public static String getPrincipalName() {
-    Principal userPrincipal = getFacesRequest().getUserPrincipal();
-    return userPrincipal != null ? userPrincipal.getName() : null;
-  }
-
-  @NotNull
-  public static HttpServletRequest getFacesRequest() {
-    Object request = FacesContext.getCurrentInstance().getExternalContext().getRequest();
-    if (request instanceof HttpServletRequest) {
-      return (HttpServletRequest) request;
-    } else {
-      throw new RuntimeException("could not parse request as an HTTP request: " + request);
+    @Nullable
+    public static String getPrincipalName() {
+        Principal userPrincipal = getFacesRequest().getUserPrincipal();
+        return userPrincipal != null ? userPrincipal.getName() : null;
     }
-  }
 
-  @Nullable
-  public static HttpServletRequest findFacesRequest() {
-    FacesContext currentInstance = FacesContext.getCurrentInstance();
-    if (currentInstance == null)
-      return null;
-
-    ExternalContext externalContext = currentInstance.getExternalContext();
-    if (externalContext == null)
-      return null;
-
-    Object request = externalContext.getRequest();
-    if (request instanceof HttpServletRequest)
-      return (HttpServletRequest) request;
-    else
-      return null;
-  }
-
-  @NotNull
-  public static HttpServletResponse getResponse() {
-    Object response = FacesContext.getCurrentInstance().getExternalContext().getResponse();
-
-    if (response instanceof HttpServletResponse) {
-      return (HttpServletResponse) response;
-    } else {
-      throw new RuntimeException("could not parse request as an HTTP request: " + response);
+    @NotNull
+    public static HttpServletRequest getFacesRequest() {
+        Object request = FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        if (request instanceof HttpServletRequest) {
+            return (HttpServletRequest) request;
+        } else {
+            throw new RuntimeException("could not parse request as an HTTP request: " + request);
+        }
     }
-  }
 
-  @Nullable
-  public static String getUserPrincipalName() {
-    Principal userPrincipal = getFacesRequest().getUserPrincipal();
-    return userPrincipal != null ? userPrincipal.getName() : null;
-  }
+    @Nullable
+    public static HttpServletRequest findFacesRequest() {
+        FacesContext currentInstance = FacesContext.getCurrentInstance();
+        if (currentInstance == null)
+            return null;
 
-  @Nullable
-  public static String getRequestParam(@NotNull final String name) {
-    Objects.requireNonNull(name);
-    try {
-      return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(name);
-    } catch (RuntimeException e) {
-      log.warn("could not get request param: " + name, e);
-      return null;
+        ExternalContext externalContext = currentInstance.getExternalContext();
+        if (externalContext == null)
+            return null;
+
+        Object request = externalContext.getRequest();
+        if (request instanceof HttpServletRequest)
+            return (HttpServletRequest) request;
+        else
+            return null;
     }
-  }
 
-  @Nullable
-  public static Integer getRequestParamAsInt(@NotNull final String name) {
-    return toInteger(getRequestParam(name));
-  }
+    @NotNull
+    public static HttpServletResponse getResponse() {
+        Object response = FacesContext.getCurrentInstance().getExternalContext().getResponse();
 
-  @Nullable
-  public static Integer toInteger(String value) {
-    if (null == value || "null".equalsIgnoreCase(value))
-      return null;
-    else {
-      try {
-        return Integer.parseInt(value);
-      } catch (NumberFormatException e) {
-        log.warn("bad int param value: " + value);
+        if (response instanceof HttpServletResponse) {
+            return (HttpServletResponse) response;
+        } else {
+            throw new RuntimeException("could not parse request as an HTTP request: " + response);
+        }
+    }
+
+    @Nullable
+    public static String getUserPrincipalName() {
+        Principal userPrincipal = getFacesRequest().getUserPrincipal();
+        return userPrincipal != null ? userPrincipal.getName() : null;
+    }
+
+    @Nullable
+    public static String getRequestParam(@NotNull final String name) {
+        Objects.requireNonNull(name);
+        try {
+            return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(name);
+        } catch (RuntimeException e) {
+            log.warn("could not get request param: " + name, e);
+            return null;
+        }
+    }
+
+    @Nullable
+    public static Integer getRequestParamAsInt(@NotNull final String name) {
+        return toInteger(getRequestParam(name));
+    }
+
+    @Nullable
+    public static Integer toInteger(String value) {
+        if (null == value || "null".equalsIgnoreCase(value))
+            return null;
+        else {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                log.warn("bad int param value: " + value);
+                return null;
+            }
+        }
+    }
+
+    public static void logout() {
+        HttpServletRequest request = getFacesRequest();
+        Principal principal = request.getUserPrincipal();
+
+        String name = principal != null ? principal.getName() : null;
+        if (name != null) {
+            log.info("logout for principal named: " + name);
+        }
+
+        try {
+            request.logout();
+            request.getSession().setMaxInactiveInterval(GUEST_INACTIVE_INTERVAL);
+        } catch (ServletException e) {
+            log.warn("logout failed for principal named: " + name, e);
+        }
+    }
+
+    public static void removeSessionID() {
+        HttpServletResponse response = getResponse();
+        Cookie jsessionid = new Cookie("JSESSIONID", "");
+        jsessionid.setMaxAge(0);
+        response.addCookie(jsessionid);
+    }
+
+    public static String requireNotBlank(String value) {
+        if (StringUtils.isBlank(value))
+            throw new IllegalArgumentException("illegal blank argument: '" + value + "'");
+        return value;
+    }
+
+    public synchronized static String getFromSession(String key) {
+        Object value = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(key);
+        if (value instanceof String)
+            return (String) value;
+        else
+            return null;
+    }
+
+    public synchronized static void putToSession(String key, String value) {
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(key, value);
+    }
+
+    public static void redirect(String url) {
+        try {
+            log.info("webkit redirecting to: " + url);
+            FacesContext.getCurrentInstance().getExternalContext().redirect(url);
+        } catch (IOException e) {
+            log.error("could not redirect to: " + url);
+        }
+    }
+
+    public static boolean isAjaxRequest() {
+        return FacesContext.getCurrentInstance().getPartialViewContext().isAjaxRequest();
+    }
+
+    public static boolean isDeepUrl(String url) {
+        return !StringUtils.isBlank(url) && !url.equals("/") && !url.equals("null");
+    }
+
+    public static String getCookie(String key) {
+        Object cookie = FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get(Objects.requireNonNull(key));
+        return cookie instanceof Cookie ? decode(((Cookie) cookie).getValue()) : null;
+    }
+
+    private static String decode(String value) {
+        if (value != null)
+            try {
+                return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
+            } catch (UnsupportedEncodingException e) {
+                log.error("could not decode value: " + value, e);
+            }
         return null;
-      }
-    }
-  }
-
-  public static void logout() {
-    HttpServletRequest request = getFacesRequest();
-    Principal principal = request.getUserPrincipal();
-
-    String name = principal != null ? principal.getName() : null;
-    if (name != null) {
-      log.info("logout for principal named: " + name);
     }
 
-    try {
-      request.logout();
-      request.getSession().setMaxInactiveInterval(GUEST_INACTIVE_INTERVAL);
-    } catch (ServletException e) {
-      log.warn("logout failed for principal named: " + name, e);
+    public static String fill(String string, int minLength) {
+        String text = trim(string);
+        return text + replicate(' ', minLength - text.length());
     }
-  }
 
-  public static void removeSessionID() {
-    HttpServletResponse response = getResponse();
-    Cookie jsessionid = new Cookie("JSESSIONID", "");
-    jsessionid.setMaxAge(0);
-    response.addCookie(jsessionid);
-  }
-
-  public static String requireNotBlank(String value) {
-    if (StringUtils.isBlank(value))
-      throw new IllegalArgumentException("illegal blank argument: '" + value + "'");
-    return value;
-  }
-
-  public synchronized static String getFromSession(String key) {
-    Object value = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(key);
-    if (value instanceof String)
-      return (String) value;
-    else
-      return null;
-  }
-
-  public synchronized static void putToSession(String key, String value) {
-    FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(key, value);
-  }
-
-  public static void redirect(String url) {
-    try {
-      log.info("webkit redirecting to: " + url);
-      FacesContext.getCurrentInstance().getExternalContext().redirect(url);
-    } catch (IOException e) {
-      log.error("could not redirect to: " + url);
+    public static String trim(String text) {
+        return text != null ? text.trim() : "";
     }
-  }
 
-  public static boolean isAjaxRequest() {
-    return FacesContext.getCurrentInstance().getPartialViewContext().isAjaxRequest();
-  }
-
-  public static boolean isDeepUrl(String url) {
-    return !StringUtils.isBlank(url) && !url.equals("/") && !url.equals("null");
-  }
-
-  public static String getCookie(String key) {
-    Object cookie = FacesContext.getCurrentInstance().getExternalContext().getRequestCookieMap().get(Objects.requireNonNull(key));
-    return cookie instanceof Cookie ? decode(((Cookie) cookie).getValue()) : null;
-  }
-
-  private static String decode(String value) {
-    if (value != null)
-      try {
-        return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
-      } catch (UnsupportedEncodingException e) {
-        log.error("could not decode value: " + value, e);
-      }
-    return null;
-  }
+    public static String replicate(char c, int length) {
+        if (length < 1)
+            return "";
+        else if (length == 1)
+            return String.valueOf(c);
+        else {
+            StringBuilder builder = new StringBuilder(length);
+            for (int i = 0; i < length; i++)
+                builder.append(c);
+            return builder.toString();
+        }
+    }
 }

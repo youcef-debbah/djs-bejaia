@@ -4022,7 +4022,7 @@ body .ui-widget .ui-widget {
 body .ui-widget-content {
   background-color: #ffffff;
   font-size: 16px;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #6877ca;
 }
 body .ui-widget-content .ui-icon {
   color: #757575;
@@ -4389,7 +4389,7 @@ body .ui-datagrid .ui-datagrid-header {
 body .ui-datagrid .ui-panel .ui-panel-titlebar {
   background-color: #ffffff;
   color: #212121;
-  border-color: #bdbdbd;
+  border-color: #6877ca;
 }
 body .ui-datalist .ui-datalist-header {
   padding: 10px 16px;
@@ -4426,14 +4426,14 @@ body .ui-datatable .ui-paginator {
 body .ui-datatable thead th {
   padding: 10px 5px;
   border: 0 none;
-  border-top: 1px solid #bdbdbd;
+  border-top: 1px solid #6877ca;
   background-color: #ffffff;
 }
 body .ui-datatable thead th:first-child {
-  border-left: 1px solid #bdbdbd;
+  border-left: 1px solid #6877ca;
 }
 body .ui-datatable thead th:last-child {
-  border-right: 1px solid #bdbdbd;
+  border-right: 1px solid #6877ca;
 }
 body .ui-datatable thead th.ui-state-hover {
   background-color: #e8e8e8;
@@ -4491,11 +4491,11 @@ body .ui-datatable thead th.ui-state-active .ui-inputfield.ui-state-focus, body 
   border-color: #ffffff;
 }
 body .ui-datatable thead tr th {
-  border: 1px solid #bdbdbd;
+  border: 1px solid #6877ca;
 }
 body .ui-datatable tfoot td {
   padding: 10px 14px;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #6877ca;
   background-color: #ffffff;
 }
 body .ui-datatable tbody tr.ui-datatable-even {
@@ -4653,7 +4653,7 @@ body .ui-tree.ui-tree-horizontal {
 }
 body .ui-tree.ui-tree-horizontal .ui-treenode-content {
   background-color: #ffffff;
-  border: 1px solid #bdbdbd;
+  border: 1px solid #6877ca;
 }
 body .ui-tree.ui-tree-horizontal .ui-treenode-content .ui-tree-toggler {
   vertical-align: top;
@@ -4699,10 +4699,10 @@ body .ui-treetable thead th .ui-icon {
   color: #757575;
 }
 body .ui-treetable thead th:first-child {
-  border-left: 1px solid #bdbdbd;
+  border-left: 1px solid #6877ca;
 }
 body .ui-treetable thead th:last-child {
-  border-right: 1px solid #bdbdbd;
+  border-right: 1px solid #6877ca;
 }
 body .ui-treetable thead th.ui-state-hover {
   background-color: #e8e8e8;
@@ -4779,8 +4779,8 @@ body .ui-treetable.ui-treetable-scrollable .ui-treetable-scrollable-header, body
 body .ui-treetable.ui-treetable-scrollable thead th {
   background-color: #ffffff;
   color: #212121;
-  border-bottom: 1px solid #bdbdbd;
-  border-top: 1px solid #bdbdbd;
+  border-bottom: 1px solid #6877ca;
+  border-top: 1px solid #6877ca;
 }
 body .ui-treetable.ui-treetable-scrollable thead th.ui-state-active {
   background-color: #E91E63;
@@ -4809,7 +4809,7 @@ body .ui-tagcloud li a:hover {
   color: #000000;
 }
 body .timeline-frame .timeline-event {
-  border-color: #bdbdbd;
+  border-color: #6877ca;
   background-color: #ffffff;
 }
 body .timeline-frame .timeline-event.ui-state-active {
@@ -4818,7 +4818,7 @@ body .timeline-frame .timeline-event.ui-state-active {
   color: #ffffff;
 }
 body .timeline-frame .timeline-axis {
-  border-color: #bdbdbd;
+  border-color: #6877ca;
 }
 body .timeline-frame .timeline-navigation {
   height: 36px;
@@ -6276,7 +6276,7 @@ body .p-datepicker-panel .ui-timepicker {
 }
 body .p-datepicker-panel .ui-timepicker .ui-picker-up {
   cursor: pointer;
-  font-size: 24px;
+  font-size: 20px;
   color: #ffffff;
   font-family: "Material Icons", fantasy;
   font-weight: normal;
@@ -6321,7 +6321,7 @@ body .p-datepicker-panel .ui-timepicker .ui-picker-up span {
 }
 body .p-datepicker-panel .ui-timepicker .ui-picker-down {
   cursor: pointer;
-  font-size: 24px;
+  font-size: 20px;
   color: #ffffff;
   font-family: "Material Icons", fantasy;
   font-weight: normal;
@@ -6593,7 +6593,7 @@ body .ui-breadcrumb a {
 }
 body .ui-breadcrumb li:first-child a {
   position: relative;
-  font-size: 24px;
+  font-size: 20px;
   margin-top: 0;
 }
 body .ui-breadcrumb li:first-child a span {
@@ -6642,7 +6642,7 @@ body .ui-steps .ui-steps-item:last-child .ui-menuitem-link {
 }
 body .ui-steps:before {
   content: " ";
-  border: 1px solid #bdbdbd;
+  border: 1px solid #6877ca;
   width: 90%;
   top: 45%;
   left: 0;
@@ -6723,7 +6723,7 @@ body .ui-menu .ui-menu-list li.ui-menuitem .ui-menuitem-link .ui-menuitem-text {
 }
 body .ui-menu .ui-menu-list .ui-separator {
   height: 1px;
-  background-color: #bdbdbd;
+  background-color: #6877ca;
   width: 100%;
   box-sizing: border-box;
 }
@@ -7539,7 +7539,7 @@ body .ui-panel .ui-panel-content {
 body .ui-panel .ui-panel-footer {
   padding: 10px 16px;
   border: 0 none;
-  border-top: 1px solid #bdbdbd;
+  border-top: 1px solid #6877ca;
   margin: 0;
 }
 body .ui-panel.ui-panel-collapsed-h .ui-panel-titlebar {
@@ -7700,7 +7700,7 @@ body .ui-tabs.ui-tabs-top > .ui-tabs-nav {
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
   border-top-right-radius: 4px;
-  border-bottom: 1px solid #bdbdbd;
+  border-bottom: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-top > .ui-tabs-nav > li {
   border-style: solid;
@@ -7715,7 +7715,7 @@ body .ui-tabs.ui-tabs-bottom > .ui-tabs-nav {
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
-  border-top: 1px solid #bdbdbd;
+  border-top: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-bottom > .ui-tabs-nav > li {
   border-width: 2px 0 0 0;
@@ -7729,7 +7729,7 @@ body .ui-tabs.ui-tabs-left > .ui-tabs-nav {
   -moz-border-radius-bottomleft: 4px;
   -webkit-border-bottom-left-radius: 4px;
   border-bottom-left-radius: 4px;
-  border-right: 1px solid #bdbdbd;
+  border-right: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-left > .ui-tabs-nav > li {
   box-sizing: border-box;
@@ -7747,7 +7747,7 @@ body .ui-tabs.ui-tabs-right > .ui-tabs-nav {
   -moz-border-radius-bottomright: 4px;
   -webkit-border-bottom-right-radius: 4px;
   border-bottom-right-radius: 4px;
-  border-left: 1px solid #bdbdbd;
+  border-left: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-right > .ui-tabs-nav > li {
   box-sizing: border-box;
@@ -7784,7 +7784,7 @@ body .ui-tabs.ui-tabs-scrollable .ui-tabs-navscroller > .ui-tabs-navscroller-btn
 body .ui-tabs.ui-tabs-scrollable .ui-tabs-navscroller > .ui-tabs-navscroller-btn-left {
   z-index: 1;
   left: 0;
-  border-right: 1px solid #bdbdbd;
+  border-right: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-scrollable .ui-tabs-navscroller > .ui-tabs-navscroller-btn-left > span:before {
   position: relative;
@@ -7793,7 +7793,7 @@ body .ui-tabs.ui-tabs-scrollable .ui-tabs-navscroller > .ui-tabs-navscroller-btn
 body .ui-tabs.ui-tabs-scrollable .ui-tabs-navscroller > .ui-tabs-navscroller-btn-right {
   z-index: 1;
   right: 0;
-  border-left: 1px solid #bdbdbd;
+  border-left: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-scrollable .ui-tabs-navscroller > .ui-tabs-navscroller-btn-right > span:before {
   position: relative;
@@ -7803,7 +7803,7 @@ body .ui-tabs.ui-tabs-scrollable .ui-tabs-navscroller .ui-tabs-nav > li {
   margin: 0;
 }
 body .ui-tabs.ui-tabs-scrollable.ui-tabs-top .ui-tabs-navscroller > .ui-tabs-nav {
-  border-bottom: 1px solid #bdbdbd;
+  border-bottom: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-scrollable.ui-tabs-top .ui-tabs-navscroller > .ui-tabs-nav > li {
   border-style: solid;
@@ -7811,10 +7811,10 @@ body .ui-tabs.ui-tabs-scrollable.ui-tabs-top .ui-tabs-navscroller > .ui-tabs-nav
 }
 body .ui-tabs.ui-tabs-scrollable.ui-tabs-top .ui-tabs-navscroller > .ui-tabs-navscroller-btn-left {
   border-top: 0 none;
-  border-bottom: 1px solid #bdbdbd;
+  border-bottom: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-scrollable.ui-tabs-bottom .ui-tabs-navscroller > .ui-tabs-nav {
-  border-top: 1px solid #bdbdbd;
+  border-top: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-scrollable.ui-tabs-bottom .ui-tabs-navscroller > .ui-tabs-nav > li {
   border-style: solid;
@@ -7822,10 +7822,10 @@ body .ui-tabs.ui-tabs-scrollable.ui-tabs-bottom .ui-tabs-navscroller > .ui-tabs-
 }
 body .ui-tabs.ui-tabs-scrollable.ui-tabs-bottom .ui-tabs-navscroller > .ui-tabs-navscroller-btn-left {
   border-bottom: 0 none;
-  border-top: 1px solid #bdbdbd;
+  border-top: 1px solid #6877ca;
 }
 body .ui-tabs.ui-tabs-scrollable.ui-tabs-bottom .ui-tabs-navscroller > .ui-tabs-navscroller-btn-right {
-  border-top: 1px solid #bdbdbd;
+  border-top: 1px solid #6877ca;
 }
 body .ui-wizard .ui-wizard-step-titles {
   background-color: #283593;
@@ -7868,3 +7868,4 @@ body .ui-wizard .ui-wizard-navbar button {
 }
 /* Add your customizations of theme here */
 
+/*# sourceMappingURL=theme.css.map */

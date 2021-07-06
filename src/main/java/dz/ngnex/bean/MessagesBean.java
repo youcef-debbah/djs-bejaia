@@ -1,6 +1,7 @@
 package dz.ngnex.bean;
 
 import dz.ngnex.entity.*;
+import dz.ngnex.view.MenuItem;
 
 import javax.ejb.Local;
 import java.util.Collection;
@@ -41,7 +42,7 @@ public interface MessagesBean {
 
   List<ClientMessageEntity> getInboxMessagesReceivedBy(Service destination);
 
-  List<String> getAllReceivers(Service service);
+  List<MenuItem> getAllReceivers(Service service);
 
   List<Snippet> getConversationWithAdministration(String username, boolean markReadByAdmin) throws IntegrityException;
 

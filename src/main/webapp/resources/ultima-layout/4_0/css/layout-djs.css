@@ -3311,6 +3311,16 @@ body.layout-compact .ui-slider.ui-slider-horizontal .ui-slider-handle {
   padding-bottom: 0;
 }
 
+.slim {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.ui-dialog.slim .ui-dialog-content {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
 .small-hint span {
   font-size: 14px;
 }
@@ -4076,10 +4086,34 @@ h1.small-top {
   width: 263px !important;
 }
 
+body .ui-selectcheckboxmenu-panel.width-450 {
+  width: 450px;
+}
+body .ui-selectcheckboxmenu-panel.width-450 li label {
+  font-family: monospace;
+  white-space: pre;
+}
 body .ui-selectcheckboxmenu-panel.long-search-bar .ui-selectcheckboxmenu-header .ui-selectcheckboxmenu-filter-container {
   width: calc(100% - 35px);
 }
 body .ui-selectcheckboxmenu-panel.no-header-checkbox .ui-widget-header .ui-chkbox {
   display: none;
 }
+body .ui-selectcheckboxmenu-token {
+  padding: 0;
+}
+body .ui-selectcheckboxmenu-token .ui-selectcheckboxmenu-token-icon {
+  right: 0;
+}
+body .ui-selectcheckboxmenu-token .ui-selectcheckboxmenu-token-label {
+  font-family: monospace;
+  white-space: pre;
+  overflow: hidden;
+  max-width: 122px;
+  padding: 1px 0;
+  border-left: 3px solid transparent;
+  border-right: 20px solid transparent;
+  text-overflow: clip;
+}
 
+/*# sourceMappingURL=layout-djs.css.map */
