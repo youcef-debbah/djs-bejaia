@@ -63,116 +63,116 @@ import java.io.Serializable;
 @ViewModel
 public class SingleUserView implements Serializable {
 
-  private static final long serialVersionUID = -7529359910608973878L;
+    private static final long serialVersionUID = -7529359910608973878L;
 
-  private static final Logger log = LogManager.getLogger(SingleUserView.class);
+    private static final Logger log = LogManager.getLogger(SingleUserView.class);
 
-  @EJB
-  PrincipalBean principalBean;
+    @EJB
+    PrincipalBean principalBean;
 
-  @Inject
-  ProfileView profileView;
+    @Inject
+    ProfileView profileView;
 
-  @Inject
-  SectionsView sectionsView;
+    @Inject
+    SectionsView sectionsView;
 
-  @Inject
-  PropertiesView propertiesView;
+    @Inject
+    PropertiesView propertiesView;
 
-  @Inject
-  private Messages messages;
+    @Inject
+    private Messages messages;
 
-  @Inject
-  private Meta meta;
+    @Inject
+    private Meta meta;
 
-  @Inject
-  private CurrentPrincipal currentPrincipal;
+    @Inject
+    private CurrentPrincipal currentPrincipal;
 
-  @PostConstruct
-  public void init() {
-    handleRefresh(RefreshAccountEvent.refreshAll());
-  }
-
-  public void handleRefresh(@Observes(notifyObserver = Reception.IF_EXISTS) RefreshAccountEvent event) {
-    if (event != null) {
-      if (currentPrincipal.isAssociation()) {
-        setCurrentAccount(event.getAssociation(() -> principalBean.findPrincipal(currentPrincipal.getAssociationReference())),
-            event.getContractTemplateID(),
-            event.getSectionID());
-      } else
-        setCurrentAccount(null, null, null);
+    @PostConstruct
+    public void init() {
+        handleRefresh(RefreshAccountEvent.refreshAll());
     }
-  }
 
-  private void updateContract(ContractInstanceEntity contractInstance) {
-    Integer contractID = contractInstance != null ? contractInstance.getContractTemplate().getId() : null;
-    sectionsView.updateState(sectionsView.getCurrentAssociation(), contractID, sectionsView.getCurrentSectionID());
-    syncSectionsView();
-  }
+    public void handleRefresh(@Observes(notifyObserver = Reception.IF_EXISTS) RefreshAccountEvent event) {
+        if (event != null) {
+            if (currentPrincipal.isAssociation()) {
+                setCurrentAccount(event.getAssociation(() -> principalBean.findPrincipal(currentPrincipal.getAssociationReference())),
+                        event.getContractTemplateID(),
+                        event.getSectionID());
+            } else
+                setCurrentAccount(null, null, null);
+        }
+    }
 
-  private void syncSectionsView() {
-    BasicAssociationEntity currentAssociation = sectionsView.getCurrentAssociation();
-    ContractInstanceEntity currentContract = sectionsView.getCurrentContract();
-    propertiesView.updateState(currentAssociation, currentContract);
-    profileView.updateState(currentAssociation);
-  }
+    private void updateContract(ContractInstanceEntity contractInstance) {
+        Integer contractID = contractInstance != null ? contractInstance.getContractTemplate().getId() : null;
+        sectionsView.updateState(sectionsView.getCurrentAssociation(), contractID, sectionsView.getCurrentSectionID());
+        syncSectionsView();
+    }
 
-  public BasicAssociationEntity getCurrentAccount() {
-    return sectionsView.getCurrentAssociation();
-  }
+    private void syncSectionsView() {
+        BasicAssociationEntity currentAssociation = sectionsView.getCurrentAssociation();
+        ContractInstanceEntity currentContract = sectionsView.getCurrentContract();
+        propertiesView.updateState(currentAssociation, currentContract);
+        profileView.updateState(currentAssociation);
+    }
 
-  public void setCurrentAccount(BasicAssociationEntity updatedAccount, Integer contractTemplateID, Integer sectionID) {
-    if (updatedAccount != null) {
-      sectionsView.updateState(updatedAccount, contractTemplateID, sectionID);
-    } else
-      sectionsView.updateState(null, null, null);
+    public BasicAssociationEntity getCurrentAccount() {
+        return sectionsView.getCurrentAssociation();
+    }
 
-    syncSectionsView();
-  }
+    public void setCurrentAccount(BasicAssociationEntity updatedAccount, Integer contractTemplateID, Integer sectionID) {
+        if (updatedAccount != null) {
+            sectionsView.updateState(updatedAccount, contractTemplateID, sectionID);
+        } else
+            sectionsView.updateState(null, null, null);
 
-  public ContractInstanceEntity getCurrentContract() {
-    return sectionsView.getCurrentContract();
-  }
+        syncSectionsView();
+    }
 
-  public void setCurrentContract(ContractInstanceEntity newContract) {
-    Integer contractID = newContract != null ? newContract.getContractTemplate().getId() : null;
-    sectionsView.updateState(sectionsView.getCurrentAssociation(), contractID, sectionsView.getCurrentSectionID());
-    syncSectionsView();
-  }
+    public ContractInstanceEntity getCurrentContract() {
+        return sectionsView.getCurrentContract();
+    }
 
-  public SectionEntity getCurrentSection() {
-    return sectionsView.getCurrentSection();
-  }
+    public void setCurrentContract(ContractInstanceEntity newContract) {
+        Integer contractID = newContract != null ? newContract.getContractTemplate().getId() : null;
+        sectionsView.updateState(sectionsView.getCurrentAssociation(), contractID, sectionsView.getCurrentSectionID());
+        syncSectionsView();
+    }
 
-  public void setCurrentSection(SectionEntity newSection) {
-    Integer sectionID = newSection != null ? newSection.getId() : null;
-    sectionsView.updateState(sectionsView.getCurrentAssociation(), sectionsView.getCurrentContractTemplateID(), sectionID);
-    syncSectionsView();
-  }
+    public SectionEntity getCurrentSection() {
+        return sectionsView.getCurrentSection();
+    }
 
-  public void saveChanges() {
-    BasicAssociationEntity currentAccount = getCurrentAccount();
-    if (currentAccount == null)
-      meta.noSelectionError();
-    else
-      try {
-        profileView.save();
-        sectionsView.save();
-        propertiesView.save();
-        meta.dataUpdatedSuccessfully();
+    public void setCurrentSection(SectionEntity newSection) {
+        Integer sectionID = newSection != null ? newSection.getId() : null;
+        sectionsView.updateState(sectionsView.getCurrentAssociation(), sectionsView.getCurrentContractTemplateID(), sectionID);
+        syncSectionsView();
+    }
 
-        handleRefresh(new RefreshAccountEvent(currentAccount.getReference(), sectionsView.getCurrentContractTemplateID(), sectionsView.getCurrentSectionID()));
-      } catch (Exception e) {
-        meta.handleException(e);
-      }
-  }
+    public void saveChanges() {
+        BasicAssociationEntity currentAccount = getCurrentAccount();
+        if (currentAccount == null)
+            meta.noSelectionError();
+        else
+            try {
+                BasicAssociationEntity updatedAssociation = profileView.save();
+                sectionsView.save(updatedAssociation);
+                propertiesView.save(updatedAssociation);
+                meta.dataUpdatedSuccessfully();
 
-  @Override
-  public String toString() {
-    return "SingleUserView{" +
-        "profileView=" + profileView +
-        ", sectionsView=" + sectionsView +
-        ", propertiesView=" + propertiesView +
-        '}';
-  }
+                handleRefresh(new RefreshAccountEvent(currentAccount.getReference(), sectionsView.getCurrentContractTemplateID(), sectionsView.getCurrentSectionID()));
+            } catch (Exception e) {
+                meta.handleException(e);
+            }
+    }
+
+    @Override
+    public String toString() {
+        return "SingleUserView{" +
+                "profileView=" + profileView +
+                ", sectionsView=" + sectionsView +
+                ", propertiesView=" + propertiesView +
+                '}';
+    }
 }

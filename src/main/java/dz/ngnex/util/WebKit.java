@@ -45,7 +45,7 @@ public final class WebKit {
 
   public static final int GUEST_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(10);
   public static final int ADMIN_INACTIVE_INTERVAL = (int) TimeUnit.HOURS.toSeconds(3);
-  public static final int ASSOCIATION_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(20);
+  public static final int ASSOCIATION_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(30);
 
 
   @Nullable

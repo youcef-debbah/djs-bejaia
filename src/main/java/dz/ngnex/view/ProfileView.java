@@ -43,86 +43,88 @@ import java.util.List;
 @Named("profile")
 @ViewModel
 public class ProfileView implements Serializable {
-  private static final long serialVersionUID = -1465599600432240728L;
+    private static final long serialVersionUID = -1465599600432240728L;
 
-  @Inject
-  private Logger log;
+    @Inject
+    private Logger log;
 
-  @EJB
-  private PrincipalBean principalBean;
+    @EJB
+    private PrincipalBean principalBean;
 
-  @EJB
-  private DossierBean dossierBean;
+    @EJB
+    private DossierBean dossierBean;
 
-  @Inject
-  private Messages messages;
+    @Inject
+    private Messages messages;
 
-  @Nullable
-  private BasicAssociationEntity currentAssociation;
+    @Nullable
+    private BasicAssociationEntity currentAssociation;
 
-  @NotNull
-  private List<DossierInfoEntity> dossierFiles = Collections.emptyList();
+    @NotNull
+    private List<DossierInfoEntity> dossierFiles = Collections.emptyList();
 
-  @Inject
-  Meta meta;
+    @Inject
+    Meta meta;
 
-  @Inject
-  CurrentPrincipal currentPrincipal;
+    @Inject
+    CurrentPrincipal currentPrincipal;
 
-  @PostConstruct
-  private void init() {
-    updateState(null);
-  }
-
-  void updateState(@Nullable BasicAssociationEntity currentAssociation) {
-    this.currentAssociation = currentAssociation;
-
-    if (currentAssociation != null && currentAssociation.getName() != null)
-      dossierFiles = dossierBean.getAll(currentAssociation.getName());
-    else
-      dossierFiles = Collections.emptyList();
-  }
-
-  @Nullable
-  public BasicAssociationEntity getCurrentAssociation() {
-    return currentAssociation;
-  }
-
-  @NotNull
-  public List<DossierInfoEntity> getDossierFiles() {
-    return dossierFiles;
-  }
-
-  void save() {
-    BasicAssociationEntity association = getCurrentAssociation();
-    if (association != null) {
-      association.setLastUpdater(currentPrincipal.getName());
-      this.currentAssociation = principalBean.updateAssociationInfo(association);
+    @PostConstruct
+    private void init() {
+        updateState(null);
     }
-  }
 
-  public String getEmailRegex() {
-    return Constrains.EMAIL_REGEX;
-  }
+    void updateState(@Nullable BasicAssociationEntity currentAssociation) {
+        this.currentAssociation = currentAssociation;
 
-  public String getCurrentDossierUrl() {
-    if (currentPrincipal != null && currentPrincipal.getName() != null)
-      return DossierServlet.getDossierUrlAsAttachment(currentPrincipal.getName());
-    else
-      return "#";
-  }
+        if (currentAssociation != null && currentAssociation.getName() != null)
+            dossierFiles = dossierBean.getAll(currentAssociation.getName());
+        else
+            dossierFiles = Collections.emptyList();
+    }
 
-  public String getDossierFileUrl(String filename) {
-    if (StringUtils.isBlank(filename))
-      return "#";
-    else
-      return DossierServlet.getUrlAsAttachment(filename);
-  }
+    @Nullable
+    public BasicAssociationEntity getCurrentAssociation() {
+        return currentAssociation;
+    }
 
-  @Override
-  public String toString() {
-    return "ProfileView{" +
-        "currentAssociation=" + getCurrentAssociation() +
-        '}';
-  }
+    @NotNull
+    public List<DossierInfoEntity> getDossierFiles() {
+        return dossierFiles;
+    }
+
+    @Nullable
+    BasicAssociationEntity save() {
+        BasicAssociationEntity association = getCurrentAssociation();
+        if (association != null) {
+            association.setLastUpdater(currentPrincipal.getName());
+            return this.currentAssociation = principalBean.updateAssociationInfo(association);
+        }
+        return null;
+    }
+
+    public String getEmailRegex() {
+        return Constrains.EMAIL_REGEX;
+    }
+
+    public String getCurrentDossierUrl() {
+        if (currentPrincipal != null && currentPrincipal.getName() != null)
+            return DossierServlet.getDossierUrlAsAttachment(currentPrincipal.getName());
+        else
+            return "#";
+    }
+
+    public String getDossierFileUrl(String filename) {
+        if (StringUtils.isBlank(filename))
+            return "#";
+        else
+            return DossierServlet.getUrlAsAttachment(filename);
+    }
+
+    @Override
+    public String toString() {
+        return "ProfileView{" +
+                "currentAssociation=" + getCurrentAssociation() +
+                '}';
+    }
 }

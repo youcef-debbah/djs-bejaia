@@ -11,6 +11,7 @@
         <h:form id="spreadsheet_form">
             <ul style="display: none">
                 <li>usersView.currentAccount: #{usersView.currentAccount}</li>
+                <li>usersView.currentAccount: #{profile.currentAssociation}</li>
                 <li>sectionsView.currentAssociation: #{sectionsView.currentAssociation}</li>
                 <li>propertiesView.currentAssociation: #{propertiesView.currentAssociation}</li>
             </ul>
@@ -113,7 +114,7 @@
             </h:panelGroup>
 
             <h:panelGroup id="accountsPanel" layout="block" styleClass="card">
-                <h1>#{messages.association}: #{usersView.targetAssociation.name} (#{messages.season}: #{sectionsView.currentSeasonName})</h1>
+                <h1>#{messages.association}: #{profile.currentAssociation.name} - #{profile.currentAssociation.description}</h1>
 
                 <p:toolbar id="accounts_dashboard1" styleClass="scrollable-toolbar">
                     <f:facet name="left">
@@ -153,7 +154,7 @@
 
                 <h:panelGroup id="inputs" layout="block">
                     <p:fieldset id="contract_input"
-                                legend="#{messages.assignedContracts}">
+                                legend="#{messages.assignedContracts} (#{messages.season}: #{sectionsView.currentSeasonName})">
                         <!--suppress ELValidationInJSP -->
                         <p:dataTable id="contracts_table" value="#{sectionsView.assignedContracts}"
                                      var="contract" emptyMessage="#{messages.noAssignedContract}"
@@ -342,14 +343,15 @@
                         <p:fieldset id="info_input" rendered="#{not empty sectionsView.currentAssociation}"
                                     legend="#{messages.associationInfo}">
                             <p:messages for="password" showIcon="false" closable="true"/>
-                            <p:messages for="agrement" showIcon="false" closable="true"/>
                             <p:messages for="description" showIcon="false" closable="true"/>
+                            <p:messages for="agrement" showIcon="false" closable="true"/>
+                            <p:messages for="adresse" showIcon="false" closable="true"/>
                             <p:messages for="president" showIcon="false" closable="true"/>
                             <p:messages for="phone" showIcon="false" closable="true"/>
+                            <p:messages for="email" showIcon="false" closable="true"/>
                             <p:messages for="compte" showIcon="false" closable="true"/>
-                            <p:messages for="banque" showIcon="false" closable="true"/>
                             <p:messages for="agence" showIcon="false" closable="true"/>
-                            <p:messages for="adresse" showIcon="false" closable="true"/>
+                            <p:messages for="banque" showIcon="false" closable="true"/>
 
                             <div class="ui-g ui-fluid compact-data">
                                 <div class="ui-g-12 ui-md-4">
@@ -593,7 +595,8 @@
                                 </ui:fragment>
                                 <ui:repeat value="#{propertiesView.potentialValues}"
                                            var="propertyValue">
-                                    <h:panelGroup rendered="#{propertyValue.property.type ne 'NOTE'}" styleClass="ui-g-12 ui-fluid">
+                                    <h:panelGroup rendered="#{propertyValue.property.type ne 'NOTE'}"
+                                                  styleClass="ui-g-12 ui-fluid">
                                         <p:inplace>
                                             <f:facet name="output">
                                                 <h:outputText
