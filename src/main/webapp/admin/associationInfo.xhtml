@@ -153,7 +153,7 @@
 
                 <h:panelGroup id="inputs" layout="block">
                     <p:fieldset id="contract_input"
-                                legend="#{messages.assignedContracts} - #{sectionsView.currentAssociation.name}">
+                                legend="#{messages.assignedContracts}">
                         <!--suppress ELValidationInJSP -->
                         <p:dataTable id="contracts_table" value="#{sectionsView.assignedContracts}"
                                      var="contract" emptyMessage="#{messages.noAssignedContract}"
@@ -213,7 +213,7 @@
                     <h:panelGroup id="sub_inputs" layout="block">
                         <p:fieldset
                                 rendered="#{sectionsView.currentAssociationIsSport}"
-                                id="budget_input" legend="Les Informations des sections">
+                                id="budget_input" legend="#{messages.sectionsInfo}">
                             <div class="ui-g compact-data">
                                 <h:panelGroup id="sections_panel" styleClass="ui-g-12" layout="block">
                                     <!--suppress ELValidationInJSP -->
@@ -340,7 +340,7 @@
                             </div>
                         </p:fieldset>
                         <p:fieldset id="info_input" rendered="#{not empty sectionsView.currentAssociation}"
-                                    legend="Informations d'association: #{sectionsView.currentAssociation.name}">
+                                    legend="#{messages.associationInfo}">
                             <p:messages for="password" showIcon="false" closable="true"/>
                             <p:messages for="agrement" showIcon="false" closable="true"/>
                             <p:messages for="description" showIcon="false" closable="true"/>
@@ -670,7 +670,7 @@
                                 </ui:repeat>
                             </h:panelGroup>
                         </p:fieldset>
-                        <p:fieldset id="additional_info" legend="Statistiques d'association">
+                        <p:fieldset id="additional_info" legend="#{messages.associationStats}">
                             <div class="ui-g ui-fluid">
                                 <h:panelGroup layout="block" styleClass="ui-g-12"
                                               rendered="#{not empty profile.currentAssociation.lastLogin}">
