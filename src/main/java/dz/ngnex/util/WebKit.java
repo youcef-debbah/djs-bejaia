@@ -128,21 +128,27 @@ public final class WebKit {
         }
     }
 
-    public static void logout() {
+    public static boolean logout() {
         HttpServletRequest request = getFacesRequest();
-        Principal principal = request.getUserPrincipal();
+        String username = getCurrentUsername(request);
 
-        String name = principal != null ? principal.getName() : null;
-        if (name != null) {
-            log.info("logout for principal named: " + name);
-        }
+        if (username != null)
+            log.info("logout for user: " + username);
 
         try {
             request.logout();
             request.getSession().setMaxInactiveInterval(GUEST_INACTIVE_INTERVAL);
         } catch (ServletException e) {
-            log.warn("logout failed for principal named: " + name, e);
+            log.warn("logout failed for principal named: " + username, e);
         }
+
+        return Objects.equals(username, getCurrentUsername(request));
+    }
+
+    @Nullable
+    private static String getCurrentUsername(HttpServletRequest request) {
+        Principal principal = request.getUserPrincipal();
+        return principal != null ? principal.getName() : null;
     }
 
     public static void removeSessionID() {
