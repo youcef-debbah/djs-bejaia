@@ -12,7 +12,6 @@ public class CustomExternalContext extends ExternalContextWrapper {
     public CustomExternalContext(ExternalContext wrapped) {
         super(wrapped);
         securedWebsockets = "Production".equals(wrapped.getInitParameter("javax.faces.PROJECT_STAGE"));
-        System.out.println("CustomExternalContext initialized (securedWebsockets: " + securedWebsockets + ")");
     }
 
     @Override
