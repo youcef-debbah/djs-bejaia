@@ -1,7 +1,7 @@
 package dz.ngnex.util;
 
 public class Config {
-  public static final String GLOBAL_MSG = "global";
+
 
   public static final String HOME_PAGE = "/landing.xhtml";
   public static final String ADMIN_HOME = "/admin/associations.xhtml";

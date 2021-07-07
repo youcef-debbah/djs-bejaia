@@ -1,6 +1,6 @@
 package dz.ngnex.control;
 
-import dz.ngnex.util.Config;
+import dz.ngnex.entity.BasicMessageEntity;
 import dz.ngnex.util.Messages;
 import dz.ngnex.util.ResourcesProvider;
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +33,7 @@ public class GlobalNotificationsListener implements PhaseListener {
       FacesMessage facesMessage = new FacesMessage(FacesMessage.SEVERITY_ERROR,
           messages.get("validationFailed"),
           messages.get("recheckInput"));
-      facesContext.addMessage(Config.GLOBAL_MSG, facesMessage);
+      facesContext.addMessage(BasicMessageEntity.GLOBAL_MSG, facesMessage);
     }
   }
 

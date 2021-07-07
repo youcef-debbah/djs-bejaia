@@ -61,7 +61,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static dz.ngnex.util.Config.GLOBAL_MSG;
+import static dz.ngnex.entity.BasicMessageEntity.GLOBAL_MSG;
 
 @Named
 @RequestScoped

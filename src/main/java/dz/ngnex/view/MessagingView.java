@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static dz.ngnex.util.Config.GLOBAL_MSG;
+import static dz.ngnex.entity.BasicMessageEntity.GLOBAL_MSG;
 
 @ViewModel
 public class MessagingView implements Serializable {

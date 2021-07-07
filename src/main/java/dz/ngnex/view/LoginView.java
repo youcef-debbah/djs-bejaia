@@ -41,7 +41,7 @@ import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.Objects;
 
-import static dz.ngnex.util.Config.GLOBAL_MSG;
+import static dz.ngnex.entity.BasicMessageEntity.GLOBAL_MSG;
 
 /**
  * @author youcef debbah

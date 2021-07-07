@@ -17,6 +17,7 @@
                                              render="output" actionListener="#{messagingView.fetchMessages}"/>
                             <f:websocket channel="messageNotifications" onmessage="refreshChatOutput"
                                          user="#{empty currentPrincipal.service? 'global' : currentPrincipal.service.name()}"/>
+                            <f:websocket channel="globalMessageNotifications" onmessage="refreshChatOutput"/>
                             <p:panel styleClass="card chat ui-shadow-content"
                                      header="#{messages.chatWith} #{messagingView.entity.name}">
                                 <h:panelGroup id="chatbox"
@@ -36,11 +37,6 @@
                                                     </li>
                                                 </ui:fragment>
                                                 <ui:fragment rendered="#{message.source eq 'global'}">
-                                                    <ui:fragment rendered="#{not status.first}">
-                                                        <li class="clearfix">
-                                                            <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
-                                                        </li>
-                                                    </ui:fragment>
                                                     <li class="clearfix message-own">
                                                         <span class="global" tabindex="0">
                                                             <h:outputText value="#{message.value}" escape="false"/><br/>
@@ -51,7 +47,7 @@
                                                         <ui:fragment rendered="#{not empty message.attachment}">
                                                             <p:button id="globalAttachmentDownloadButton"
                                                                       icon="ui-icon-attachment" style="float: right"
-                                                                      href="#{meta.safeUrl(message.attachment)}"/>
+                                                                      href="#{meta.attachmentUrl(message.attachment)}"/>
                                                             <p:tooltip for="globalAttachmentDownloadButton"
                                                                        value="#{messages.downloadAttachment}"/>
                                                         </ui:fragment>

@@ -56,7 +56,7 @@ public class InboxView implements Serializable {
 
     private String groupMessageContent;
 
-    private AttachmentContentEntity attachment;
+    private AttachmentContentEntity groupAttachment;
 
     private List<String> selectedReceivers;
 
@@ -177,7 +177,7 @@ public class InboxView implements Serializable {
     public void sendGroupMessage() {
         if (groupMessageContent != null && selectedReceivers != null && !selectedReceivers.isEmpty())
             try {
-                messagesBean.sendAdminMessages(currentPrincipal.getName(), localeManager.formatTextAsHtml(groupMessageContent), selectedReceivers, attachment);
+                messagesBean.sendAdminMessages(currentPrincipal.getName(), localeManager.formatTextAsHtml(groupMessageContent), selectedReceivers, groupAttachment);
                 resetGroupMessageInput();
                 meta.workDoneSuccessfully("messageSent");
                 PrimeFaces.current().executeScript("PF('group_msg_dialog').hide()");
@@ -201,29 +201,33 @@ public class InboxView implements Serializable {
 
     private void resetGroupMessageInput() {
         groupMessageContent = null;
-        attachment = null;
+        groupAttachment = null;
     }
 
-    public void handleAttachment(FileUploadEvent event) {
+    public void handleGroupAttachment(FileUploadEvent event) {
         try {
             AttachmentContentEntity uploadedFile = attachmentsBean.add(event.getFile(), currentPrincipal.getName(), System.currentTimeMillis());
-            if (attachment != null)
+            if (groupAttachment != null)
                 meta.workDoneSuccessfully("fileReplaced");
             else
                 meta.workDoneSuccessfully("fileUploaded");
 
-            attachment = uploadedFile;
+            groupAttachment = uploadedFile;
         } catch (Exception e) {
             meta.handleException(e);
         }
     }
 
-    public AttachmentContentEntity getAttachment() {
-        return attachment;
+    public AttachmentContentEntity getGroupAttachment() {
+        return groupAttachment;
     }
 
-    public void deleteAttachment() {
-        attachment = null;
+    public void deleteGroupAttachment() {
+        groupAttachment = null;
         meta.workDoneSuccessfully("fileDeleted");
+    }
+
+    public int getMaxFileSize() {
+        return AttachmentsBean.MAX_FILE_SIZE;
     }
 }

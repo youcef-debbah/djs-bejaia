@@ -73,7 +73,7 @@ public class MessageEntity extends BasicMessageEntity implements ClientMessageEn
   @Override
   @Transient
   public String getSnippetSourceName() {
-    return "user";
+    return BasicMessageEntity.USER_MSG;
   }
 
   @Override

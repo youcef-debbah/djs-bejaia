@@ -64,7 +64,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.Map.Entry;
 
-import static dz.ngnex.util.Config.GLOBAL_MSG;
+import static dz.ngnex.entity.BasicMessageEntity.GLOBAL_MSG;
 
 /**
  * @author youcef debbah

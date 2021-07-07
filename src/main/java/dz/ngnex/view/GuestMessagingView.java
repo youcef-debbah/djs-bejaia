@@ -3,10 +3,7 @@ package dz.ngnex.view;
 import dz.ngnex.bean.AttachmentsBean;
 import dz.ngnex.bean.MessagesBean;
 import dz.ngnex.control.Meta;
-import dz.ngnex.entity.AttachmentContentEntity;
-import dz.ngnex.entity.Constrains;
-import dz.ngnex.entity.GuestMessageEntity;
-import dz.ngnex.entity.Service;
+import dz.ngnex.entity.*;
 import dz.ngnex.util.Config;
 import dz.ngnex.util.ViewModel;
 import dz.ngnex.util.WebKit;
@@ -77,7 +74,7 @@ public class GuestMessagingView implements Serializable {
     try {
       GuestMessageEntity messageDraft = getDraft();
       messagesBean.sendMessage(messageDraft, attachment);
-      messageNotifications.send("refresh", Arrays.asList(messageDraft.getDestination().name(), Config.GLOBAL_MSG));
+      messageNotifications.send("refresh", Arrays.asList(messageDraft.getDestination().name(), BasicMessageEntity.GLOBAL_MSG));
       this.draft = null;
       meta.workDoneSuccessfully("messageSent");
       meta.keepMessages();

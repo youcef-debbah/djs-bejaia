@@ -15,38 +15,66 @@
     </ui:define>
 
     <ui:define name="overlay">
-        <h:form id="global_msg_form">
-            <p:dialog widgetVar="global_msg_dialog" positionType="absolute"
-                      header="#{messages.sendGlobalMessage}" modal="false" width="350">
-
+        <p:dialog widgetVar="global_msg_dialog" positionType="absolute" styleClass="slim"
+                  header="#{messages.sendGlobalMessage}" modal="false" width="500">
+            <h:form id="global_msg_form">
                 <h:panelGroup id="dialogContent" styleClass="ui-g ui-fluid" layout="block">
                     <p:focus context="dialogContent"/>
-                    <div class="ui-g-12 compact">
+                    <div class="ui-g-12 slim compact">
                         <h:outputLabel for="content" value="#{messages.sendMessageToAllAssociations}"/>
                         <p:messages for="content" showIcon="false" closable="true">
                             <p:effect event="load" type="bounce"/>
                         </p:messages>
                     </div>
-                    <div class="ui-g-12">
+                    <div class="ui-g-12 slim">
                         <p:inputTextarea id="content" value="#{globalMessagingView.content}"
                                          requiredMessage="#{messages.messageCannotBeEmpty}"
                                          placeholder="#{messages.writeMessage}"/>
                     </div>
                 </h:panelGroup>
-
-                <f:facet name="footer">
-                    <p:commandButton icon="ui-icon-send" value="#{messages.send}"
-                                     actionListener="#{globalMessagingView.sendGlobalMessage}"
-                                     widgetVar="widget_send_global_msg_button"
-                                     onstart="PF('widget_send_global_msg_button').disable()"
-                                     onerror="jsoftware95.updateFailed()"
-                                     oncomplete="PF('widget_send_global_msg_button').enable()"
-                                     process="global_msg_form" update="dialogContent"/>
-                    <p:commandButton value="#{messages.cancel}" type="button"
-                                     onclick="PF('global_msg_dialog').hide()" icon="fa fa-remove"/>
-                </f:facet>
-            </p:dialog>
-        </h:form>
+            </h:form>
+            <h:form id="global_attach_form" enctype="multipart/form-data"
+                    styleClass="align-center full-width overflow-hidden">
+                <p:fileUpload styleClass="no-preview top-spaced" skinSimple="true"
+                              listener="#{globalMessagingView.handleAttachment}"
+                              process="global_attach_form" update="global_attach_form"
+                              uploadIcon="ui-icon-attach-file"
+                              auto="true" multiple="false" sequential="true"
+                              sizeLimit="#{globalMessagingView.maxFileSize}"
+                              invalidSizeMessage="#{messages.fileTooBig}"
+                              label="#{empty globalMessagingView.attachment? messages.attachFile : messages.replaceFile}"
+                              uploadLabel="#{messages.upload}" cancelLabel="#{messages.cancel}"
+                />
+                <h:panelGroup rendered="#{not empty globalMessagingView.attachment}"
+                              layout="block">
+                    <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
+                    <h:outputText value="#{globalMessagingView.attachment.shortName}"/>
+                    <span class="inline-block slightly-spaced">
+                        <p:button
+                                icon="ui-icon-file-download"
+                                styleClass="spaced"
+                                href="#{meta.attachmentUrl(globalMessagingView.attachment.id)}"/>
+                        <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
+                                         styleClass="pink-btn v-spaced"
+                                         onerror="jsoftware95.updateFailed()"
+                                         actionListener="#{globalMessagingView.deleteAttachment}">
+                            <p:confirm message="#{messages.confirmDelete}"/>
+                        </p:commandButton>
+                    </span>
+                </h:panelGroup>
+            </h:form>
+            <f:facet name="footer">
+                <p:commandButton icon="ui-icon-send" value="#{messages.send}"
+                                 actionListener="#{globalMessagingView.sendGlobalMessage}"
+                                 widgetVar="widget_send_global_msg_button"
+                                 onstart="PF('widget_send_global_msg_button').disable()"
+                                 onerror="jsoftware95.updateFailed()"
+                                 oncomplete="PF('widget_send_global_msg_button').enable()"
+                                 form="global_msg_form" process="@this global_msg_form" update="global_msg_form global_attach_form"/>
+                <p:commandButton value="#{messages.cancel}" type="button"
+                                 onclick="PF('global_msg_dialog').hide()" icon="fa fa-remove"/>
+            </f:facet>
+        </p:dialog>
 
         <p:dialog widgetVar="group_msg_dialog" positionType="absolute" styleClass="slim"
                   header="#{messages.sendGroupMessage}" modal="false" width="500">
@@ -83,30 +111,31 @@
                     </div>
                 </h:panelGroup>
             </h:form>
-            <h:form id="file_form" enctype="multipart/form-data" styleClass="align-center full-width overflow-hidden">
+            <h:form id="group_attach_form" enctype="multipart/form-data"
+                    styleClass="align-center full-width overflow-hidden">
                 <p:fileUpload styleClass="no-preview top-spaced" skinSimple="true"
-                              listener="#{inboxView.handleAttachment}"
-                              process="file_form" update="file_form"
+                              listener="#{inboxView.handleGroupAttachment}"
+                              process="group_attach_form" update="group_attach_form"
                               uploadIcon="ui-icon-attach-file"
                               auto="true" multiple="false" sequential="true"
-                              sizeLimit="#{uploadedImagesView.maxFileSize}"
+                              sizeLimit="#{inboxView.maxFileSize}"
                               invalidSizeMessage="#{messages.fileTooBig}"
-                              label="#{empty inboxView.attachment? messages.attachFile : messages.replaceFile}"
+                              label="#{empty inboxView.groupAttachment? messages.attachFile : messages.replaceFile}"
                               uploadLabel="#{messages.upload}" cancelLabel="#{messages.cancel}"
                 />
-                <h:panelGroup rendered="#{not empty inboxView.attachment}"
+                <h:panelGroup rendered="#{not empty inboxView.groupAttachment}"
                               layout="block">
                     <h:outputText styleClass="bold" value="#{messages.attachment}: "/>
-                    <h:outputText value="#{inboxView.attachment.shortName}"/>
+                    <h:outputText value="#{inboxView.groupAttachment.shortName}"/>
                     <span class="inline-block slightly-spaced">
                         <p:button
                                 icon="ui-icon-file-download"
                                 styleClass="spaced"
-                                href="#{meta.attachmentUrl(inboxView.attachment.id)}"/>
+                                href="#{meta.attachmentUrl(inboxView.groupAttachment.id)}"/>
                         <p:commandButton icon="ui-icon-closethick" process="@this" update="@form"
                                          styleClass="pink-btn v-spaced"
                                          onerror="jsoftware95.updateFailed()"
-                                         actionListener="#{inboxView.deleteAttachment}">
+                                         actionListener="#{inboxView.deleteGroupAttachment}">
                             <p:confirm message="#{messages.confirmDelete}"/>
                         </p:commandButton>
                     </span>
@@ -120,7 +149,7 @@
                                  onerror="jsoftware95.updateFailed()"
                                  oncomplete="PF('widget_send_group_msg_button').enable()"
                                  form="group_msg_form"
-                                 process="@this group_msg_form" update="group_msg_form file_form"/>
+                                 process="@this group_msg_form" update="group_msg_form group_attach_form"/>
                 <p:commandButton value="#{messages.cancel}" type="button"
                                  onclick="PF('group_msg_dialog').hide()" icon="fa fa-remove"/>
             </f:facet>

@@ -52,7 +52,7 @@ public class AdminMessageEntity extends BasicMessageEntity {
   @Override
   @Transient
   public String getSnippetSourceName() {
-    return "admin";
+    return receiverName != null? BasicMessageEntity.ADMIN_MSG : BasicMessageEntity.GLOBAL_MSG;
   }
 
   @Override

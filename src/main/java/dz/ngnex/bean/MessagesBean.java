@@ -14,7 +14,7 @@ public interface MessagesBean {
   long DURATION_TO_CHAIN_WITH_PREVIEW = TimeUnit.MINUTES.toMillis(4);
   long DURATION_TO_SHOW_DATE = TimeUnit.MINUTES.toMillis(45);
 
-  void sendGlobalAdminMessage(String adminName, String content) throws IntegrityException;
+  void sendGlobalAdminMessage(String adminName, String content, AttachmentContentEntity attachment) throws IntegrityException;
 
   void sendAdminMessage(String adminName, String content, String receiverUsername, AttachmentContentEntity attachment) throws IntegrityException;
 

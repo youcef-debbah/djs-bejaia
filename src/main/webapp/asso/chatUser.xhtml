@@ -86,11 +86,6 @@
                                                 </ui:fragment>
 
                                                 <ui:fragment rendered="#{message.source eq 'global'}">
-                                                    <ui:fragment rendered="#{not status.first}">
-                                                        <li class="clearfix">
-                                                            <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
-                                                        </li>
-                                                    </ui:fragment>
                                                     <li class="clearfix message-from">
                                                         <span class="global" tabindex="0">
                                                             <h:outputText value="#{message.value}" escape="false"/><br/>
@@ -101,7 +96,7 @@
                                                         <ui:fragment rendered="#{not empty message.attachment}">
                                                             <p:button id="globalAttachmentDownloadButton"
                                                                       icon="ui-icon-attachment" style="float: left"
-                                                                      href="#{meta.safeUrl(message.attachment)}"/>
+                                                                      href="#{meta.attachmentUrl(message.attachment)}"/>
                                                             <p:tooltip for="globalAttachmentDownloadButton"
                                                                        value="#{messages.downloadAttachment}"/>
                                                         </ui:fragment>
