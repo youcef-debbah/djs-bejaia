@@ -45,7 +45,7 @@
 
     <factory>
         <exception-handler-factory>dz.ngnex.control.ViewExpiredExceptionHandlerFactory</exception-handler-factory>
-        <external-context-factory>dz.ngnex.security.CustomExternalContext.Factory</external-context-factory>
+        <external-context-factory>dz.ngnex.security.CustomExternalContext$Factory</external-context-factory>
     </factory>
 
     <lifecycle>
