@@ -53,6 +53,9 @@
                     </p:selectOneMenu>
                 </f:facet>
                 <f:facet name="right">
+                    <p:commandButton value="#{messages.save}" actionListener="#{seasonView.updateContractsSeason}"
+                                     form="templatesList" process="@this templatesList" update="templatesList seasonMenuForm"
+                                     onerror="jsoftware95.updateFailed()"/>
                     <p:commandButton icon="ui-icon-add" value="#{messages.newSeason}" type="button"
                                      onclick="PF('new-season-dialog').show()"/>
                     <p:commandButton id="deleteSeasonButton" disabled="#{empty seasonView.seasons}"
@@ -72,11 +75,6 @@
             <div class="card">
                 <h2>#{messages.contractTemplates}</h2>
                 <div class="ui-g">
-                    <div class="ui-g-12 align-center">
-                        <p:commandButton value="#{messages.save}" actionListener="#{seasonView.updateContractsSeason}"
-                                         process="@form" update="@form seasonMenuForm"
-                                         onerror="jsoftware95.updateFailed()"/>
-                    </div>
                     <ui:repeat value="#{seasonView.contracts}" var="contract">
                         <div class="ui-g-12 ui-md-6">
                             <div class="card float-parent" style="background: #e2e4f4">
