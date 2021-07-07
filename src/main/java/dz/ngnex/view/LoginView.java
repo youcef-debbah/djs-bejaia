@@ -19,6 +19,7 @@ package dz.ngnex.view;
 
 import dz.ngnex.bean.PrincipalBean;
 import dz.ngnex.control.CurrentPrincipal;
+import dz.ngnex.control.LocaleManager;
 import dz.ngnex.control.NavigationHistory;
 import dz.ngnex.entity.AccessType;
 import dz.ngnex.util.Config;
@@ -47,104 +48,107 @@ import static dz.ngnex.util.Config.GLOBAL_MSG;
  */
 @ViewModel
 public class LoginView implements Serializable {
-  private static final long serialVersionUID = -1791839482568436535L;
-  private static final Logger log = LogManager.getLogger(LoginView.class);
+    private static final long serialVersionUID = -1791839482568436535L;
+    private static final Logger log = LogManager.getLogger(LoginView.class);
 
-  public static final String NEXT_OUTCOME = "outcome";
+    public static final String NEXT_OUTCOME = "outcome";
 
-  @EJB
-  private PrincipalBean principalBean;
+    @EJB
+    private PrincipalBean principalBean;
 
-  @Inject
-  private Messages messages;
+    @Inject
+    private Messages messages;
 
-  @Size(min = 1, max = 45)
-  private String username;
-  @Size(min = 1, max = 45)
-  private String password;
+    @Size(min = 1, max = 45)
+    private String username;
+    @Size(min = 1, max = 45)
+    private String password;
 
-  @Inject
-  private CurrentPrincipal currentPrincipal;
+    @Inject
+    private CurrentPrincipal currentPrincipal;
 
-  private String nextOutcome;
-  private String lastUrl;
+    @Inject
+    private LocaleManager localeManager;
 
-  @PostConstruct
-  private void init() {
-    nextOutcome = WebKit.getRequestParam(NEXT_OUTCOME);
-    lastUrl = WebKit.getCookie(NavigationHistory.LAST_URL_VISITED);
-  }
+    private String nextOutcome;
+    private String lastUrl;
 
-  public String login() {
-    setUsername(getUsername().toLowerCase());
-
-    WebKit.logout();
-
-    FacesContext context = FacesContext.getCurrentInstance();
-    try {
-      HttpServletRequest request = WebKit.getFacesRequest();
-      System.out.println("#loggin - trying to authenticate: " + currentUser(request) + " as: " + getUsername());
-      request.login(getUsername(), getPassword());
-      Principal principal = request.getUserPrincipal();
-      String principalName = principal.getName();
-      Objects.requireNonNull(principalName);
-      currentPrincipal.refreshState(principal, request);
-      log.info("#loggin - succeeded to authenticate: " + currentUser(request));
-
-      String welcomeBack = MessageFormat.format(messages.getString("welcomeBack"), principalName);
-      context.addMessage(GLOBAL_MSG, new FacesMessage(messages.getString("userConnected"), welcomeBack));
-
-      if (nextOutcome != null)
-        return nextOutcome;
-
-      AccessType principalType = CurrentPrincipal.getPrincipalType(request);
-      if (principalType.isAdmin()) {
-        request.getSession().setMaxInactiveInterval(WebKit.ADMIN_INACTIVE_INTERVAL);
-        if (lastUrl != null && lastUrl.contains("/admin/"))
-          WebKit.redirect(lastUrl);
-        else
-          WebKit.redirect(Config.ADMIN_HOME);
-      } else if (principalType.isAssociation()) {
-        request.getSession().setMaxInactiveInterval(WebKit.ASSOCIATION_INACTIVE_INTERVAL);
-        if (lastUrl != null && lastUrl.contains("/asso/"))
-          WebKit.redirect(lastUrl);
-        else
-          WebKit.redirect(Config.ASSO_HOME);
-      } else {
-        request.getSession().setMaxInactiveInterval(WebKit.GUEST_INACTIVE_INTERVAL);
-        WebKit.redirect(Config.HOME_PAGE);
-      }
-
-      return null;
-    } catch (Exception e) {
-      log.info("#loggin - failed to authenticate: '" + getUsername(), e);
-      context.addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.getString("loginFailed"),
-          messages.getString("loginFailedDetail")));
-      return null;
+    @PostConstruct
+    private void init() {
+        nextOutcome = WebKit.getRequestParam(NEXT_OUTCOME);
+        lastUrl = WebKit.getCookie(NavigationHistory.LAST_URL_VISITED);
     }
-  }
 
-  private String currentUser(HttpServletRequest request) {
-    Principal userPrincipal = request.getUserPrincipal();
-    if (userPrincipal != null)
-      return "principal: " + userPrincipal.getName() + ", currentPrincipal: " + currentPrincipal.getName();
-    else
-      return "principal: null , currentPrincipal: " + currentPrincipal.getName();
-  }
+    public String login() {
+        setUsername(getUsername().toLowerCase());
 
-  public String getUsername() {
-    return username;
-  }
+        WebKit.logout();
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+            HttpServletRequest request = WebKit.getFacesRequest();
+            log.info("\"#\"login-history\"#\" - trying to authenticate: " + currentUser(request) + " as: " + getUsername());
+            request.login(getUsername(), getPassword());
+            Principal principal = request.getUserPrincipal();
+            String principalName = principal.getName();
+            Objects.requireNonNull(principalName);
+            currentPrincipal.refreshState(principal, request);
+            log.info("\"#\"login-history\"#\" - succeeded to authenticate: " + currentUser(request) + "@" + localeManager.getCurrentLocalDateTime());
 
-  public String getPassword() {
-    return password;
-  }
+            String welcomeBack = MessageFormat.format(messages.getString("welcomeBack"), principalName);
+            context.addMessage(GLOBAL_MSG, new FacesMessage(messages.getString("userConnected"), welcomeBack));
 
-  public void setPassword(String password) {
-    this.password = password;
-  }
+            if (nextOutcome != null)
+                return nextOutcome;
+
+            AccessType principalType = CurrentPrincipal.getPrincipalType(request);
+            if (principalType.isAdmin()) {
+                request.getSession().setMaxInactiveInterval(WebKit.ADMIN_INACTIVE_INTERVAL);
+                if (lastUrl != null && lastUrl.contains("/admin/"))
+                    WebKit.redirect(lastUrl);
+                else
+                    WebKit.redirect(Config.ADMIN_HOME);
+            } else if (principalType.isAssociation()) {
+                request.getSession().setMaxInactiveInterval(WebKit.ASSOCIATION_INACTIVE_INTERVAL);
+                if (lastUrl != null && lastUrl.contains("/asso/"))
+                    WebKit.redirect(lastUrl);
+                else
+                    WebKit.redirect(Config.ASSO_HOME);
+            } else {
+                request.getSession().setMaxInactiveInterval(WebKit.GUEST_INACTIVE_INTERVAL);
+                WebKit.redirect(Config.HOME_PAGE);
+            }
+
+            return null;
+        } catch (Exception e) {
+            log.info("#loggin - failed to authenticate: '" + getUsername(), e);
+            context.addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_ERROR, messages.getString("loginFailed"),
+                    messages.getString("loginFailedDetail")));
+            return null;
+        }
+    }
+
+    private String currentUser(HttpServletRequest request) {
+        Principal userPrincipal = request.getUserPrincipal();
+        if (userPrincipal != null)
+            return "principal: " + userPrincipal.getName() + ", currentPrincipal: " + currentPrincipal.getName();
+        else
+            return "principal: null , currentPrincipal: " + currentPrincipal.getName();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
