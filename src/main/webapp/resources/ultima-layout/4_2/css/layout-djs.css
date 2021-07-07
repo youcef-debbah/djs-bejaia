@@ -3714,6 +3714,14 @@ html body .ui-panelgrid.compact-data .ui-panelgrid-cell {
   right: 8px;
 }
 
+.accent-background {
+  color: white;
+  background: #E91E63;
+}
+.accent-background h1 {
+  margin: 16px;
+}
+
 .done {
   color: #43dc1b;
 }

@@ -472,6 +472,14 @@ html body {
   }
 }
 
+.accent-background {
+  h1 {
+    margin: 16px;
+  }
+  color: white;
+  background: $accentColor;
+}
+
 .done {
   color: #43dc1b;
 }

@@ -623,7 +623,7 @@ public class DefaultContractBeanImpl implements ContractBean {
 
   @Override
   public List<TemplateInfo> getTemplatesInfo() {
-    return em.createQuery("select new dz.ngnex.entity.TemplateInfo(t.id, t.name, t.season.id) from ContractTemplateEntity t order by t.lastUpdate desc, t.name asc", TemplateInfo.class)
+    return em.createQuery("select new dz.ngnex.entity.TemplateInfo(t.id, t.name, t.season.id) from ContractTemplateEntity t order by t.season.id, t.lastUpdate desc, t.name asc", TemplateInfo.class)
         .getResultList();
   }
 
