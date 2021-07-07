@@ -17,6 +17,7 @@
 
 package dz.ngnex.view;
 
+import dz.ngnex.bean.ExtraBean;
 import dz.ngnex.bean.PrincipalBean;
 import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.LocaleManager;
@@ -72,6 +73,9 @@ public class LoginView implements Serializable {
 
     private String nextOutcome;
     private String lastUrl;
+
+    @EJB
+    ExtraBean extraBean;
 
     @PostConstruct
     private void init() {

@@ -60,6 +60,22 @@
             <ui:insert name="layout-wrapper"/>
 
             <div class="layout-main">
+                <h:form>
+                    <h:commandScript name="updateAds" onevent="ion.sound.play('button_tiny')"
+                                     render="adsPanel"
+                                     actionListener="#{globalView.refreshAdvertisements}"/>
+
+                    <f:websocket channel="globalAdvertisements" onmessage="updateAds"/>
+
+                    <h:panelGroup id="adsPanel" layout="block">
+                        <h:panelGroup rendered="#{not empty globalView.advertisements}"
+                                      layout="block" styleClass="card accent-background align-center">
+                            <ui:repeat value="#{globalView.advertisements}" var="ad">
+                                <h1>#{ad}</h1>
+                            </ui:repeat>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                </h:form>
                 <ui:fragment rendered="#{not meta.underMaintenance}">
                     <ui:insert name="content"/>
                 </ui:fragment>

@@ -1,6 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:pe="http://primefaces.org/ui/extensions" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
                 template="/WEB-INF/templates/template.xhtml">
     <ui:param name="title" value="Info"/>
     <ui:define name="content">
@@ -15,15 +16,30 @@
                                     <h:outputText value="#{account.name}: "/>
                                     <pe:timeAgo value="#{account.lastLoginDate}"/>
                                 </ui:fragment>
+                                <ui:fragment rendered="#{empty account.lastLogin}">
+                                    <h:outputText value="#{account.name}: #{messages.nothing}"/>
+                                </ui:fragment>
                             </li>
                         </ui:repeat>
                     </ul>
                     <h2>Server config</h2>
                     <ul>
-                        <li>BUILD TIME = #{localeManager.formatAsLocalDateTime(initParam['dz.jsoftware95.BuildEpoch'])}</li>
+                        <li>BUILD TIME = #{localeManager.formatAsLocalDateTime(localeManager.asLong(initParam['dz.jsoftware95.BuildEpoch']))}</li>
                         <li>PROJECT_STAGE = '#{initParam['javax.faces.PROJECT_STAGE']}'</li>
                         <li>FACELETS_REFRESH_PERIOD = '#{initParam['javax.faces.FACELETS_REFRESH_PERIOD']}'</li>
                     </ul>
+                    <h2>Actions</h2>
+                    <h:form id="actionsForm">
+                        <p:commandButton value="Restart Warning" icon="ui-icon-autorenew"
+                                         actionListener="#{globalView.issueRestartWarning}"
+                                         process="@this" onerror="jsoftware95.updateFailed()"/>
+                        <p:commandButton value="Shutdown Warning" icon="ui-icon-power"
+                                         actionListener="#{globalView.issueShutdownWarning}"
+                                         process="@this" onerror="jsoftware95.updateFailed()"/>
+                        <p:commandButton value="Clear Warnings" icon="ui-icon-block"
+                                         actionListener="#{globalView.clearWarnings}"
+                                         process="@this" onerror="jsoftware95.updateFailed()"/>
+                    </h:form>
                 </div>
             </div>
         </div>

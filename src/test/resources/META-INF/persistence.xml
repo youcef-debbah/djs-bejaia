@@ -62,5 +62,6 @@
         <class>dz.ngnex.entity.AttachmentInfoEntity</class>
         <class>dz.ngnex.entity.AttachmentContentEntity</class>
         <class>dz.ngnex.entity.CommentEntity</class>
+        <class>dz.ngnex.entity.ExtraEntity</class>
     </persistence-unit>
 </persistence>
