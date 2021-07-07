@@ -2,25 +2,29 @@ package dz.ngnex.entity;
 
 public interface ClientMessageEntity extends ChronologicalDatabaseEntity {
 
-  Integer getId();
+    Integer getId();
 
-  String getContent();
+    String getContent();
 
-  Long getEpoch();
+    Long getEpoch();
 
-  MessageState getState();
+    MessageState getState();
 
-  String getSenderName();
+    String getSenderName();
 
-  Service getDestination();
+    Service getDestination();
 
-  String getTitle();
+    String getTitle();
 
-  AttachmentInfoEntity getAttachment();
+    AttachmentInfoEntity getAttachment();
 
-  void setAttachment(AttachmentInfoEntity attachment);
+    void setAttachment(AttachmentInfoEntity attachment);
 
-  boolean isFromGuest();
+    boolean isFromGuest();
 
-  String getKey();
+    String getKey();
+
+    default boolean notFromGuest() {
+        return !isFromGuest();
+    }
 }

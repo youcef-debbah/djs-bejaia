@@ -3572,13 +3572,16 @@ html body .compact-data .ui-overlaypanel-content ul {
   padding: 0;
 }
 html body .dark-input .ui-inputfield, html body .ui-toolbar .ui-inputfield {
-  color: #fff;
+  color: white;
 }
 html body .dark-input .ui-inputfield::placeholder, html body .ui-toolbar .ui-inputfield::placeholder {
   color: #bdbdbd;
 }
 html body .dark-input .ui-inputgroup .ui-inputgroup-addon, html body .dark-input .ui-inputgroup .ui-inputgroup-addon-checkbox {
-  color: #fff;
+  color: white;
+}
+html body .dark-input .ui-chkbox-box {
+  border-color: #d6d6d6;
 }
 html body .ui-inputfield.ui-state-disabled {
   border-bottom: none;

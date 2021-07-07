@@ -21,193 +21,209 @@ import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ViewModel
 public class InboxView implements Serializable {
 
-  private static final long serialVersionUID = 7390757397211957055L;
+    private static final long serialVersionUID = 7390757397211957055L;
 
-  private static final Logger log = LogManager.getLogger(UsersView.class);
+    private static final Logger log = LogManager.getLogger(UsersView.class);
 
-  @EJB
-  private MessagesBean messagesBean;
+    @EJB
+    private MessagesBean messagesBean;
 
-  @EJB
-  private AttachmentsBean attachmentsBean;
+    @EJB
+    private AttachmentsBean attachmentsBean;
 
-  @Inject
-  @Push
-  private PushContext adminMessageNotifications;
+    @Inject
+    @Push
+    private PushContext adminMessageNotifications;
 
-  private List<ClientMessageEntity> messages;
+    private List<ClientMessageEntity> allMessages;
+    private List<ClientMessageEntity> importantMessages;
 
-  private ClientMessageEntity selectedMessage;
+    private ClientMessageEntity selectedMessage;
 
-  @Inject
-  private LocaleManager localeManager;
+    @Inject
+    private LocaleManager localeManager;
 
-  @Inject
-  Meta meta;
+    @Inject
+    Meta meta;
 
-  @Inject
-  CurrentPrincipal currentPrincipal;
+    @Inject
+    CurrentPrincipal currentPrincipal;
 
-  private String groupMessageContent;
+    private String groupMessageContent;
 
-  private AttachmentContentEntity attachment;
+    private AttachmentContentEntity attachment;
 
-  private List<String> selectedReceivers;
+    private List<String> selectedReceivers;
 
-  private List<MenuItem> allReceivers;
+    private List<MenuItem> allReceivers;
 
-  @PostConstruct
-  public void init() {
-    refreshMessages();
-    refreshReceivers();
-  }
+    private boolean onlyImportantMessages;
 
-  public void refreshMessages() {
-    try {
-      messages = messagesBean.getInboxMessagesReceivedBy(currentPrincipal.getService());
-    } catch (Exception e) {
-      meta.handleException(e);
+    @PostConstruct
+    public void init() {
+        refreshMessages();
+        refreshReceivers();
     }
-  }
 
-  private void refreshReceivers() {
-    try {
-      allReceivers = messagesBean.getAllReceivers(currentPrincipal.getService());
-    } catch (Exception e) {
-      allReceivers = Collections.emptyList();
-      meta.handleException(e);
+    public void refreshMessages() {
+        try {
+            List<ClientMessageEntity> messages = messagesBean.getInboxMessagesReceivedBy(currentPrincipal.getService());
+            this.allMessages = messages;
+            importantMessages = messages.stream()
+                    .filter(ClientMessageEntity::notFromGuest)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            meta.handleException(e);
+        }
     }
+
+    private void refreshReceivers() {
+        try {
+            allReceivers = messagesBean.getAllReceivers(currentPrincipal.getService());
+        } catch (Exception e) {
+            allReceivers = Collections.emptyList();
+            meta.handleException(e);
+        }
+    }
+
+    public List<ClientMessageEntity> getMessages() {
+        return onlyImportantMessages ? importantMessages : allMessages;
+    }
+
+  public boolean isOnlyImportantMessages() {
+    return onlyImportantMessages;
   }
 
-  public List<ClientMessageEntity> getMessages() {
-    return messages;
+  public void setOnlyImportantMessages(boolean onlyImportantMessages) {
+    this.onlyImportantMessages = onlyImportantMessages;
   }
 
   public ClientMessageEntity getSelectedMessage() {
-    return selectedMessage;
-  }
-
-  public String getGuestEmail() {
-    if (selectedMessage instanceof GuestMessageEntity)
-      return ((GuestMessageEntity) selectedMessage).getEmail();
-    else
-      return null;
-  }
-
-  public String getGuestPhone() {
-    if (selectedMessage instanceof GuestMessageEntity)
-      return ((GuestMessageEntity) selectedMessage).getPhone();
-    else
-      return null;
-  }
-
-  public String getGuestName() {
-    if (selectedMessage instanceof GuestMessageEntity)
-      return ((GuestMessageEntity) selectedMessage).getGuestName();
-    else
-      return null;
-  }
-
-  public void setSelectedMessage(ClientMessageEntity selectedMessage) {
-    this.selectedMessage = selectedMessage;
-    if (DatabaseEntity.getID(selectedMessage) != null) {
-      markAsRead(selectedMessage);
-      AttachmentInfoEntity attachment = selectedMessage.getAttachment();
-      if (DatabaseEntity.getID(attachment) != null && !Hibernate.isInitialized(attachment))
-        selectedMessage.setAttachment(messagesBean.getAttachment(attachment.getId()));
+        return selectedMessage;
     }
-  }
 
-  public void markAsRead(ClientMessageEntity selectedMessage) {
-    if (selectedMessage.getState() != MessageState.READ)
-      try {
-        if (this.selectedMessage.isFromGuest())
-          messagesBean.markGuestMessageAsRead(this.selectedMessage.getId());
+    public String getGuestEmail() {
+        if (selectedMessage instanceof GuestMessageEntity)
+            return ((GuestMessageEntity) selectedMessage).getEmail();
         else
-          messagesBean.markMessageAsRead(this.selectedMessage.getId());
-      } catch (Exception e) {
-        meta.handleException(e);
-      }
-  }
+            return null;
+    }
 
-  public void deleteCurrentMessage() {
-    if (DatabaseEntity.getID(selectedMessage) != null) {
-      try {
-        if (selectedMessage.isFromGuest())
-          messagesBean.deleteGuestMessage(selectedMessage.getId());
+    public String getGuestPhone() {
+        if (selectedMessage instanceof GuestMessageEntity)
+            return ((GuestMessageEntity) selectedMessage).getPhone();
         else
-          messagesBean.deleteMessage(selectedMessage.getId());
-
-        selectedMessage = null;
-        refreshMessages();
-      } catch (Exception e) {
-        meta.handleException(e);
-      }
+            return null;
     }
-  }
 
-  public String getGroupMessageContent() {
-    return groupMessageContent;
-  }
-
-  public void setGroupMessageContent(String groupMessageContent) {
-    this.groupMessageContent = groupMessageContent;
-  }
-
-  public void sendGroupMessage() {
-    if (groupMessageContent != null && selectedReceivers != null && !selectedReceivers.isEmpty())
-      try {
-        messagesBean.sendAdminMessages(currentPrincipal.getName(), localeManager.formatTextAsHtml(groupMessageContent), selectedReceivers, attachment);
-        resetGroupMessageInput();
-        meta.workDoneSuccessfully("messageSent");
-        PrimeFaces.current().executeScript("PF('group_msg_dialog').hide()");
-        adminMessageNotifications.send("refresh", selectedReceivers);
-      } catch (RuntimeException e) {
-        meta.handleException(e);
-      }
-  }
-
-  public List<MenuItem> getAllReceivers() {
-    return allReceivers;
-  }
-
-  public List<String> getSelectedReceivers() {
-    return selectedReceivers;
-  }
-
-  public void setSelectedReceivers(List<String> selectedReceivers) {
-    this.selectedReceivers = selectedReceivers;
-  }
-
-  private void resetGroupMessageInput() {
-    groupMessageContent = null;
-    attachment = null;
-  }
-
-  public void handleAttachment(FileUploadEvent event) {
-    try {
-      AttachmentContentEntity uploadedFile = attachmentsBean.add(event.getFile(), currentPrincipal.getName(), System.currentTimeMillis());
-      if (attachment != null)
-        meta.workDoneSuccessfully("fileReplaced");
-      else
-        meta.workDoneSuccessfully("fileUploaded");
-
-      attachment = uploadedFile;
-    } catch (Exception e) {
-      meta.handleException(e);
+    public String getGuestName() {
+        if (selectedMessage instanceof GuestMessageEntity)
+            return ((GuestMessageEntity) selectedMessage).getGuestName();
+        else
+            return null;
     }
-  }
 
-  public AttachmentContentEntity getAttachment() {
-    return attachment;
-  }
+    public void setSelectedMessage(ClientMessageEntity selectedMessage) {
+        this.selectedMessage = selectedMessage;
+        if (DatabaseEntity.getID(selectedMessage) != null) {
+            markAsRead(selectedMessage);
+            AttachmentInfoEntity attachment = selectedMessage.getAttachment();
+            if (DatabaseEntity.getID(attachment) != null && !Hibernate.isInitialized(attachment))
+                selectedMessage.setAttachment(messagesBean.getAttachment(attachment.getId()));
+        }
+    }
 
-  public void deleteAttachment() {
-    attachment = null;
-    meta.workDoneSuccessfully("fileDeleted");
-  }
+    public void markAsRead(ClientMessageEntity selectedMessage) {
+        if (selectedMessage.getState() != MessageState.READ)
+            try {
+                if (this.selectedMessage.isFromGuest())
+                    messagesBean.markGuestMessageAsRead(this.selectedMessage.getId());
+                else
+                    messagesBean.markMessageAsRead(this.selectedMessage.getId());
+            } catch (Exception e) {
+                meta.handleException(e);
+            }
+    }
+
+    public void deleteCurrentMessage() {
+        if (DatabaseEntity.getID(selectedMessage) != null) {
+            try {
+                if (selectedMessage.isFromGuest())
+                    messagesBean.deleteGuestMessage(selectedMessage.getId());
+                else
+                    messagesBean.deleteMessage(selectedMessage.getId());
+
+                selectedMessage = null;
+                refreshMessages();
+            } catch (Exception e) {
+                meta.handleException(e);
+            }
+        }
+    }
+
+    public String getGroupMessageContent() {
+        return groupMessageContent;
+    }
+
+    public void setGroupMessageContent(String groupMessageContent) {
+        this.groupMessageContent = groupMessageContent;
+    }
+
+    public void sendGroupMessage() {
+        if (groupMessageContent != null && selectedReceivers != null && !selectedReceivers.isEmpty())
+            try {
+                messagesBean.sendAdminMessages(currentPrincipal.getName(), localeManager.formatTextAsHtml(groupMessageContent), selectedReceivers, attachment);
+                resetGroupMessageInput();
+                meta.workDoneSuccessfully("messageSent");
+                PrimeFaces.current().executeScript("PF('group_msg_dialog').hide()");
+                adminMessageNotifications.send("refresh", selectedReceivers);
+            } catch (RuntimeException e) {
+                meta.handleException(e);
+            }
+    }
+
+    public List<MenuItem> getAllReceivers() {
+        return allReceivers;
+    }
+
+    public List<String> getSelectedReceivers() {
+        return selectedReceivers;
+    }
+
+    public void setSelectedReceivers(List<String> selectedReceivers) {
+        this.selectedReceivers = selectedReceivers;
+    }
+
+    private void resetGroupMessageInput() {
+        groupMessageContent = null;
+        attachment = null;
+    }
+
+    public void handleAttachment(FileUploadEvent event) {
+        try {
+            AttachmentContentEntity uploadedFile = attachmentsBean.add(event.getFile(), currentPrincipal.getName(), System.currentTimeMillis());
+            if (attachment != null)
+                meta.workDoneSuccessfully("fileReplaced");
+            else
+                meta.workDoneSuccessfully("fileUploaded");
+
+            attachment = uploadedFile;
+        } catch (Exception e) {
+            meta.handleException(e);
+        }
+    }
+
+    public AttachmentContentEntity getAttachment() {
+        return attachment;
+    }
+
+    public void deleteAttachment() {
+        attachment = null;
+        meta.workDoneSuccessfully("fileDeleted");
+    }
 }

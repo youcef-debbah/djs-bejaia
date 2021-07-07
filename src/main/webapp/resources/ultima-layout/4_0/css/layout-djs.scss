@@ -320,7 +320,7 @@ html body {
   }
 
   .dark-input .ui-inputfield, .ui-toolbar .ui-inputfield {
-    color: #fff;
+    color: white;
 
     &::placeholder {
       color: $inputBorderColor;
@@ -328,7 +328,11 @@ html body {
   }
 
   .dark-input .ui-inputgroup .ui-inputgroup-addon, .dark-input .ui-inputgroup .ui-inputgroup-addon-checkbox {
-    color: #fff;
+    color: white;
+  }
+
+  .dark-input .ui-chkbox-box {
+    border-color: #d6d6d6;
   }
 
   .ui-inputfield.ui-state-disabled {

@@ -176,7 +176,7 @@
                         </ui:fragment>
 
                         <ui:fragment rendered="#{not message.fromGuest}">
-                            <h:link id="assoLink" styleClass="spaced" outcome="associationInfo">
+                            <h:link id="assoLink" styleClass="spaced" outcome="associationInfo" target="_blank">
                                 #{message.senderName}
                                 <f:param name="asso_name" value="#{message.senderName}"/>
                             </h:link>
@@ -222,7 +222,7 @@
                                   href="#{meta.safeUrl(inboxView.selectedMessage.attachment.urlAsAttachment)}"/>
                     </f:facet>
                     <f:facet name="right">
-                        <div class="dark-input spaced">
+                        <div class="dark-input spaced inlined">
                             <div class="ui-inputgroup">
                                 <div class="ui-inputgroup-addon">
                                     <i class="topbar-icon ui-icon fa fa-filter"/>
@@ -231,8 +231,18 @@
                                         onkeyup="jsoftware95.filterTableRowsBy(this.value,PF('main_sheet_widget').tbody)"
                                         placeholder="#{messages.filter}"/>
                             </div>
-
                         </div>
+                        <div class="dark-input inlined">
+                            <h:outputText id="onlyImportantLabel" styleClass="ui-icon fa fa-eye-slash"/>
+                            <p:selectBooleanCheckbox id="onlyImportantCheckbox"
+                                                     value="#{inboxView.onlyImportantMessages}"
+                                                     style="margin: 0 5px 5px 5px;">
+                                <p:ajax process="@this" update="@form"
+                                        onerror="jsoftware95.updateFailed()"/>
+                            </p:selectBooleanCheckbox>
+                        </div>
+                        <p:tooltip for="onlyImportantCheckbox"
+                                   value="#{messages.hideGuestsMessages}"/>
                     </f:facet>
                 </p:toolbar>
                 <h:panelGroup id="messageInfo" layout="block">
