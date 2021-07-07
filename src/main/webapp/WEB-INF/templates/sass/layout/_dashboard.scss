@@ -120,12 +120,17 @@ $smallRadius: 5px;
       list-style-type: none;
 
       li {
-        img {
+        >.ui-button {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+
+        >img {
           width: 36px;
           float: left;
         }
 
-        span:first-child {
+        >span:first-child {
           padding: 6px 12px;
           float: left;
           display: inline-block;
@@ -146,15 +151,15 @@ $smallRadius: 5px;
         }
 
         &.message-from {
-          img:first-child, span:first-child {
+          >img:first-child, >span:first-child {
             float: left;
           }
 
-          img:first-child {
+          >img:first-child {
             margin-right: 8px;
           }
 
-          span:first-child {
+          >span:first-child {
             background-color: #BBDEFB;
             color: #000000;
 
@@ -169,22 +174,22 @@ $smallRadius: 5px;
             }
           }
 
-          span.global:first-child {
+          >span.global:first-child {
             background: #b3ffb3;
             color: #000000;
           }
         }
 
         &.message-own {
-          img:first-child, span:first-child {
+          >img:first-child, >span:first-child {
             float: right;
           }
 
-          img:first-child {
+          >img:first-child {
             margin-left: 8px;
           }
 
-          span:first-child {
+          >span:first-child {
             background: #FFECB3;
             color: #000000;
 
@@ -199,7 +204,7 @@ $smallRadius: 5px;
             }
           }
 
-          span.global:first-child {
+          >span.global:first-child {
             background: #b3ffb3;
             color: #000000;
           }

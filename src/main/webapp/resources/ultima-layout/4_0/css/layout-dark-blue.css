@@ -261,11 +261,15 @@
   margin: 0;
   list-style-type: none;
 }
-.dashboard .chat ul li img {
+.dashboard .chat ul li > .ui-button {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.dashboard .chat ul li > img {
   width: 36px;
   float: left;
 }
-.dashboard .chat ul li span:first-child {
+.dashboard .chat ul li > span:first-child {
   padding: 6px 12px;
   float: left;
   display: inline-block;
@@ -274,7 +278,7 @@
   -webkit-border-radius: 1em;
   border-radius: 1em;
 }
-.dashboard .chat ul li span:first-child.conversation-timestamp {
+.dashboard .chat ul li > span:first-child.conversation-timestamp {
   color: #9ea3a8;
   text-align: center;
   font-size: 13px;
@@ -285,47 +289,47 @@
   margin: 0;
   padding: 0;
 }
-.dashboard .chat ul li.message-from img:first-child, .dashboard .chat ul li.message-from span:first-child {
+.dashboard .chat ul li.message-from > img:first-child, .dashboard .chat ul li.message-from > span:first-child {
   float: left;
 }
-.dashboard .chat ul li.message-from img:first-child {
+.dashboard .chat ul li.message-from > img:first-child {
   margin-right: 8px;
 }
-.dashboard .chat ul li.message-from span:first-child {
+.dashboard .chat ul li.message-from > span:first-child {
   background-color: #BBDEFB;
   color: #000000;
 }
-.dashboard .chat ul li.message-from span:first-child.chained-previews {
+.dashboard .chat ul li.message-from > span:first-child.chained-previews {
   margin-top: 1px;
   border-top-left-radius: 5px;
 }
-.dashboard .chat ul li.message-from span:first-child.chained-next {
+.dashboard .chat ul li.message-from > span:first-child.chained-next {
   margin-bottom: 1px;
   border-bottom-left-radius: 5px;
 }
-.dashboard .chat ul li.message-from span.global:first-child {
+.dashboard .chat ul li.message-from > span.global:first-child {
   background: #b3ffb3;
   color: #000000;
 }
-.dashboard .chat ul li.message-own img:first-child, .dashboard .chat ul li.message-own span:first-child {
+.dashboard .chat ul li.message-own > img:first-child, .dashboard .chat ul li.message-own > span:first-child {
   float: right;
 }
-.dashboard .chat ul li.message-own img:first-child {
+.dashboard .chat ul li.message-own > img:first-child {
   margin-left: 8px;
 }
-.dashboard .chat ul li.message-own span:first-child {
+.dashboard .chat ul li.message-own > span:first-child {
   background: #FFECB3;
   color: #000000;
 }
-.dashboard .chat ul li.message-own span:first-child.chained-previews {
+.dashboard .chat ul li.message-own > span:first-child.chained-previews {
   margin-top: 1px;
   border-top-right-radius: 5px;
 }
-.dashboard .chat ul li.message-own span:first-child.chained-next {
+.dashboard .chat ul li.message-own > span:first-child.chained-next {
   margin-bottom: 1px;
   border-bottom-right-radius: 5px;
 }
-.dashboard .chat ul li.message-own span.global:first-child {
+.dashboard .chat ul li.message-own > span.global:first-child {
   background: #b3ffb3;
   color: #000000;
 }

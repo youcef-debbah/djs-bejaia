@@ -41,17 +41,20 @@
                                                             <span class="conversation-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
                                                         </li>
                                                     </ui:fragment>
-                                                    <ui:fragment rendered="#{not empty message.attachment}">
-                                                        <p:button icon="ui-icon-attachment" style="float: right"
-                                                                  href="#{meta.safeUrl(message.attachment)}"/>
-                                                    </ui:fragment>
                                                     <li class="clearfix message-own">
-                                                    <span class="global" tabindex="0">
-                                                        <h:outputText value="#{message.value}" escape="false"/><br/>
-                                                            <span class="small-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
-                                                            <pe:timeAgo styleClass="small-timestamp"
-                                                                        value="#{meta.asDate(message.stamp)}"/>
-                                                    </span>
+                                                        <span class="global" tabindex="0">
+                                                            <h:outputText value="#{message.value}" escape="false"/><br/>
+                                                                <span class="small-timestamp">#{localeManager.formatAsLocalDateTime(message.stamp)}</span>
+                                                                <pe:timeAgo styleClass="small-timestamp"
+                                                                            value="#{meta.asDate(message.stamp)}"/>
+                                                        </span>
+                                                        <ui:fragment rendered="#{not empty message.attachment}">
+                                                            <p:button id="globalAttachmentDownloadButton"
+                                                                      icon="ui-icon-attachment" style="float: right"
+                                                                      href="#{meta.safeUrl(message.attachment)}"/>
+                                                            <p:tooltip for="globalAttachmentDownloadButton"
+                                                                       value="#{messages.downloadAttachment}"/>
+                                                        </ui:fragment>
                                                     </li>
                                                     <ui:fragment
                                                             rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
@@ -61,10 +64,6 @@
                                                     </ui:fragment>
                                                 </ui:fragment>
                                                 <ui:fragment rendered="#{message.source eq 'admin'}">
-                                                    <ui:fragment rendered="#{not empty message.attachment}">
-                                                        <p:button icon="ui-icon-attachment" style="float: right"
-                                                                  href="#{meta.attachmentUrl(message.attachment)}"/>
-                                                    </ui:fragment>
                                                     <li class="clearfix message-own">
                                                         <span class="#{message.styleClasses}" tabindex="0">
                                                             <h:outputText value="#{message.value}" escape="false"/><br/>
@@ -72,6 +71,13 @@
                                                             <pe:timeAgo styleClass="small-timestamp"
                                                                         value="#{meta.asDate(message.stamp)}"/>
                                                         </span>
+                                                        <ui:fragment rendered="#{not empty message.attachment}">
+                                                            <p:button id="adminAttachmentDownloadButton"
+                                                                      icon="ui-icon-attachment" style="float: right"
+                                                                      href="#{meta.attachmentUrl(message.attachment)}"/>
+                                                            <p:tooltip for="adminAttachmentDownloadButton"
+                                                                       value="#{messages.downloadAttachment}"/>
+                                                        </ui:fragment>
                                                     </li>
                                                     <ui:fragment
                                                             rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
@@ -81,10 +87,6 @@
                                                     </ui:fragment>
                                                 </ui:fragment>
                                                 <ui:fragment rendered="#{message.source eq 'user'}">
-                                                    <ui:fragment rendered="#{not empty message.attachment}">
-                                                        <p:button icon="ui-icon-attachment" style="float: right"
-                                                                  href="#{meta.attachmentUrl(message.attachment)}"/>
-                                                    </ui:fragment>
                                                     <li class="clearfix message-from">
                                                         <span class="#{message.styleClasses}" tabindex="0">
                                                             <h:outputText value="#{message.value}" escape="false"/><br/>
@@ -92,6 +94,21 @@
                                                             <pe:timeAgo styleClass="small-timestamp"
                                                                         value="#{meta.asDate(message.stamp)}"/>
                                                         </span>
+                                                        <ui:fragment rendered="#{not empty message.attachment}">
+                                                            <p:button id="userAttachmentDownloadButton"
+                                                                      icon="ui-icon-attachment" style="float: left"
+                                                                      href="#{meta.attachmentUrl(message.attachment)}"/>
+                                                            <p:tooltip for="userAttachmentDownloadButton"
+                                                                       value="#{messages.downloadAttachment}"/>
+                                                            <p:commandButton id="addToDossierButton"
+                                                                             icon="ui-icon-folder" style="float: left"
+                                                                             actionListener="#{messagingView.addToDossier(message.attachment)}"
+                                                                             onerror="jsoftware95.updateFailed()"
+                                                                             process="@this" update="@none"
+                                                            />
+                                                            <p:tooltip for="addToDossierButton"
+                                                                       value="#{messages.addToDossier}"/>
+                                                        </ui:fragment>
                                                     </li>
                                                     <ui:fragment
                                                             rendered="#{message.conversationEnd or (status.last and message.oldEnoughToShowDate)}">
@@ -131,9 +148,15 @@
                                                      oncomplete="jsoftware95.scrollToBottom('output:chatbox')"
                                                      update="main_form output file_form"/>
                                 </div>
-                                <p:hotkey bind="alt+return" handler="jsoftware95.clickOnInput('sendButtonWidget','inputWidget')"/>
+                                <p:hotkey bind="alt+return"
+                                          handler="jsoftware95.clickOnInput('sendButtonWidget','inputWidget')"/>
                                 <script type="text/javascript">
-                                    $(function() {PF('inputWidget').getJQ().bind('keydown', 'alt+return', function(){jsoftware95.clickOnInput('sendButtonWidget','inputWidget');return false;});});
+                                    $(function () {
+                                        PF('inputWidget').getJQ().bind('keydown', 'alt+return', function () {
+                                            jsoftware95.clickOnInput('sendButtonWidget', 'inputWidget');
+                                            return false;
+                                        });
+                                    });
                                 </script>
                             </h:form>
                             <div class="align-center">

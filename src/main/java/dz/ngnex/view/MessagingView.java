@@ -1,9 +1,6 @@
 package dz.ngnex.view;
 
-import dz.ngnex.bean.AttachmentsBean;
-import dz.ngnex.bean.IntegrityException;
-import dz.ngnex.bean.MessagesBean;
-import dz.ngnex.bean.PrincipalBean;
+import dz.ngnex.bean.*;
 import dz.ngnex.control.CurrentPrincipal;
 import dz.ngnex.control.LocaleManager;
 import dz.ngnex.control.Meta;
@@ -29,174 +26,189 @@ import static dz.ngnex.util.Config.GLOBAL_MSG;
 @ViewModel
 public class MessagingView implements Serializable {
 
-  private static final long serialVersionUID = 2821593938969430957L;
-  public static final String PARAM_SENDER = "sender";
+    private static final long serialVersionUID = 2821593938969430957L;
+    public static final String PARAM_SENDER = "sender";
 
-  @EJB
-  private MessagesBean messagesBean;
+    @EJB
+    private MessagesBean messagesBean;
 
-  @EJB
-  private PrincipalBean principalBean;
+    @EJB
+    private PrincipalBean principalBean;
 
-  @Size(max = MessageEntity.MAX_TITLE_LENGTH)
-  private String title;
+    @Size(max = MessageEntity.MAX_TITLE_LENGTH)
+    private String title;
 
-  @NotNull
-  @Size(max = BasicMessageEntity.MAX_CONTENT_LENGTH)
-  private String content;
+    @NotNull
+    @Size(max = BasicMessageEntity.MAX_CONTENT_LENGTH)
+    private String content;
 
-  private AttachmentContentEntity attachment;
+    private AttachmentContentEntity attachment;
 
-  private List<Snippet> conversation;
+    private List<Snippet> conversation;
 
-  private Service service;
+    private Service service;
 
-  private BasicPrincipalEntity entity;
+    private BasicPrincipalEntity entity;
 
-  @EJB
-  private AttachmentsBean attachmentsBean;
+    @EJB
+    private AttachmentsBean attachmentsBean;
 
-  @Inject
-  CurrentPrincipal currentPrincipal;
+    @EJB
+    private DossierBean dossierBean;
 
-  @Inject
-  Meta meta;
+    @Inject
+    CurrentPrincipal currentPrincipal;
 
-  @Inject
-  private LocaleManager localeManager;
+    @Inject
+    Meta meta;
 
-  @Push
-  @Inject
-  private PushContext messageNotifications;
+    @Inject
+    private LocaleManager localeManager;
 
-  @Inject
-  @Push
-  private PushContext adminMessageNotifications;
+    @Push
+    @Inject
+    private PushContext messageNotifications;
 
-  @PostConstruct
-  private void init() {
-    initEntityAndAdministration();
-    if (entity == null)
-      meta.pageNotFound();
-    else
-      fetchMessages();
-  }
+    @Inject
+    @Push
+    private PushContext adminMessageNotifications;
 
-  private void initEntityAndAdministration() {
-    if (currentPrincipal.getAccessType().isAssociation())
-      entity = principalBean.findPrincipal(currentPrincipal.getId());
-    else {
-      String senderName = WebKit.getRequestParam(PARAM_SENDER);
-      if (senderName != null)
-        entity = principalBean.findPrincipalByName(senderName);
+    @PostConstruct
+    private void init() {
+        initEntityAndAdministration();
+        if (entity == null)
+            meta.pageNotFound();
+        else
+            fetchMessages();
     }
 
-    if (entity != null)
-      service = entity.getAccessType().getService();
-    else
-      service = null;
-  }
+    private void initEntityAndAdministration() {
+        if (currentPrincipal.getAccessType().isAssociation())
+            entity = principalBean.findPrincipal(currentPrincipal.getId());
+        else {
+            String senderName = WebKit.getRequestParam(PARAM_SENDER);
+            if (senderName != null)
+                entity = principalBean.findPrincipalByName(senderName);
+        }
 
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
-
-  public String getContent() {
-    return content;
-  }
-
-  public void setContent(String content) {
-    this.content = content;
-  }
-
-  public Service getService() {
-    return service;
-  }
-
-  public void setService(Service service) {
-    this.service = service;
-  }
-
-  public void sendMessage() {
-    try {
-      messagesBean.sendMessage(service, title, localeManager.formatTextAsHtml(content), entity.getName(), attachment);
-      resetInput();
-      fetchMessages();
-      messageNotifications.send("refresh", Arrays.asList(service.name(), GLOBAL_MSG));
-    } catch (Exception e) {
-      meta.handleException(e);
+        if (entity != null)
+            service = entity.getAccessType().getService();
+        else
+            service = null;
     }
-  }
 
-  public void sendAdminMessage() {
-    if (entity != null)
-      try {
-        String receiver = entity.getName();
-        messagesBean.sendAdminMessage(currentPrincipal.getName(), localeManager.formatTextAsHtml(content), receiver, attachment);
-        resetInput();
-        adminMessageNotifications.send("refresh", receiver);
-        fetchMessages();
-      } catch (Exception e) {
-        meta.handleException(e);
-      }
-  }
-
-  public void handleAttachment(FileUploadEvent event) {
-    try {
-      AttachmentContentEntity uploadedFile = attachmentsBean.add(event.getFile(), currentPrincipal.getName(), System.currentTimeMillis());
-
-      if (attachment != null)
-        meta.workDoneSuccessfully("fileReplaced");
-      else
-        meta.workDoneSuccessfully("fileUploaded");
-
-
-      attachment = uploadedFile;
-    } catch (Exception e) {
-      meta.handleException(e);
+    public String getTitle() {
+        return title;
     }
-  }
 
-  public AttachmentContentEntity getAttachment() {
-    return attachment;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public void deleteAttachment() {
-    attachment = null;
-    meta.workDoneSuccessfully("fileDeleted");
-  }
+    public String getContent() {
+        return content;
+    }
 
-  public void resetInput() {
-    setContent("");
-    setTitle("");
-    attachment = null;
-  }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-  public void fetchMessages() {
-    if (entity != null)
-      try {
-        conversation = messagesBean.getConversationWithAdministration(entity.getName(), currentPrincipal.isAdmin());
-        return;
-      } catch (IntegrityException e) {
-        meta.handleException(e);
-      }
+    public Service getService() {
+        return service;
+    }
 
-    conversation = Collections.emptyList();
-  }
+    public void setService(Service service) {
+        this.service = service;
+    }
 
-  public Service[] getPossibleDestinations() {
-    return Service.values();
-  }
+    public void sendMessage() {
+        try {
+            messagesBean.sendMessage(service, title, localeManager.formatTextAsHtml(content), entity.getName(), attachment);
+            resetInput();
+            fetchMessages();
+            messageNotifications.send("refresh", Arrays.asList(service.name(), GLOBAL_MSG));
+        } catch (Exception e) {
+            meta.handleException(e);
+        }
+    }
 
-  public List<Snippet> getConversation() {
-    return conversation;
-  }
+    public void sendAdminMessage() {
+        if (entity != null)
+            try {
+                String receiver = entity.getName();
+                messagesBean.sendAdminMessage(currentPrincipal.getName(), localeManager.formatTextAsHtml(content), receiver, attachment);
+                resetInput();
+                adminMessageNotifications.send("refresh", receiver);
+                fetchMessages();
+            } catch (Exception e) {
+                meta.handleException(e);
+            }
+    }
 
-  public BasicPrincipalEntity getEntity() {
-    return entity;
-  }
+    public void handleAttachment(FileUploadEvent event) {
+        try {
+            AttachmentContentEntity uploadedFile = attachmentsBean.add(event.getFile(), currentPrincipal.getName(), System.currentTimeMillis());
+
+            if (attachment != null)
+                meta.workDoneSuccessfully("fileReplaced");
+            else
+                meta.workDoneSuccessfully("fileUploaded");
+
+
+            attachment = uploadedFile;
+        } catch (Exception e) {
+            meta.handleException(e);
+        }
+    }
+
+    public AttachmentContentEntity getAttachment() {
+        return attachment;
+    }
+
+    public void deleteAttachment() {
+        attachment = null;
+        meta.workDoneSuccessfully("fileDeleted");
+    }
+
+    public void resetInput() {
+        setContent("");
+        setTitle("");
+        attachment = null;
+    }
+
+    public void fetchMessages() {
+        if (entity != null)
+            try {
+                conversation = messagesBean.getConversationWithAdministration(entity.getName(), currentPrincipal.isAdmin());
+                return;
+            } catch (IntegrityException e) {
+                meta.handleException(e);
+            }
+
+        conversation = Collections.emptyList();
+    }
+
+    public Service[] getPossibleDestinations() {
+        return Service.values();
+    }
+
+    public List<Snippet> getConversation() {
+        return conversation;
+    }
+
+    public BasicPrincipalEntity getEntity() {
+        return entity;
+    }
+
+    public void addToDossier(Integer attachment) {
+        try {
+            if (entity != null && entity.getAccessType().isAssociation()) {
+                BinaryContent file = attachmentsBean.getBinaryContent(attachment);
+                dossierBean.add(file, entity.getName());
+                meta.workDoneSuccessfully("fileAddedToDossier");
+            }
+        } catch (Exception e) {
+            meta.handleException(e);
+        }
+    }
 }
