@@ -348,7 +348,7 @@
     </mime-mapping>
 
     <session-config>
-        <session-timeout>10</session-timeout>
+        <session-timeout>10800</session-timeout>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
