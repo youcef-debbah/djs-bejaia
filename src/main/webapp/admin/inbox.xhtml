@@ -158,7 +158,7 @@
 
     <ui:define name="content">
         <h:form id="spreadsheet_form">
-            <h:commandScript name="refreshInbox" onevent="ion.sound.play('button_tiny')"
+            <h:commandScript name="refreshInbox"
                              render="acc_container" actionListener="#{inboxView.refreshMessages}"/>
             <f:websocket channel="messageNotifications" onmessage="refreshInbox"
                          user="#{empty currentPrincipal.service? 'global' : currentPrincipal.service.name()}"/>

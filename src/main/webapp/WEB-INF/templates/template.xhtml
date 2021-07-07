@@ -61,7 +61,8 @@
 
             <div class="layout-main">
                 <h:form>
-                    <h:commandScript name="updateAds" onevent="ion.sound.play('button_tiny')"
+                    <!-- sound effect: onevent="ion.sound.play('button_tiny')" -->
+                    <h:commandScript name="updateAds"
                                      render="adsPanel"
                                      actionListener="#{globalView.refreshAdvertisements}"/>
 

@@ -8,7 +8,7 @@
         xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
 >
     <h:form id="search_form" pt:autocomplete="off">
-        <h:commandScript name="refreshMessageCounter" onevent="ion.sound.play('button_tiny')"
+        <h:commandScript name="refreshMessageCounter"
                          render="inboxLink chatUserLink menuform:inboxMenuItem menuform:chatUserMenuItem"
                          actionListener="#{messageCounter.refresh}"/>
 

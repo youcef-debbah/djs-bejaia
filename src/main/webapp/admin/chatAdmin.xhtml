@@ -13,7 +13,7 @@
                 <div class="ui-g">
                     <div class="ui-g-12">
                         <h:form id="output">
-                            <h:commandScript name="refreshChatOutput" onevent="ion.sound.play('button_tiny')"
+                            <h:commandScript name="refreshChatOutput"
                                              render="output" actionListener="#{messagingView.fetchMessages}"/>
                             <f:websocket channel="messageNotifications" onmessage="refreshChatOutput"
                                          user="#{empty currentPrincipal.service? 'global' : currentPrincipal.service.name()}"/>
