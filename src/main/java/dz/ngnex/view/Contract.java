@@ -305,7 +305,7 @@ public final class Contract {
     activitySectionContent.replace(BUDGET_SECTION_VAR_ACTIVITY, sectionActivityBudget);
     ventilationTemplate
         .append("<li style='").append(style).append("'>")
-        .append(activitySectionContent.toString())
+        .append(activitySectionContent)
         .append("</li>");
   }
 
