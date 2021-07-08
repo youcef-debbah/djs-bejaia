@@ -53,7 +53,7 @@ public class TemplatedContent {
     if (name == null)
       return null;
     else
-      return VARIABLE_PREFIX + name + VARIABLE_SUFFIX;
+      return VARIABLE_PREFIX + name.replaceAll("\\s{2,}", " ") + VARIABLE_SUFFIX;
   }
 
   @NotNull

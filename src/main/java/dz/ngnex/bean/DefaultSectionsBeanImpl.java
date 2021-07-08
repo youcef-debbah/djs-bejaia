@@ -39,16 +39,15 @@ public class DefaultSectionsBeanImpl implements SectionsBean {
 
   @Override
   public SectionTemplateEntity addTemplate(String name) throws IntegrityException {
-    DatabaseEntity.checkIdentifierSyntax(name);
-    SectionTemplateEntity templateEntity = new SectionTemplateEntity(name);
+    SectionTemplateEntity templateEntity = new SectionTemplateEntity(DatabaseEntity.normalizeIdentifier(name));
     em.persist(templateEntity);
     return templateEntity;
   }
 
   @Override
-  public SectionEntity add(Integer assoID, String sectionName) throws IntegrityException {
-    Check.argNotNull(assoID, sectionName);
-    DatabaseEntity.checkIdentifierSyntax(sectionName);
+  public SectionEntity add(Integer assoID, String rawSectionName) throws IntegrityException {
+    Check.argNotNull(assoID, rawSectionName);
+    String sectionName = DatabaseEntity.normalizeIdentifier(rawSectionName);
     checkDuplicatedSectionName(em, assoID, sectionName);
 
     SectionEntity newSection = new SectionEntity(sectionName);

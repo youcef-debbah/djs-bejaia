@@ -32,10 +32,11 @@ public interface DatabaseEntity extends Serializable, Comparable<DatabaseEntity>
       return entity.getId();
   }
 
-  static void checkIdentifierSyntax(String identifier) throws IntegrityException {
+  static String normalizeIdentifier(String identifier) throws IntegrityException {
     Check.argNotNull(identifier);
     if (!Constrains.IDENTIFIER_PATTERN.matcher(identifier).matches())
       throw new IntegrityException("illegal identifier: " + identifier, "identifierWithIllegalChars", identifier);
+    return identifier.replaceAll("\\s{2,}", " ");
   }
 
   static <T extends DatabaseEntity> void addLazily(T entityToAdd, Collection<? super T> collection) {
