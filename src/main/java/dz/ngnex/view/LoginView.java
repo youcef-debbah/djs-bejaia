@@ -36,6 +36,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.security.Principal;
@@ -119,7 +120,9 @@ public class LoginView implements Serializable {
                 else
                     WebKit.redirect(Config.ASSO_HOME);
             } else {
-                request.getSession().setMaxInactiveInterval(WebKit.GUEST_INACTIVE_INTERVAL);
+                HttpSession session = request.getSession(false);
+                if (session != null)
+                    session.setMaxInactiveInterval(WebKit.GUEST_INACTIVE_INTERVAL);
                 WebKit.redirect(Config.HOME_PAGE);
             }
 

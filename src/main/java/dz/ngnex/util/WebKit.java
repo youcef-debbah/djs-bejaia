@@ -44,8 +44,8 @@ public final class WebKit {
     public static final Charset CONTENT_ENCODING = StandardCharsets.UTF_8;
     private static final Logger log = LogManager.getLogger(WebKit.class);
 
-    public static final int GUEST_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(10);
-    public static final int ADMIN_INACTIVE_INTERVAL = (int) TimeUnit.HOURS.toSeconds(3);
+    public static final int GUEST_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(15);
+    public static final int ADMIN_INACTIVE_INTERVAL = (int) TimeUnit.HOURS.toSeconds(12);
     public static final int ASSOCIATION_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(30);
 
 
