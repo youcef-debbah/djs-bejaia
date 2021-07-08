@@ -273,7 +273,7 @@
                     <p:calendar id="downloadDate" value="#{templateView.downloadDate}" locale="#{localeManager.locale}"
                                 timeZone="#{localeManager.adminTimeZone}" autocomplete="false"
                                 pattern="dd/MM/yyyy HH:mm" effect="fade">
-                        <f:convertDateTime type="date" />
+                        <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm" />
                     </p:calendar>
                     <p:tooltip value="#{messages.associationsCanNotDownloadBeforeThisDate}" for="downloadDate"/>
                 </h:panelGroup>

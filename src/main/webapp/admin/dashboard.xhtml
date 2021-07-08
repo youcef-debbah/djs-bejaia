@@ -68,11 +68,11 @@
                                                styleClass="spaced"/>
                                 <br/>
                                 <p:calendar id="visitorsStatFrom" styleClass="text-Center"
-                                            value="#{commandBoard.visitorsStatFrom}" pattern="dd MMMM yyyy"
+                                            value="#{commandBoard.visitorsStatFrom}" pattern="dd/MM/yyyy"
                                             showButtonPanel="true" showOtherMonths="true"
                                             selectOtherMonths="true" mindate="#{localeManager.beginningOfTime}"
                                             maxdate="#{localeManager.currentTime}">
-                                    <f:convertDateTime type="date" />
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                                     <p:ajax event="dateSelect" process="@this" update="@form"
                                             onerror="jsoftware95.updateFailed()"
                                             listener="#{commandBoard.updateVisitorsModel}"/>
@@ -83,11 +83,11 @@
                                                styleClass="spaced"/>
                                 <br/>
                                 <p:calendar id="visitorsStatTo" styleClass="text-Center"
-                                            value="#{commandBoard.visitorsStatTo}" pattern="dd MMMM yyyy"
+                                            value="#{commandBoard.visitorsStatTo}" pattern="dd/MM/yyyy"
                                             showButtonPanel="true" showOtherMonths="true"
                                             selectOtherMonths="true" mindate="#{localeManager.beginningOfTime}"
                                             maxdate="#{localeManager.currentTime}">
-                                    <f:convertDateTime type="date" />
+                                    <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                                     <p:ajax event="dateSelect" process="@this" update="@form"
                                             onerror="jsoftware95.updateFailed()"
                                             listener="#{commandBoard.updateVisitorsModel}"/>

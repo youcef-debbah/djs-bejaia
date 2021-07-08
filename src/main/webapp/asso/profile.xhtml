@@ -340,12 +340,13 @@
                                 </ui:fragment>
                                 <ui:fragment rendered="#{propertyValue.property.type eq 'DATE'}">
                                     <p:messages for="DATE_input" showIcon="false" closable="true"/>
+                                    x4
                                     <h:panelGroup styleClass="md-inputfield md-inputfield-fill">
-                                        <p:calendar id="DATE_input"
+                                        <p:calendar id="DATE_input" locale="#{localeManager.locale}"
                                                     required="#{propertyValue.property.required eq 'REQUIRED_FROM_ALL' or propertyValue.property.required eq 'REQUIRED_FROM_ASSOCIATION'}"
-                                                    value="#{propertyValue.valueAsDate}"
+                                                    value="#{propertyValue.valueAsDate}" pattern="dd/MM/yyyy"
                                                     styleClass="need-validation">
-                                            <f:convertDateTime type="date" />
+                                            <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
                                         </p:calendar>
                                     </h:panelGroup>
                                 </ui:fragment>
