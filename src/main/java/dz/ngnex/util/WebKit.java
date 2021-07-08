@@ -29,6 +29,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -137,7 +138,9 @@ public final class WebKit {
 
         try {
             request.logout();
-            request.getSession().setMaxInactiveInterval(GUEST_INACTIVE_INTERVAL);
+            HttpSession session = request.getSession(false);
+            if (session != null)
+                session.invalidate();
         } catch (ServletException e) {
             log.warn("logout failed for principal named: " + username, e);
         }
