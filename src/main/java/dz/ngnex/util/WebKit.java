@@ -17,12 +17,14 @@
 
 package dz.ngnex.util;
 
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
@@ -251,5 +253,22 @@ public final class WebKit {
                 if (value != null && (max == null || value > max))
                     max = value;
         return max;
+    }
+
+    public static Locale getRequestLocale() {
+        HttpServletRequest request = WebKit.findFacesRequest();
+        if (request != null)
+            return request.getLocale();
+        return null;
+    }
+
+    public static Locale getFacesLocale() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context != null) {
+            UIViewRoot viewRoot = context.getViewRoot();
+            if (viewRoot != null)
+                return viewRoot.getLocale();
+        }
+        return null;
     }
 }

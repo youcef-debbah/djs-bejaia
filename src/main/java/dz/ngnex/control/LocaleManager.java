@@ -20,18 +20,15 @@ package dz.ngnex.control;
 import dz.ngnex.util.InjectableByTests;
 import dz.ngnex.util.Messages;
 import dz.ngnex.util.TemplatedContent;
-import dz.ngnex.util.WebKit;
 import org.apache.commons.text.StringEscapeUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.primefaces.PrimeFaces;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -54,7 +51,7 @@ public class LocaleManager implements Serializable {
     private static final long serialVersionUID = -7848606304114310427L;
     public static final String NO_DATE_KEY = "nothing";
 
-    private static Logger log = LogManager.getLogger(LocaleManager.class);
+    private static final Logger log = LogManager.getLogger(LocaleManager.class);
 
     public static final ZoneId ADMIN_ZONE = ZoneId.of("GMT+1");
     public static final TimeZone ADMIN_TIME_ZONE = TimeZone.getTimeZone(ADMIN_ZONE);
@@ -80,13 +77,6 @@ public class LocaleManager implements Serializable {
     @Inject
     private Messages messages;
 
-    @PostConstruct
-    private void init() {
-        HttpServletRequest request = WebKit.findFacesRequest();
-        if (request != null)
-            preferences.init(request);
-    }
-
     private static DecimalFormat newDAFormatter() {
         DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.FRENCH);
         symbols.setGroupingSeparator(' ');
@@ -95,6 +85,10 @@ public class LocaleManager implements Serializable {
 
     public Locale getLocale() {
         return preferences.getLocale();
+    }
+
+    public Locale getDefaultLocale() {
+        return preferences.getDefaultLocale();
     }
 
     public String getLanguage() {

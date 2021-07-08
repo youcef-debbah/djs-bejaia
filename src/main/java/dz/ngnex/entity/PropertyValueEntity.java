@@ -174,7 +174,7 @@ public class PropertyValueEntity implements DatabaseEntity {
       return null;
     else
       try {
-        return new Date(Long.parseLong(value));
+        return new Date(getValueAsLong());
       } catch (RuntimeException e) {
         log.error("could not parse value as date: " + value, e);
         return null;
@@ -191,10 +191,15 @@ public class PropertyValueEntity implements DatabaseEntity {
 
   @Transient
   public Long getValueAsLong() {
-    if (isNullValue())
+    try {
+      if (isNullValue())
+        return null;
+      else
+        return Long.parseLong(value);
+    } catch (RuntimeException e) {
+      log.error("could not parse value as long: " + value, e);
       return null;
-    else
-      return Long.parseLong(value);
+    }
   }
 
   @Transient
