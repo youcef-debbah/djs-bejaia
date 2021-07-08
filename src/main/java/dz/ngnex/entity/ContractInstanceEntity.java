@@ -280,6 +280,6 @@ public class ContractInstanceEntity implements DatabaseEntity {
     @Transient
     public Long getEntityIndex() {
         Long time = WebKit.max(assignmentDate, lastUpdate, lastDownload);
-        return WebKit.bound(time, 0, 9223372036853L) * 1_000_000 + (Math.abs(id) % 1_000_000);
+        return -WebKit.bound(time, 0, 9223372036853L) * 1_000_000 + (Math.abs(id) % 1_000_000);
     }
 }
