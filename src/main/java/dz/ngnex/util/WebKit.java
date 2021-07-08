@@ -232,4 +232,24 @@ public final class WebKit {
             return builder.toString();
         }
     }
+
+    public static long bound(Long value, long min, long max) {
+        if (value == null)
+            return min;
+        else if (value > max)
+            return max;
+        else if (value < min)
+            return min;
+        else
+            return value;
+    }
+
+    public static Long max(Long... values) {
+        Long max = null;
+        if (values != null)
+            for (Long value : values)
+                if (value != null && (max == null || value > max))
+                    max = value;
+        return max;
+    }
 }
