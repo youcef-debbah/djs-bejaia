@@ -17,7 +17,7 @@
 
 package dz.ngnex.util;
 
-import org.apache.commons.lang3.EnumUtils;
+import dz.ngnex.view.ApplicationInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,7 +38,8 @@ import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
-import java.util.*;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public final class WebKit {
@@ -49,6 +50,7 @@ public final class WebKit {
     public static final int GUEST_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(15);
     public static final int ADMIN_INACTIVE_INTERVAL = (int) TimeUnit.HOURS.toSeconds(12);
     public static final int ASSOCIATION_INACTIVE_INTERVAL = (int) TimeUnit.MINUTES.toSeconds(30);
+    public static final String BUILD_EPOCH = "dz.jsoftware95.BuildEpoch";
 
 
     @Nullable
@@ -126,6 +128,20 @@ public final class WebKit {
                 return Integer.parseInt(value);
             } catch (NumberFormatException e) {
                 log.warn("bad int param value: " + value);
+                return null;
+            }
+        }
+    }
+
+    @Nullable
+    public static Long toLong(String value) {
+        if (null == value || "null".equalsIgnoreCase(value))
+            return null;
+        else {
+            try {
+                return Long.parseLong(value);
+            } catch (NumberFormatException e) {
+                log.warn("bad long param value: " + value);
                 return null;
             }
         }
@@ -270,5 +286,17 @@ public final class WebKit {
                 return viewRoot.getLocale();
         }
         return null;
+    }
+
+    public static long getBuildEpoch() {
+        Long epoch = null;
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context != null) {
+            ExternalContext externalContext = context.getExternalContext();
+            if (externalContext != null)
+                epoch = toLong(externalContext.getInitParameter(BUILD_EPOCH));
+        }
+
+        return epoch != null ? epoch : ApplicationInfo.STARTUP_EPOCH;
     }
 }
