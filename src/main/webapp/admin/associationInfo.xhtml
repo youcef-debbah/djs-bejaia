@@ -55,7 +55,7 @@
                                          process="newSectionDialogPanel accountsPanel"
                                          update="newSectionDialogContent accountsPanel"
                                          icon="fa fa-user-plus"
-                                         onstart="PF('widget_addSectionButton').disable()"
+                                         onstart="PF('widget_addSectionButton').disable();jsoftware95.initSound()"
                                          onerror="jsoftware95.updateFailed()"
                                          oncomplete="PF('widget_addSectionButton').enable()"
                                          disabled="#{empty sectionsView.currentAssociation}"
@@ -102,7 +102,7 @@
                                          process="newContractDialogPanel accountsPanel"
                                          update="newContractDialogContent accountsPanel"
                                          icon="fa fa-user-plus"
-                                         onstart="PF('widget_addContractButton').disable()"
+                                         onstart="PF('widget_addContractButton').disable();jsoftware95.initSound()"
                                          onerror="jsoftware95.updateFailed()"
                                          oncomplete="PF('widget_addContractButton').enable()"
                                          disabled="#{empty sectionsView.currentAssociation}"
@@ -119,10 +119,11 @@
                 <p:toolbar id="accounts_dashboard1" styleClass="scrollable-toolbar">
                     <f:facet name="left">
                         <h:panelGroup>
-                            <p:button icon="ui-icon-arrow-back" outcome="associations" />
+                            <p:button icon="ui-icon-arrow-back" outcome="associations"/>
                             <p:commandButton widgetVar="saveButtonWidget"
                                              value="#{messages.save}"
                                              disabled="#{empty profile.currentAssociation}"
+                                             onstart="jsoftware95.initSound()"
                                              onerror="jsoftware95.updateFailed()"
                                              icon="ui-icon-save" process="spreadsheet_form:accountsPanel" update="@form"
                                              actionListener="#{usersView.saveChanges}"/>
@@ -204,7 +205,7 @@
                                              value="#{messages.newContract}" icon="ui-icon-add"
                                              disabled="#{empty profile.currentAssociation}"
                                              onerror="jsoftware95.updateFailed()"
-                                             onclick="PF('new_contract_dialog').show()"/>
+                                             onclick="PF('new_contract_dialog').show();jsoftware95.initSound()"/>
                             <p:button id="contractsArchive" value="#{messages.viewAll}"
                                       disabled="#{empty profile.currentAssociation}"
                                       outcome="contractsArchive" icon="ui-icon-search">
@@ -250,7 +251,7 @@
                                                          value="#{messages.newSection}" icon="ui-icon-add"
                                                          disabled="#{empty profile.currentAssociation}"
                                                          onerror="jsoftware95.updateFailed()"
-                                                         onclick="PF('new_section_dialog').show()"/>
+                                                         onclick="PF('new_section_dialog').show();jsoftware95.initSound()"/>
 
                                         <p:commandButton id="section_up_button"
                                                          disabled="#{sectionsView.currentSectionIsFirst}"
@@ -700,6 +701,7 @@
                             <p:commandButton widgetVar="saveButtonWidget"
                                              value="#{messages.save}"
                                              disabled="#{empty profile.currentAssociation}"
+                                             onstart="jsoftware95.initSound()"
                                              onerror="jsoftware95.updateFailed()"
                                              icon="ui-icon-save" process="spreadsheet_form:accountsPanel" update="@form"
                                              actionListener="#{usersView.saveChanges}"/>

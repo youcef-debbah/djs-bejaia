@@ -140,6 +140,7 @@
                                     <p:commandButton icon="ui-icon-send" value="#{messages.send}"
                                                      widgetVar="sendButtonWidget"
                                                      actionListener="#{messagingView.sendMessage()}"
+                                                     onstart="jsoftware95.initSound()"
                                                      onerror="jsoftware95.updateFailed()" process="main_form"
                                                      oncomplete="jsoftware95.scrollToBottom('output:chatbox')"
                                                      update="main_form output file_form"/>

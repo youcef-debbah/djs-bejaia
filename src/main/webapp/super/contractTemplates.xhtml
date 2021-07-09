@@ -35,7 +35,7 @@
                                      value="#{messages.add}"
                                      icon="ui-icon-add" process="activity_dialog"
                                      update="main_form:activities-section activityDialogContent"
-                                     onstart="PF('activity_dialog_add_button').disable()"
+                                     onstart="PF('activity_dialog_add_button').disable();jsoftware95.initSound()"
                                      onerror="jsoftware95.updateFailed()"
                                      oncomplete="PF('activity_dialog_add_button').enable()"
                                      actionListener="#{templateView.addNewActivity}"/>
@@ -93,7 +93,7 @@
                                      value="#{messages.add}"
                                      icon="ui-icon-add" process="dialog"
                                      update="main_form:properties-section dialogContent"
-                                     onstart="PF('dialog_add_button').disable()"
+                                     onstart="PF('dialog_add_button').disable();jsoftware95.initSound()"
                                      onerror="jsoftware95.updateFailed()"
                                      oncomplete="PF('dialog_add_button').enable()"
                                      actionListener="#{templateView.addNewProperty}"/>
@@ -150,7 +150,7 @@
                                      value="#{messages.add}"
                                      icon="ui-icon-add" process="template_dialog"
                                      update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent templateEditForm:templateEditDialogContent"
-                                     onstart="PF('template_dialog_add_button').disable()"
+                                     onstart="PF('template_dialog_add_button').disable();jsoftware95.initSound()"
                                      onerror="jsoftware95.updateFailed()"
                                      oncomplete="PF('template_dialog_add_button').enable()"
                                      actionListener="#{templateView.addNewTemplate()}"/>
@@ -186,7 +186,7 @@
                                      value="#{messages.save}"
                                      icon="ui-icon-save" process="template_edit_dialog"
                                      update="main_form activityForm:activityDialogContent propertyForm:dialogContent templateForm:templateDialogContent templateEditForm:templateEditDialogContent"
-                                     onstart="PF('template_edit_dialog_save_button').disable()"
+                                     onstart="PF('template_edit_dialog_save_button').disable();jsoftware95.initSound()"
                                      onerror="jsoftware95.updateFailed()"
                                      oncomplete="PF('template_edit_dialog_save_button').enable()"
                                      actionListener="#{templateView.renameTemplate()}"/>
@@ -205,15 +205,16 @@
                     <p:toolbar>
                         <f:facet name="left">
                             <p:commandButton onerror="jsoftware95.updateFailed()"
+                                             onstart="jsoftware95.initSound()"
                                              icon="ui-icon-save" process="template-panel" update="template-panel"
                                              disabled="#{empty templateView.currentTemplate}"
                                              actionListener="#{templateView.saveCurrentTemplate}"/>
 
                             <p:commandButton icon="ui-icon-edit" type="button"
-                                             onclick="PF('edit_template_dialog_widget').show()"/>
+                                             onclick="PF('edit_template_dialog_widget').show();jsoftware95.initSound()"/>
 
                             <p:commandButton icon="ui-icon-add" type="button"
-                                             onclick="PF('add_template_dialog_widget').show()"/>
+                                             onclick="PF('add_template_dialog_widget').show();jsoftware95.initSound()"/>
 
                             <p:commandButton icon="ui-icon-remove"
                                              onerror="jsoftware95.updateFailed()"
@@ -313,6 +314,7 @@
                     <p:toolbar id="toolbar">
                         <f:facet name="left">
                             <p:commandButton value="#{messages.save}"
+                                             onstart="jsoftware95.initSound()"
                                              onerror="jsoftware95.updateFailed()"
                                              icon="ui-icon-save" process="properties-section"
                                              update="properties-section"
@@ -321,7 +323,7 @@
 
                             <p:commandButton icon="ui-icon-add" value="#{messages.add}" type="button"
                                              disabled="#{empty templateView.currentTemplate}"
-                                             onclick="PF('add-property-dialog').show()"/>
+                                             onclick="PF('add-property-dialog').show();jsoftware95.initSound()"/>
 
                             <p:commandButton id="delete_button" disabled="#{empty templateView.currentProperty}"
                                              onerror="jsoftware95.updateFailed()"
@@ -508,6 +510,7 @@
                     <p:toolbar id="activity_toolbar">
                         <f:facet name="left">
                             <p:commandButton value="#{messages.save}"
+                                             onstart="jsoftware95.initSound()"
                                              onerror="jsoftware95.updateFailed()"
                                              icon="ui-icon-save" process="activities-section"
                                              update="activities-section"
@@ -516,7 +519,7 @@
 
                             <p:commandButton icon="ui-icon-add" value="#{messages.add}" type="button"
                                              disabled="#{empty templateView.currentTemplate}"
-                                             onclick="PF('add-activity-dialog').show()"/>
+                                             onclick="PF('add-activity-dialog').show();jsoftware95.initSound()"/>
 
                             <p:commandButton id="activity_delete_button"
                                              disabled="#{empty templateView.currentActivity}"
