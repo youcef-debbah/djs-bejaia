@@ -273,7 +273,7 @@
                     <p:calendar id="downloadDate" value="#{templateView.downloadDate}" locale="#{localeManager.locale}"
                                 timeZone="#{localeManager.adminTimeZone}" autocomplete="false"
                                 pattern="dd/MM/yyyy HH:mm" effect="fade">
-                        <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm" />
+                        <f:convertDateTime type="date" pattern="dd/MM/yyyy HH:mm"/>
                     </p:calendar>
                     <p:tooltip value="#{messages.associationsCanNotDownloadBeforeThisDate}" for="downloadDate"/>
                 </h:panelGroup>
@@ -608,6 +608,19 @@
                     </h:panelGroup>
                 </h:panelGroup>
             </h:panelGroup>
+            <h:outputScript>
+                // <![CDATA[
+                $(document).keypress(function (event) {
+                    if (event.which === 13) {
+                        var activeElement = document.activeElement;
+                        if (activeElement && activeElement.tagName.toLowerCase() === 'textarea')
+                            return
+
+                        event.preventDefault();
+                    }
+                })
+                // ]]>
+            </h:outputScript>
         </h:form>
 
     </ui:define>
