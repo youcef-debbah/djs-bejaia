@@ -180,10 +180,10 @@ public class Meta {
                 messages.get(summary), messages.get(detail)));
     }
 
-    public void addGlobalLog(String detail) {
+    public void addGlobalMessage(String message) {
         Messages messages = ResourcesProvider.getMessagesBundle();
         FacesContext.getCurrentInstance().addMessage(GLOBAL_MSG, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                "Log", detail));
+                messages.get(message), null));
     }
 
     private void handleInternalError(Exception e) {

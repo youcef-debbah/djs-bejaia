@@ -17,67 +17,77 @@ import java.util.List;
 
 @ViewModel
 public class DossierView implements Serializable {
-  private static final long serialVersionUID = 8260722795234178216L;
+    private static final long serialVersionUID = 8260722795234178216L;
 
-  @EJB
-  private DossierBean dossierBean;
+    @EJB
+    private DossierBean dossierBean;
 
-  private List<DossierInfoEntity> files;
-  private FilesStatistics statistics;
+    private List<DossierInfoEntity> files;
+    private FilesStatistics statistics;
 
-  @Inject
-  private Meta meta;
+    @Inject
+    private Meta meta;
 
-  @Inject
-  private CurrentPrincipal currentPrincipal;
+    @Inject
+    private CurrentPrincipal currentPrincipal;
 
-  @PostConstruct
-  private void init() {
-    refresh();
-  }
+    @Inject
+    private TutorialsView tutorialsView;
 
-  public List<DossierInfoEntity> getFiles() {
-    return files;
-  }
+    private boolean firstVisit;
 
-  public void handleFileUpload(FileUploadEvent event) {
-    UploadedFile uploadedFile = event.getFile();
-    if (uploadedFile != null) {
-      try {
-        dossierBean.add(uploadedFile, currentPrincipal.getName());
-        meta.dataUpdated("fileUploaded");
+    @PostConstruct
+    private void init() {
         refresh();
-      } catch (Exception e) {
-        meta.handleException(e);
-      }
+        this.firstVisit = tutorialsView.markDossierTutorialDone();
     }
-  }
 
-  public void delete(Integer id) {
-    try {
-      dossierBean.delete(id);
-      meta.dataUpdated("fileDeleted");
-      refresh();
-    } catch (Exception e) {
-      meta.handleException(e);
+    public boolean isFirstVisit() {
+        return firstVisit;
     }
-  }
 
-  private void refresh() {
-    String name = currentPrincipal.getName();
-    files = dossierBean.getAll(name);
-    statistics = dossierBean.getStatistics(name);
-  }
+    public List<DossierInfoEntity> getFiles() {
+        return files;
+    }
 
-  public int getMaxFileSize() {
-    return DossierBean.MAX_FILE_SIZE;
-  }
+    public void handleFileUpload(FileUploadEvent event) {
+        UploadedFile uploadedFile = event.getFile();
+        if (uploadedFile != null) {
+            try {
+                dossierBean.add(uploadedFile, currentPrincipal.getName());
+                meta.dataUpdated("fileUploaded");
+                refresh();
+            } catch (Exception e) {
+                meta.handleException(e);
+            }
+        }
+    }
 
-  public long getTotalFilesCount() {
-    return statistics.getCount();
-  }
+    public void delete(Integer id) {
+        try {
+            dossierBean.delete(id);
+            meta.dataUpdated("fileDeleted");
+            refresh();
+        } catch (Exception e) {
+            meta.handleException(e);
+        }
+    }
 
-  public String getFormattedTotalFilesSize() {
-    return statistics.getFormattedTotalFilesSize();
-  }
+    private void refresh() {
+        String name = currentPrincipal.getName();
+        files = dossierBean.getAll(name);
+        statistics = dossierBean.getStatistics(name);
+    }
+
+    public int getMaxFileSize() {
+        return DossierBean.MAX_FILE_SIZE;
+    }
+
+    public long getTotalFilesCount() {
+        return statistics.getCount();
+    }
+
+    public String getFormattedTotalFilesSize() {
+        return statistics.getFormattedTotalFilesSize();
+    }
 }

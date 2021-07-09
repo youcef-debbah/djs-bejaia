@@ -10,14 +10,14 @@
         <div class="ui-g">
             <div class="ui-g-12">
                 <div class="card">
-                    <h1>#{messages.uploadNewFiles}</h1>
+                    <h1>#{dossierView.firstVisit? messages.youCanUploadYourDossier : messages.uploadNewFiles}</h1>
                     <h:form enctype="multipart/form-data" styleClass="hidden-overflow">
                         <p:fileUpload listener="#{dossierView.handleFileUpload}"
-                                update=":files_list" auto="true" multiple="true" sequential="true"
-                                sizeLimit="#{dossierView.maxFileSize}"
-                                invalidSizeMessage="#{messages.fileTooBig}"
-                                label="#{messages.choose}" uploadLabel="#{messages.upload}"
-                                cancelLabel="#{messages.cancel}"
+                                      update=":files_list" auto="true" multiple="true" sequential="true"
+                                      sizeLimit="#{dossierView.maxFileSize}"
+                                      invalidSizeMessage="#{messages.fileTooBig}"
+                                      label="#{messages.choose}" uploadLabel="#{messages.upload}"
+                                      cancelLabel="#{messages.cancel}"
                         />
                     </h:form>
                     <h1 class="small-top">#{messages.uploadedFiles}</h1>

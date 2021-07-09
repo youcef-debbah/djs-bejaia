@@ -4131,4 +4131,9 @@ body .ui-selectcheckboxmenu-token .ui-selectcheckboxmenu-token-label {
   text-overflow: clip;
 }
 
+.tutorial-hint {
+  color: #E91E63 !important;
+  margin: 5px;
+}
+
 /*# sourceMappingURL=layout-djs.css.map */

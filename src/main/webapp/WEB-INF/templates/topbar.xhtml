@@ -60,7 +60,7 @@
                                 <i class="topbar-icon material-icons ui-icon-email"/>
                                 <c:if test="#{messageCounter.enabled}">
                                     <h:panelGroup rendered="#{messageCounter.totalUnreadCount > 0}"
-                                                  styleClass="topbar-badge animated rubberBand">
+                                                  styleClass="topbar-badge animated rubberBand delay-1s">
                                         #{messageCounter.totalUnreadCount}
                                     </h:panelGroup>
                                 </c:if>

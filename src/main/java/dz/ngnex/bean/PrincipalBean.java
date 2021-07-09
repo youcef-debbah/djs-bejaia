@@ -27,70 +27,75 @@ import java.util.List;
 @Local
 public interface PrincipalBean {
 
-  List<AdminEntity> getAllAdmins();
+    List<AdminEntity> getAllAdmins();
 
-  List<BasicAssociationEntity> getAllAssociations();
+    List<BasicAssociationEntity> getAllAssociations();
 
-  BasicAssociationEntity getSingleAssociation(Integer id);
+    BasicAssociationEntity getSingleAssociation(Integer id);
 
-  BasicAssociationEntity getSingleAssociation(String id);
+    BasicAssociationEntity getSingleAssociation(String id);
 
-  List<BasicAssociationEntity> getAllSportAssociations();
+    List<BasicAssociationEntity> getAllSportAssociations();
 
-  List<BasicAssociationEntity> getAllYouthAssociations();
+    List<BasicAssociationEntity> getAllYouthAssociations();
 
-  BasicPrincipalEntity findLoggedInPrincipalByName(String name);
+    BasicPrincipalEntity findLoggedInPrincipalByName(String name);
 
-  BasicPrincipalEntity findPrincipalByName(String name);
+    BasicPrincipalEntity findPrincipalByName(String name);
 
-  AdminEntity findAdmin(Integer id);
+    AdminEntity findAdmin(Integer id);
 
-  @Nullable <T extends BasicAssociationEntity> T findSelectedAssociation(EntityReference<T> principalReference);
+    @Nullable <T extends BasicAssociationEntity> T findSelectedAssociation(EntityReference<T> principalReference);
 
-  Integer findCurrentSeasonID();
+    Integer findCurrentSeasonID();
 
-  @Nullable <T extends BasicPrincipalEntity> T findPrincipal(EntityReference<T> principalReference);
+    @Nullable <T extends BasicPrincipalEntity> T findPrincipal(EntityReference<T> principalReference);
 
-  @NotNull <T extends BasicPrincipalEntity> T getPrincipal(EntityReference<T> principalReference) throws IntegrityException;
+    @NotNull <T extends BasicPrincipalEntity> T getPrincipal(EntityReference<T> principalReference) throws IntegrityException;
 
-  BasicAssociationEntity updateAssociationInfo(BasicAssociationEntity entity);
+    BasicAssociationEntity updateAssociationInfo(BasicAssociationEntity entity);
 
-  AdminEntity updateAdminInfo(AdminEntity updatedAdmin);
+    AdminEntity updateAdminInfo(AdminEntity updatedAdmin);
 
-  AdminEntity createAdmin(String name, String password, String role)
-      throws IntegrityException;
+    AdminEntity createAdmin(String name, String password, String role)
+            throws IntegrityException;
 
-  SportAssociationEntity createSportAssociation(String name, String password, String description, Integer demand, String user)
-      throws IntegrityException;
+    SportAssociationEntity createSportAssociation(String name, String password, String description, Integer demand, String user)
+            throws IntegrityException;
 
-  YouthAssociationEntity createYouthAssociation(String name, String password, String description, Integer demandID, String user)
-      throws IntegrityException;
+    YouthAssociationEntity createYouthAssociation(String name, String password, String description, Integer demandID, String user)
+            throws IntegrityException;
 
-  void deleteAdmin(Integer adminID);
+    void deleteAdmin(Integer adminID);
 
-  void deleteAssociation(EntityReference<? extends BasicAssociationEntity> associationRef);
+    void deleteAssociation(EntityReference<? extends BasicAssociationEntity> associationRef);
 
-  void deleteContractInstance(Integer contractID);
+    void deleteContractInstance(Integer contractID);
 
-  void deleteContractInstance(Integer contractID, EntityReference<? extends BasicAssociationEntity> associationRef);
+    void deleteContractInstance(Integer contractID, EntityReference<? extends BasicAssociationEntity> associationRef);
 
-  <T extends AbstractAssociationEntity> void recalcContractDownloadState(EntityReference<? extends BasicAssociationEntity> associationRef);
+    <T extends AbstractAssociationEntity> void recalcContractDownloadState(EntityReference<? extends BasicAssociationEntity> associationRef);
 
-  void archiveContractInstance(Integer contractId, EntityReference<? extends BasicAssociationEntity> associationRef);
+    void archiveContractInstance(Integer contractId, EntityReference<? extends BasicAssociationEntity> associationRef);
 
-  void unarchiveContractInstance(Integer contractId, EntityReference<? extends BasicAssociationEntity> associationRef);
+    void unarchiveContractInstance(Integer contractId, EntityReference<? extends BasicAssociationEntity> associationRef);
 
-  BasicPrincipalEntity findPrincipal(Integer id);
+    BasicPrincipalEntity findPrincipal(Integer id);
 
-  void deleteTemplate(Integer contractTemplateID);
+    void deleteTemplate(Integer contractTemplateID);
 
-  Integer addContractInstance(Integer contractTemplateId,
-                              EntityReference<? extends BasicAssociationEntity> associationRef);
+    Integer addContractInstance(Integer contractTemplateId,
+                                EntityReference<? extends BasicAssociationEntity> associationRef);
 
-  List<ContractInstanceEntity> getAllContracts(EntityReference<? extends BasicAssociationEntity> associationRef);
+    List<ContractInstanceEntity> getAllContracts(EntityReference<? extends BasicAssociationEntity> associationRef);
 
-  void clear();
+    void clear();
 
-  BasicAssociationEntity findAssociationForContractDownload(Integer accountID);
-  BasicAssociationEntity findAssociationForContractView(Integer accountID);
+    BasicAssociationEntity findAssociationForContractDownload(Integer accountID);
+
+    BasicAssociationEntity findAssociationForContractView(Integer accountID);
+
+    Integer getTutorials(EntityReference<? extends BasicPrincipalEntity> ref);
+
+    void setTutorial(EntityReference<? extends BasicPrincipalEntity> ref, int tutorials);
 }

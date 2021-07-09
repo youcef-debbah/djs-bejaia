@@ -32,7 +32,7 @@
                             </div>
                             <a id="profile-options" href="#">
                                 <span class="profile-name">#{currentPrincipal.name}</span>
-                                <i class="material-icons">&#xE313;</i>
+                                <i class="#{tutorialsView.profileMenuNeeded? 'material-icons animated heartBeat infinite slower tutorial-hint' : 'material-icons'}">&#xE313;</i>
                             </a>
                         </div>
 
@@ -59,6 +59,10 @@
                                     <p:link outcome="dossier">
                                         <i class="topbar-icon material-icons ui-icon-folder"/>
                                         <span class="topbar-item-name">#{messages.dossier}</span>
+                                        <h:panelGroup rendered="#{not tutorialsView.openDossierDone}"
+                                                      styleClass="topbar-badge animated rubberBand">
+                                            <i class="tutorial-hint material-icons ui-icon-new-releases"/>
+                                        </h:panelGroup>
                                     </p:link>
                                 </li>
 
