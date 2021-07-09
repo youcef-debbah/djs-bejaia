@@ -109,7 +109,7 @@ public class LoginView implements Serializable {
             AccessType principalType = CurrentPrincipal.getPrincipalType(request);
             if (principalType.isAdmin()) {
                 request.getSession().setMaxInactiveInterval(WebKit.ADMIN_INACTIVE_INTERVAL);
-                if (lastUrl != null && lastUrl.contains("/admin/"))
+                if (lastUrl != null && (lastUrl.contains("/admin/") | (lastUrl.contains("/super/"))))
                     WebKit.redirect(lastUrl);
                 else
                     WebKit.redirect(Config.ADMIN_HOME);
