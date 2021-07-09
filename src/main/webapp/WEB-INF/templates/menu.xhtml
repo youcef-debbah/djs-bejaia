@@ -14,7 +14,7 @@
                 <div class="nano-content menu-scroll-content">
                     <ui:fragment rendered="#{currentPrincipal.loggedIn}">
                         <div class="profile">
-                            <div>
+                            <div class="container" style="margin-bottom: 10px;">
                                 <p:link outcome="avatar">
                                     <pe:letterAvatar rendered="#{empty currentPrincipal.avatar}"
                                                      width="60" height="60"
@@ -29,10 +29,13 @@
                                         </div>
                                     </ui:fragment>
                                 </p:link>
+                                <p:button rendered="#{empty currentPrincipal.avatar}" styleClass="small"
+                                          icon="ui-icon-edit" outcome="avatar"/>
                             </div>
-                            <a id="profile-options" href="#">
+                            <a id="profile-options" class="container" href="#">
                                 <span class="profile-name">#{currentPrincipal.name}</span>
-                                <i class="#{tutorialsView.profileMenuNeeded? 'material-icons animated heartBeat infinite slower tutorial-hint' : 'material-icons'}">&#xE313;</i>
+                                <i class="material-icons #{tutorialsView.profileMenuNeeded? 'animated heartBeat infinite slower tutorial-hint' : ''}"
+                                style="position: absolute;margin-left: 2px;margin-top: 2px;">&#xE313;</i>
                             </a>
                         </div>
 

@@ -4130,10 +4130,25 @@ body .ui-selectcheckboxmenu-token .ui-selectcheckboxmenu-token-label {
   border-right: 20px solid transparent;
   text-overflow: clip;
 }
+body .ui-button.ui-button-icon-only.small {
+  position: absolute;
+  bottom: -5px;
+  right: 41%;
+  transform: translate(50%, 0);
+  width: 32px;
+  height: 32px;
+  margin: 0;
+}
+body .ui-button.ui-button-icon-only.small .ui-icon {
+  width: 24px;
+  height: 24px;
+  font-size: 18px;
+  margin-top: -9px;
+  margin-left: -12px;
+}
 
 .tutorial-hint {
   color: #E91E63 !important;
-  margin: 5px;
 }
 
 /*# sourceMappingURL=layout-djs.css.map */
