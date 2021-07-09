@@ -38,7 +38,7 @@ public class DefaultPrincipalBeanImpl implements PrincipalBean {
 
     @Override
     public List<AdminEntity> getAllAdmins() {
-        return em.createQuery("from AdminEntity", AdminEntity.class)
+        return em.createQuery("from AdminEntity a order by a.lastLogin", AdminEntity.class)
                 .getResultList();
     }
 
