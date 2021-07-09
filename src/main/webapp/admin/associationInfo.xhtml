@@ -119,6 +119,7 @@
                 <p:toolbar id="accounts_dashboard1" styleClass="scrollable-toolbar">
                     <f:facet name="left">
                         <h:panelGroup>
+                            <p:button icon="ui-icon-arrow-back" outcome="associations" />
                             <p:commandButton widgetVar="saveButtonWidget"
                                              value="#{messages.save}"
                                              disabled="#{empty profile.currentAssociation}"
