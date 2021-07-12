@@ -9,7 +9,7 @@ public enum Database {
     @Override
     public void setup(Properties properties, PoolingDataSource ds) {
       ds.setClassName("org.h2.jdbcx.JdbcDataSource");
-      ds.getDriverProperties().setProperty("url", "jdbc:h2:./h2/test_db;TRACE_LEVEL_FIle=2;MODE=MySQL;DATABASE_TO_LOWER=TRUE");
+      ds.getDriverProperties().setProperty("url", "jdbc:h2:./h2/" + H2_TEST_DB_NAME);
       properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
       addH2Hooks(properties);
     }
@@ -18,7 +18,7 @@ public enum Database {
     @Override
     public void setup(Properties properties, PoolingDataSource ds) {
       ds.setClassName("org.h2.jdbcx.JdbcDataSource");
-      ds.getDriverProperties().setProperty("url", "jdbc:h2:mem:test_db;TRACE_LEVEL_FIle=2;MODE=MySQL;DATABASE_TO_LOWER=TRUE");
+      ds.getDriverProperties().setProperty("url", "jdbc:h2:mem:" + H2_TEST_DB_NAME);
       properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
       addH2Hooks(properties);
     }
@@ -35,6 +35,8 @@ public enum Database {
     }
   };
 
+  public static final String H2_TEST_DB_NAME = "test_db;TRACE_LEVEL_FIle=2;MODE=MySQL;DATABASE_TO_LOWER=TRUE";
+
   public static void addMysqlHooks(Properties properties) {
     properties.put("javax.persistence.schema-generation.create-script-source", "mysql_hooks/create.sql");
     properties.put("javax.persistence.sql-load-script-source", "mysql_hooks/data.sql");
@@ -50,6 +52,6 @@ public enum Database {
   public abstract void setup(Properties properties, PoolingDataSource ds);
 
   public static Database defaultDatabase() {
-    return MYSQL;
+    return H2_IN_FILE;
   }
 }

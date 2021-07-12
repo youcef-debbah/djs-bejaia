@@ -25,43 +25,49 @@
         <jta-data-source>jdbc/TestDS</jta-data-source>
         <!--<jta-data-source>java:jboss/datasources/MySQLDS</jta-data-source>-->
 
-        <!-- core entities -->
-        <class>dz.ngnex.entity.ContractInstanceEntity</class>
-        <class>dz.ngnex.entity.BasicAssociationEntity</class>
-        <class>dz.ngnex.entity.YouthAssociationEntity</class>
-        <class>dz.ngnex.entity.SportAssociationEntity</class>
-        <class>dz.ngnex.entity.BasicPrincipalEntity</class>
-        <class>dz.ngnex.entity.ContractTemplateEntity</class>
-        <class>dz.ngnex.entity.SeasonEntity</class>
-        <class>dz.ngnex.entity.AccountDemandEntity</class>
-        <class>dz.ngnex.entity.GlobalBudgetEntity</class>
-        <class>dz.ngnex.entity.BudgetDatabaseEntity</class>
-        <class>dz.ngnex.entity.SectionTemplateEntity</class>
-        <class>dz.ngnex.entity.ActivityEntity</class>
-        <class>dz.ngnex.entity.PropertyValueEntity</class>
-        <class>dz.ngnex.entity.BudgetEntity</class>
-        <class>dz.ngnex.entity.SectionEntity</class>
-        <class>dz.ngnex.entity.AbstractAssociationEntity</class>
-        <class>dz.ngnex.entity.PropertyEntity</class>
-        <class>dz.ngnex.entity.AdminEntity</class>
+<!--        &lt;!&ndash; core entities &ndash;&gt;-->
+<!--        <class>dz.ngnex.entity.ContractInstanceEntity</class>-->
+<!--        <class>dz.ngnex.entity.BasicAssociationEntity</class>-->
+<!--        <class>dz.ngnex.entity.YouthAssociationEntity</class>-->
+<!--        <class>dz.ngnex.entity.SportAssociationEntity</class>-->
+<!--        <class>dz.ngnex.entity.BasicPrincipalEntity</class>-->
+<!--        <class>dz.ngnex.entity.ContractTemplateEntity</class>-->
+<!--        <class>dz.ngnex.entity.SeasonEntity</class>-->
+<!--        <class>dz.ngnex.entity.AccountDemandEntity</class>-->
+<!--        <class>dz.ngnex.entity.GlobalBudgetEntity</class>-->
+<!--        <class>dz.ngnex.entity.BudgetDatabaseEntity</class>-->
+<!--        <class>dz.ngnex.entity.SectionTemplateEntity</class>-->
+<!--        <class>dz.ngnex.entity.ActivityEntity</class>-->
+<!--        <class>dz.ngnex.entity.PropertyValueEntity</class>-->
+<!--        <class>dz.ngnex.entity.BudgetEntity</class>-->
+<!--        <class>dz.ngnex.entity.SectionEntity</class>-->
+<!--        <class>dz.ngnex.entity.AbstractAssociationEntity</class>-->
+<!--        <class>dz.ngnex.entity.PropertyEntity</class>-->
+<!--        <class>dz.ngnex.entity.AdminEntity</class>-->
 
-        <!-- additional entities -->
-        <class>dz.ngnex.entity.BinaryFileEntity</class>
-        <class>dz.ngnex.entity.BasicMessageEntity</class>
-        <class>dz.ngnex.entity.MessageEntity</class>
-        <class>dz.ngnex.entity.GuestMessageEntity</class>
-        <class>dz.ngnex.entity.AdminMessageEntity</class>
-        <class>dz.ngnex.entity.StatisticsEntity</class>
-        <class>dz.ngnex.entity.ArticleEntity</class>
-        <class>dz.ngnex.entity.ImageContentEntity</class>
-        <class>dz.ngnex.entity.ImageInfoEntity</class>
-        <class>dz.ngnex.entity.DossierInfoEntity</class>
-        <class>dz.ngnex.entity.DossierContentEntity</class>
-        <class>dz.ngnex.entity.AvatarInfoEntity</class>
-        <class>dz.ngnex.entity.AvatarContentEntity</class>
-        <class>dz.ngnex.entity.AttachmentInfoEntity</class>
-        <class>dz.ngnex.entity.AttachmentContentEntity</class>
-        <class>dz.ngnex.entity.CommentEntity</class>
-        <class>dz.ngnex.entity.ExtraEntity</class>
+<!--        &lt;!&ndash; additional entities &ndash;&gt;-->
+<!--        <class>dz.ngnex.entity.BinaryFileEntity</class>-->
+<!--        <class>dz.ngnex.entity.BasicMessageEntity</class>-->
+<!--        <class>dz.ngnex.entity.MessageEntity</class>-->
+<!--        <class>dz.ngnex.entity.GuestMessageEntity</class>-->
+<!--        <class>dz.ngnex.entity.AdminMessageEntity</class>-->
+<!--        <class>dz.ngnex.entity.StatisticsEntity</class>-->
+<!--        <class>dz.ngnex.entity.ArticleEntity</class>-->
+<!--        <class>dz.ngnex.entity.ImageContentEntity</class>-->
+<!--        <class>dz.ngnex.entity.ImageInfoEntity</class>-->
+<!--        <class>dz.ngnex.entity.DossierInfoEntity</class>-->
+<!--        <class>dz.ngnex.entity.DossierContentEntity</class>-->
+<!--        <class>dz.ngnex.entity.AvatarInfoEntity</class>-->
+<!--        <class>dz.ngnex.entity.AvatarContentEntity</class>-->
+<!--        <class>dz.ngnex.entity.AttachmentInfoEntity</class>-->
+<!--        <class>dz.ngnex.entity.AttachmentContentEntity</class>-->
+<!--        <class>dz.ngnex.entity.CommentEntity</class>-->
+<!--        <class>dz.ngnex.entity.ExtraEntity</class>-->
+
+        <!-- test entities -->
+        <class>dz.ngnex.entity.Picture1InfoEntity</class>
+        <class>dz.ngnex.entity.Post1Entity</class>
+        <class>dz.ngnex.entity.Picture2InfoEntity</class>
+        <class>dz.ngnex.entity.Post2Entity</class>
     </persistence-unit>
 </persistence>

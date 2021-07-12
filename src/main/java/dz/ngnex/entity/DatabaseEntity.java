@@ -76,7 +76,9 @@ public interface DatabaseEntity extends Serializable, Comparable<DatabaseEntity>
 
     Integer getId();
 
-    Integer getVersion();
+    default Integer getVersion() {
+        return 0;
+    }
 
     @Transient
     default Long getEntityIndex() {

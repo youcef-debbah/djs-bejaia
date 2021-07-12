@@ -52,7 +52,6 @@ repositories {
         name = "PrimeFaces Maven Repository"
         setUrl("http://repository.primefaces.org")
     }
-    mavenCentral()
 }
 
 dependencies {
@@ -101,6 +100,7 @@ dependencies {
     testImplementation("org.slf4j:slf4j-api:1.7.30")
     testImplementation("ch.qos.logback:logback-classic:1.2.3")
     testImplementation("nl.jqno.equalsverifier:equalsverifier:3.3")
+    testImplementation("com.carrotsearch:junit-benchmarks:0.7.2")
 
     add(intTestImplementation, "org.testng:testng:7.1.0")
     add(intTestImplementation, "org.jboss.arquillian.testng:arquillian-testng-container:1.5.0.Final")
@@ -176,8 +176,12 @@ tasks {
     this.test {
         description = "run unit tests"
         useJUnit()
+        jvmArgs = listOf("-Djub.consumers=CONSOLE,H2", "-Djub.db.file=out/test/benchmarks")
         this.failFast = true
         finalizedBy(parseTestLog)
+        doFirst {
+            delete("h2/test_db.trace.db")
+        }
     }
 
     register("intTests", Test::class) {

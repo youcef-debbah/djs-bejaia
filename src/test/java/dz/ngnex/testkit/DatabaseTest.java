@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.transaction.UserTransaction;
 
 public class DatabaseTest extends InjectableTest {
+
   @ClassRule
   public static DatabaseResource database = new DatabaseResource();
 

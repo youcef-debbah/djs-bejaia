@@ -32,6 +32,7 @@ import java.util.Objects;
 public abstract class BinaryFileEntity implements DatabaseEntity {
 
   private static final long serialVersionUID = -7133410117981311430L;
+  public static final String FILE_ID = "binary_file_id";
 
   protected Integer id;
 
@@ -64,7 +65,7 @@ public abstract class BinaryFileEntity implements DatabaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "binary_file_id", updatable = false, nullable = false)
+  @Column(name = FILE_ID, updatable = false, nullable = false)
   public Integer getId() {
     return id;
   }

@@ -56,12 +56,12 @@ public class TransactionInterceptor implements Serializable {
     tx.begin();
     try {
       log.debug("transaction started for: " + methodName);
-      boolean traceSQL = applyAnnotationConfigurations(method);
+      boolean traceSQL = TestConfig.LOG_BEAN_CALLS && applyAnnotationConfigurations(method);
       if (traceSQL)
-        BeanUtil.logAsSqlComment(em, "start of: " + methodName);
+        BeanUtil.logAsSqlComment(em, "call beginning: " + methodName);
       Object result = ctx.proceed();
       if (traceSQL)
-        BeanUtil.logAsSqlComment(em, "  end of: " + methodName);
+        BeanUtil.logAsSqlComment(em, "call finishing: " + methodName);
       tx.commit();
       log.debug("transaction committed for: " + methodName);
       return result;

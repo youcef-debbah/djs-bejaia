@@ -13,16 +13,17 @@ import javax.persistence.EntityManagerFactory;
 @InjectableByTests
 public class EntityManagerProducer {
 
-  @Produces
-  @Singleton
-  public EntityManager produce(BeanManager beanManager) {
-    EntityManagerFactory entityManagerFactory = DatabaseResource.getCurrentEntityManagerFactory(beanManager);
-    EntityManager em = entityManagerFactory.createEntityManager();
-    BeanUtil.logAsSqlComment(em, "New context");
-    return em;
-  }
+    @Produces
+    @Singleton
+    public EntityManager produce(BeanManager beanManager) {
+        EntityManagerFactory entityManagerFactory = DatabaseResource.getCurrentEntityManagerFactory(beanManager);
+        EntityManager em = entityManagerFactory.createEntityManager();
+        if (TestConfig.LOG_NEW_ENTITIES_CONTEXT)
+            BeanUtil.logAsSqlComment(em, "New entities context");
+        return em;
+    }
 
-  public void close(@Disposes EntityManager instance) {
-    instance.close();
-  }
+    public void close(@Disposes EntityManager instance) {
+        instance.close();
+    }
 }

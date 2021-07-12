@@ -1,1 +1,1 @@
-select '#log-this-statement-as-the-comment:~End of DDL~';
+select '#log-this-statement-as-the-comment:End of DDL';
