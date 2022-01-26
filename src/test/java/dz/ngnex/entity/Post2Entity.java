@@ -186,18 +186,7 @@ public class Post2Entity implements DatabaseEntity {
         return "fr".equalsIgnoreCase(currentLanguage()) ? getContent_fr() : getContent_en();
     }
 
-    // this association is lazy however I will never initialize this association of this copy
-    // instead I will use an HQL query to do a fetch join that will return entities of this class
-    // that are already initialized, just like you wanted, a single big join query
-    // but you have to write it yourself (in HQL not SQL after you learn more you will understand
-    // why hibernate doesn't generate such a join automatically)
-    // read/reread the comments on the first copy of this class to understand more
-    @ManyToMany
-    @Fetch(FetchMode.SUBSELECT)
-    @JoinTable(name = "asso_table_post2_image", // I don't have a single asso table in my app but this is how you name it in hibernate (dont use the default name it's a bad habit)
-            joinColumns = @JoinColumn(name = ID),
-            inverseJoinColumns = @JoinColumn(name = BinaryFileEntity.FILE_ID)
-    )
+    @OneToMany
     @NotNull
     public Set<Picture2InfoEntity> getImages() {
         return images;
@@ -209,7 +198,6 @@ public class Post2Entity implements DatabaseEntity {
 
     @Transient
     public void addPicture(@NotNull Picture2InfoEntity picture) {
-        picture.getPosts().add(this);
         getImages().add(picture);
     }
 

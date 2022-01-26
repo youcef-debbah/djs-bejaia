@@ -60,8 +60,8 @@ public class ToManyFetchingTest extends DatabaseTest {
         sandboxBean.addPost1(post, Arrays.asList(firstPic, secondPic));
     }
 
-    // @Test
-    // @BenchmarkOptions(benchmarkRounds = 12, warmupRounds = 0)
+     @Test
+     @BenchmarkOptions(benchmarkRounds = 1, warmupRounds = 0)
     public void _01_addPost2WithTwoImages() throws IntegrityException {
         // same as the first but the second entity
         Picture2InfoEntity firstPic = sandboxBean.uploadPicture2("image/jpeg", "first-photo.jpg", "joseph");
@@ -77,7 +77,7 @@ public class ToManyFetchingTest extends DatabaseTest {
         sandboxBean.addPost2(post, Arrays.asList(firstPic, secondPic));
     }
 
-    @Test
+//    @Test
     @BenchmarkOptions(benchmarkRounds = 10, warmupRounds = 100)
     public void _10_noop() throws InterruptedException {
         sandboxBean.noop();
@@ -103,6 +103,7 @@ public class ToManyFetchingTest extends DatabaseTest {
 
     @Test
     public void _12_selectPost2() throws InterruptedException {
+        System.out.println("sandboxBean.countPost2() = " + sandboxBean.countPost2());
         List<Post2Entity> posts = sandboxBean.selectPost2();
 
         // close hibernate session any association that is not loaded yet will trow an exception when accessed

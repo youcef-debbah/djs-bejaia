@@ -1,14 +1,14 @@
 package dz.ngnex.testkit;
 
-public abstract class TestConfig {
-    public static final DatabaseInitialization DATABASE_INITIALIZATION = DatabaseInitialization.NONE;
-    public static final Database DATABASE = Database.MYSQL;
-    public static final boolean LOG_BEAN_CALLS = false;
-    public static final boolean LOG_NEW_ENTITIES_CONTEXT = false;
+public interface TestConfig {
+    DatabaseAction DATABASE_INIT = DatabaseAction.DROP_AND_CREATE;
+    Database DATABASE = Database.H2_IN_FILE;
+    boolean LOG_BEAN_CALLS = true;
+    boolean LOG_NEW_ENTITIES_CONTEXT = false;
 
-    public static final int SELECT_LIMIT = 10000;
-    public static final int BATCH_SIZE = 10;
+    int SELECT_LIMIT = 1000;
+    int BATCH_SIZE = SELECT_LIMIT;
 
-    public static final int WARMUPS = 300;
-    public static final int BENCHMARKS = 300;
+    int WARMUPS = 0;
+    int BENCHMARKS = 1;
 }

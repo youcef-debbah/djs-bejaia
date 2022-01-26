@@ -9,7 +9,7 @@ import java.util.List;
 @Local
 public interface SandboxBean {
 
-    long countPost1();
+    long countPost2();
 
     List<Post1Entity> selectPost1();
 

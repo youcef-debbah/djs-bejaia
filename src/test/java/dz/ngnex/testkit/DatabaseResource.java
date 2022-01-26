@@ -46,7 +46,7 @@ public final class DatabaseResource extends ExternalResource {
 
         properties.put("javax.persistence.bean.manager", beanManager);
 
-        properties.put(TestConfig.DATABASE_INITIALIZATION.getPropertyName(), TestConfig.DATABASE_INITIALIZATION.getValue());
+        properties.put(TestConfig.DATABASE_INIT.getPropertyName(), TestConfig.DATABASE_INIT.getValue());
         properties.put("javax.persistence.schema-generation.create-source", "metadata-then-script");
         properties.put("javax.persistence.schema-generation.drop-source", "script");
 

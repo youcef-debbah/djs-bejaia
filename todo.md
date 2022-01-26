@@ -1,0 +1,11 @@
+### next version roadmap
+- update spacing of home page when there is no news articls
+- check if when admin is chatting with an asso that msgs are marked as read
+- add "mark all as read" button in the inbox
+- secure content that is served by servlets
+- add files uploads count/size to dashboard info
+- add "save table layout" and "reset  layout" buttons
+- migrate to primfaces 10
+- add primfaces pdf/excel exporter
+- add primfaces 10 counters to the dashbaord
+- support direct contact to admins

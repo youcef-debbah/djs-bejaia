@@ -2,9 +2,10 @@ package dz.ngnex.entity;
 
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 /**
  * @author youcef debbah
@@ -19,8 +20,6 @@ public class Picture2InfoEntity extends BinaryFileEntity {
     public static final String TABLE = "picture2";
 
     private ImageType type;
-
-    private Set<Post2Entity> posts = new HashSet<>(2);
 
     protected Picture2InfoEntity() {
     }
@@ -40,16 +39,6 @@ public class Picture2InfoEntity extends BinaryFileEntity {
 
     public void setType(ImageType type) {
         this.type = type;
-    }
-
-    @ManyToMany(mappedBy = "images")
-    @NotNull
-    public Set<Post2Entity> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<Post2Entity> posts) {
-        this.posts = posts;
     }
 
     @Override

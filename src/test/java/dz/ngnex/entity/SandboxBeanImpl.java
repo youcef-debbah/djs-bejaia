@@ -26,8 +26,8 @@ public class SandboxBeanImpl implements SandboxBean {
     private EntityManager em;
 
     @Override
-    public long countPost1() {
-        return em.createQuery("select count(p.id) from Post1Entity p", Long.class)
+    public long countPost2() {
+        return em.createQuery("select count(p.id) from Post2Entity p", Long.class)
                 .getSingleResult();
     }
 
@@ -43,9 +43,12 @@ public class SandboxBeanImpl implements SandboxBean {
 
     @Override
     public List<Post2Entity> selectPost2() {
-        return em.createQuery("select p from Post2Entity p join fetch p.images", Post2Entity.class)
+        List<Post2Entity> resultList = em.createQuery("select p from Post2Entity p", Post2Entity.class)
                 .setMaxResults(TestConfig.SELECT_LIMIT)
                 .getResultList();
+        if (!resultList.isEmpty())
+            Hibernate.initialize(resultList.get(0));
+        return resultList;
     }
 
     @Override
