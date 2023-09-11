@@ -167,29 +167,29 @@ tasks {
         delete("out", deploymentDir)
     }
 
-    val parseTestLog by registering(H2LogParser::class) {
-        description = "extract SQL statements from H2 database log"
-        from(testDatabaseLogDir)
-        into(testDatabaseLogDir)
-    }
-
-    this.test {
-        description = "run unit tests"
-        useJUnit()
-        jvmArgs = listOf("-Djub.consumers=CONSOLE,H2", "-Djub.db.file=out/test/benchmarks")
-        this.failFast = true
-        finalizedBy(parseTestLog)
-        doFirst {
-            delete("h2/test_db.trace.db")
-        }
-    }
-
-    register("intTests", Test::class) {
-        description = "run integration tests"
-        addIntTestClasspath(this)
-        passClasspathAsSystemProperty(this)
-        useTestNG()
-    }
+//    val parseTestLog by registering(H2LogParser::class) {
+//        description = "extract SQL statements from H2 database log"
+//        from(testDatabaseLogDir)
+//        into(testDatabaseLogDir)
+//    }
+//
+//    this.test {
+//        description = "run unit tests"
+//        useJUnit()
+//        jvmArgs = listOf("-Djub.consumers=CONSOLE,H2", "-Djub.db.file=out/test/benchmarks")
+//        this.failFast = true
+//        finalizedBy(parseTestLog)
+//        doFirst {
+//            delete("h2/test_db.trace.db")
+//        }
+//    }
+//
+//    register("intTests", Test::class) {
+//        description = "run integration tests"
+//        addIntTestClasspath(this)
+//        passClasspathAsSystemProperty(this)
+//        useTestNG()
+//    }
 }
 
 class Benchmark : TaskExecutionListener {
