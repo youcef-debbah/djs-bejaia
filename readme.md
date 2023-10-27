@@ -1,11 +1,11 @@
 
 ## Overview
 
-This is a web application created for an Algerian government administration, specifically the "Youth and Sport Direction" of Bejaia state, often referred to as DJS ("Direction de la jeunesse et des sports"). The main responsibility of this administration, which operates under the Youth and Sport Ministry and the state's head ("wali"), is to supervise the activities and performance of all sports clubs and cultural associations in the state and allocate the appropriate monetary aid to each association accordingly.
+This is a web application created for an Algerian government administration, specifically the Youth and Sport Direction of Bejaia state, often referred to as DJS ("Direction de la jeunesse et des sports"). The main responsibility of this administration, which operates under the Youth and Sport Ministry and the state's head ("wali"), is to supervise the activities and performance of all sports clubs and cultural associations in the state and allocate the appropriate monetary aid to each association accordingly.
 
-In practice, this means that the DJS primarily needs to maintain an up-to-date profile of each association. Whenever the budget becomes available, it should promptly distribute a tailor-made financing contract to each association, which amounts to nearly 2000 associations, as quickly as possible.
+In practice, this means that the DJS primarily needs to maintain an up-to-date profile of each association. Whenever the budget becomes available, it should promptly distribute a tailor-made financing contract to each association, which amounts to nearly 2000 organization, as quickly as possible.
 
-# Project State
+## Project State
 
 This project is a prototype developed by Youcef DEBBAH in 2019 during their tenure at NGNEX-Soft. While this version is open-source (excluding database data), there is a another production version that underwent significant improvements, including performance optimizations, vulnerability fixes, and the addition of extra features. Regrettably, the production version is not open-source and was maintained by NGNEX-Soft until 2022 when it was eventually replaced by a national-scale web application offering similar functionalities.
 
@@ -219,3 +219,7 @@ Under the following terms:
 - **No Additional Restrictions:** You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
 
 For more details about the Apache License 2.0, please refer to the [LICENSE](LICENSE.txt) file.
+
+## Contact Us
+
+If you have any questions or inquiries about this project, please don't hesitate to contact the main developer at [youcef-debbah@hotmail.com](mailto:youcef-debbah@hotmail.com).
