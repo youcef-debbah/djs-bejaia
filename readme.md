@@ -1,9 +1,9 @@
 
 ## Overview
 
-This web application was created for an Algerian government administration, specifically the Youth and Sports Direction of Bejaia state, often called DJS ("Direction de la jeunesse et des sports"). The main responsibility of this administration, which operates under the Youth and Sports Ministry and the state's head ("wali"), is to supervise the activities and performance of all sports clubs and cultural associations in the state and allocate the appropriate monetary aid to each association accordingly.
+This web application was created for an Algerian government administration, specifically the Youth and Sports Direction of Bejaia state, often called DJS ("Direction de la jeunesse et des sports"). The main responsibility of this administration, which operates directly under the Youth and Sports Ministry and the state's head (the "wali"), is to supervise the activities and performance of all sports clubs and cultural associations in the state and allocate the appropriate monetary aid to each association accordingly.
 
-In practice, this means that the DJS primarily needs to maintain an up-to-date profile of each association. Whenever the budget becomes available, it should promptly distribute a tailor-made financing contract to each association, which amounts to nearly 2000 organizations, as quickly as possible.
+This means that one of the main responsibilities of the DJS is to maintain an up-to-date profile of each association. Whenever the budget becomes available, it should promptly distribute a tailor-made financing contract to each association, which amounts to nearly 2000 organizations, as quickly as possible.
 
 ## Project State
 
